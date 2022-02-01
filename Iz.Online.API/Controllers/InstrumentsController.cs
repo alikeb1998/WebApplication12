@@ -51,14 +51,14 @@ namespace Iz.Online.API.Controllers
             
         }
 
-        [HttpGet("WatchLists")]
+        [HttpPost("WatchLists")]
         public ResultModel<List<WatchList>> WatchLists([FromBody] ViewBaseModel model)
         {
             var result = _instrumentsService.UserWatchLists(model);
             return new ResultModel<List<WatchList>>(result);
         }
 
-        [HttpGet("WatchListsDetails")]
+        [HttpPost("WatchListsDetails")]
         public ResultModel<WatchListDetails> WatchListsDetails([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.WatchListDetails(model);
@@ -96,21 +96,21 @@ namespace Iz.Online.API.Controllers
             
         }
 
-        [HttpGet("InstrumentWatchLists")]
+        [HttpPost("InstrumentWatchLists")]
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _instrumentsService.InstrumentWatchLists(model);
             return new ResultModel<List<WatchList>>(result);
         }
 
-        [HttpGet("BestLimits")]
+        [HttpPost("BestLimits")]
         public ResultModel<BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.BestLimits(model);
             return new ResultModel<BestLimits>(result);
         }
 
-        [HttpGet("Price")]
+        [HttpPost("Price")]
         public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.Price(model);

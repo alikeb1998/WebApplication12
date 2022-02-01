@@ -74,7 +74,7 @@ namespace Iz.Online.API.Controllers
         }
 
 
-        [HttpGet("all/active")]
+        [HttpPost("all/active")]
         public ResultModel<OrdersList> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);
@@ -82,7 +82,7 @@ namespace Iz.Online.API.Controllers
         }
 
 
-        [HttpGet("order/all")]
+        [HttpPost("order/all")]
         public ResultModel<OrdersList> All([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.All(addOrderModel);
