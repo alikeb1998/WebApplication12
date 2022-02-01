@@ -1,5 +1,5 @@
 ﻿using oms = Iz.Online.OmsModels.InputModels.Order;
-using db =Iz.Online.Entities ;
+using db = Iz.Online.Entities;
 using Izi.Online.ViewModels.ShareModels;
 
 namespace Izi.Online.ViewModels.Orders
@@ -8,26 +8,37 @@ namespace Izi.Online.ViewModels.Orders
     {
         public static implicit operator oms.AddOrder(AddOrderModel model)
         {
-            return new oms.AddOrder() { Authorization = model.CustomerId };
+            return new oms.AddOrder()
+            {
+                Authorization = model.CustomerId,
+                DisclosedQuantity = model.DisclosedQuantity,
+                InstrumentId = model.InstrumentId,
+                Price = model.Price,
+                OrderSide = model.OrderSide,
+                OrderType = model.OrderType,
+                Quantity = model.Quantity,
+                ValidityDate = model.ValidityDate,
+                ValidityType = model.ValidityType
+
+            };
         }
         public static implicit operator db.Orders(AddOrderModel model)
         {
-            return new db.Orders() 
+            return new db.Orders()
             {
                 Id = Guid.NewGuid().ToString(),
-                DisclosedQuantity = 1,
-                InstrumentId = 1,
-                OrderSide = 1,
-                OrderType = 1,
-                Price = 123,
-                Quantity = 456,
-                RegisterOrderDate = DateTime.Now,
+                DisclosedQuantity = model.DisclosedQuantity,
+                InstrumentId = (int)model.InstrumentId,
+                OrderSide = model.OrderSide,
+                OrderType = model.OrderType,
+                Price = model.Price,
+                Quantity = model.Quantity,
                 CustomerId = "testUserId",
                 ValidityDate = DateTime.Now.AddDays(2),
-                ValidityType = 2
+                ValidityType = model.ValidityType
             };
         }
-        //public string HubId { get; set; }
+
         public long InstrumentId { get; set; }
         public int OrderSide { get; set; }
         public int OrderType { get; set; }

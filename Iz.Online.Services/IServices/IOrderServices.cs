@@ -8,8 +8,8 @@ namespace Iz.Online.Services.IServices
 {
     public interface IOrderServices
     {
-        AddOrderResult Add(AddOrderModel addOrderModel);
+        Izi.Online.ViewModels.Orders.AddOrderResult Add(AddOrderModel addOrderModel);
         ActiveOrdersResult AllActive(ViewBaseModel viewBaseModel);
-        GetAllResult All(GetAll getAllModel);
+        //List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel);
     }
 }

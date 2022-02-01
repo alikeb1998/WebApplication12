@@ -1,7 +1,6 @@
-﻿namespace Iz.Online.OmsModels.ResponsModels.Order
+﻿namespace Iz.Online.OmsModels.ResponsModels.Order;
+
+public class AddOrderResult : OmsResponseBaseModel
 {
-    public class AddOrderResult : OmsResponseBaseModel
-    {
-        public Order order { get; set; }
-    }
+     public Order order { get; set; }
 }

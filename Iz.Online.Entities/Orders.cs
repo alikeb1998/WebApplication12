@@ -19,6 +19,14 @@ namespace Iz.Online.Entities
         public DateTime ValidityDate { get; set; }
         public int DisclosedQuantity { get; set; }
         public DateTime RegisterOrderDate { get; set; }
+        public long OrderId { get; set; }
+        public string Isr { get; set; }
+        public DateTime CreateOrderDate { get; set; }
+        public DateTime OmsResponseDate { get; set; }
+        public long OmsQty { get; set; }
+        public long OmsPrice { get; set; }
+        public int StatusCode { get; set; }
+        
 
     }
 }

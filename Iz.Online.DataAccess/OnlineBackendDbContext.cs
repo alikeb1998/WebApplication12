@@ -20,6 +20,7 @@ namespace Iz.Online.DataAccess
         public DbSet<InstrumentSector> InstrumentSectors { get; set; }
         public DbSet<InstrumentBourse> InstrumentBourses { get; set; }
         public DbSet<ExceptionsLog> Exceptions { get; set; }
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

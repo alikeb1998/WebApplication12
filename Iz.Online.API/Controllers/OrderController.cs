@@ -1,11 +1,13 @@
 ﻿using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Iz.Online.API.Infrastructure;
+using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.Orders;
 using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
+using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 
 namespace Iz.Online.API.Controllers
 {
@@ -75,18 +77,18 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("all/active")]
-        public ResultModel<OrdersList> AllActive([FromBody] ViewBaseModel addOrderModel)
+        public ResultModel<ActiveOrdersResult> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);
-            return new ResultModel<OrdersList>(result);
+            return new ResultModel<ActiveOrdersResult>(result);
         }
 
 
-        [HttpPost("order/all")]
-        public ResultModel<OrdersList> All([FromBody] ViewBaseModel addOrderModel)
-        {
-            var result = _orderServices.All(addOrderModel);
-            return new ResultModel<OrdersList>(result);
-        }
+        //[HttpPost("order/all")]
+        //public ResultModel<OmsModels.ResponsModels.Order.AddOrderResult> All([FromBody] ViewBaseModel addOrderModel)
+        //{
+        //    var result = _orderServices.All(addOrderModel);
+        //    return new ResultModel<OmsModels.ResponsModels.Order.AddOrderResult>(result);
+        //}
     }
 }

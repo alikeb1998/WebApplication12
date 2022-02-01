@@ -1,5 +1,6 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.OmsModels.InputModels;
 using Newtonsoft.Json;
 using Iz.Online.OmsModels.InputModels.Order;
 using Iz.Online.Reopsitory.IRepository;
@@ -20,6 +21,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public AddOrderResult Add(AddOrder addOrderModel)
         {
+            
             var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
             
             if (result.statusCode != 200)
@@ -29,9 +31,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return result;
         }
         
-        public GetAllResult GetAll(GetAll getAllModel)
+        public AllOrders GetAll(OmsBaseModel getAllModel)
         {
-            var result = HttpPostRequest<GetAllResult>("order/all", JsonConvert.SerializeObject(getAllModel));
+            var result = HttpGetRequest<AllOrders>("order/all");
             if (result.statusCode != 200)
             {
                //TODO

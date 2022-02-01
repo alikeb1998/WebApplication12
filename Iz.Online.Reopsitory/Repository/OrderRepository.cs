@@ -1,6 +1,7 @@
 ﻿using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Orders;
 using Iz.Online.DataAccess;
+using Iz.Online.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Iz.Online.Reopsitory.Repository
@@ -14,7 +15,7 @@ namespace Iz.Online.Reopsitory.Repository
 
         }
     
-        public bool Add(AddOrderModel addOrderModel)
+        public void Add(Orders addOrderModel)
         {
             try
             {
@@ -22,12 +23,14 @@ namespace Iz.Online.Reopsitory.Repository
                 _db.Orders.Add(addOrderModel);
 
                 _db.SaveChanges();
-                return true;
+                //return true;
 
             }
             catch (Exception e)
             {
-                return false;
+               
+                
+                //return false;
 
                 //Log
 
