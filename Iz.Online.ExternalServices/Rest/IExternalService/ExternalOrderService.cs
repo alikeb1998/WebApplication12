@@ -27,7 +27,19 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             }
             return result;
         }
-
+        
+        public GetAllResult GetAll(GetAll getAllModel)
+        {
+            var result = HttpPostRequest<GetAllResult>("order/all", JsonConvert.SerializeObject(getAllModel));
+            if (result.statusCode != 200)
+            {
+                //TODO
+            }
+            return result;
+        }
+       
+        
+      
 
 
     }

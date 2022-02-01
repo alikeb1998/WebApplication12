@@ -78,5 +78,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}");
             return result;
         }
+
+        public InstrumentDetails Details(InstrumentDetails model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

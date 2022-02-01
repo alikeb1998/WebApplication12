@@ -1,5 +1,6 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.OmsModels.InputModels.Order;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Reopsitory.Repository;
 using Iz.Online.Services.IServices;
@@ -30,7 +31,13 @@ namespace Iz.Online.Services.Services
 
             var AddOrderResult = _externalOrderService.Add(addOrderModel);
 
-            //http://192.168.72.54:8080/order/all  
+            //http://192.168.72.54:8080/order/all 
+            var getAllModel = new GetAll()
+            {
+                Id = AddOrderResult.order.id,
+                Isr =  AddOrderResult.order.isr
+            };
+            var GetAllResult = _externalOrderService.GetAll(getAllModel);
 
             //09:02
 

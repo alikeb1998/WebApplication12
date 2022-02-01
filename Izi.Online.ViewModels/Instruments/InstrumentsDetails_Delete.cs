@@ -3,7 +3,7 @@ using Izi.Online.ViewModels.ShareModels;
 
 namespace Izi.Online.ViewModels.Instruments
 {
-    public class InstrumentsDetails
+    public class InstrumentsDetails_Delete
     {
         public long LastPrice { get; set; }
         public long ThresholdPriceMin { get; set; }
@@ -13,7 +13,7 @@ namespace Izi.Online.ViewModels.Instruments
         public long LastDayClosePrice { get; set; }
         public long FirstPrice { get; set; }
         public long TradeQuantity { get; set; }
-        public long TradeValome { get; set; }
+        public long TradeVolume { get; set; }
         public long TradeValue { get; set; }
         public long LastTradeTime { get; set; }
         public long LastTradePrice { get; set; }

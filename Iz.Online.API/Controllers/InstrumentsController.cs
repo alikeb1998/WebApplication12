@@ -110,11 +110,29 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<BestLimits>(result);
         }
 
-        [HttpGet("Price")]
-        public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
+        [HttpGet("Details")]
+        public ResultModel<InstrumentDetails> Details([FromBody] SelectedInstrument model)
         {
-            var result = _externalInstrumentService.Price(model);
-            return new ResultModel<InstrumentPrice>(result);
+            var detail = new InstrumentDetails()
+            {
+                quantity = 100,
+                firstPrice = 1000,
+                lastPrice = 1200,
+                instrumentName = "سپهر",
+                maxPrice = 1100,
+                minPrice = 1000,
+                realPrice = 1120,
+                tradesCount = 120,
+                tradesValue = 50000,
+                tradesVolume = 300,
+                lastDayPrice = 980,
+                minAskPrice = 999
+            };
+            var result = _externalInstrumentService.Details(detail);
+            return new ResultModel<InstrumentDetails>(result);
+            
+            // var result = _externalInstrumentService.Price(model);
+            // return new ResultModel<InstrumentPrice>(result);
         }
 
     }

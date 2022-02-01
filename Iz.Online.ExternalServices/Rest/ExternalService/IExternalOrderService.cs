@@ -6,6 +6,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalOrderService
     {
         AddOrderResult Add(AddOrder addOrderModel);
+        GetAllResult GetAll(GetAll getAllModel);
 
     }
 }
