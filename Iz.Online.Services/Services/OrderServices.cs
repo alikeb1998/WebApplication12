@@ -24,9 +24,18 @@ namespace Iz.Online.Services.Services
 
         public AddOrderResult Add(AddOrderModel addOrderModel)
         {
-            var result = _orderRepository.Add(addOrderModel);
-            return new AddOrderResult() { Message = "ok", IsSuccess = result, OrderId = Guid.NewGuid().ToString() };
+          //09:00
+            
+
+
             var AddOrderResult = _externalOrderService.Add(addOrderModel);
+
+            //http://192.168.72.54:8080/order/all  
+
+            //09:02
+
+            var result = _orderRepository.Add(addOrderModel);
+
 
             if (AddOrderResult.statusCode == 0)
             {
@@ -48,6 +57,9 @@ namespace Iz.Online.Services.Services
                 };
                 //TOTO log
             }
+
+
+
         }
 
       

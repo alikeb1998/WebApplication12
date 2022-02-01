@@ -68,17 +68,8 @@ namespace Iz.Online.API.Controllers
         [HttpPost("add")]
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
-            //_hubContext.Clients.All.SendAsync("ReceiveMessage", "asa", "As");
-
-            var y = new AddOrderResult();
-
             var result = _orderServices.Add(addOrderModel);
             return new ResultModel<AddOrderResult>(result);
-
-
-            //_hubContext.Clients
-            //    .Users(_userService.UserHubsList(addOrderModel.CustomerId))
-            //    .SendAsync("ReceiveMessage", result.OrderId, result.IsSuccess);
 
         }
 

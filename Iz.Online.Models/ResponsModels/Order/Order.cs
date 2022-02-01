@@ -2,7 +2,7 @@
 {
     public class Order
     {
-        public long id { get; set; } //TODO bestLimit . prices
+        public long id { get; set; } 
         public string ky { get; set; }
         public string gi { get; set; }
         public string ri { get; set; }
