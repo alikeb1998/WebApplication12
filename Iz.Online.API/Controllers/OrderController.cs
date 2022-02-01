@@ -32,9 +32,9 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpGet("test")]
-        public void OnRefreshInstrumentDetails()
+        public string OnRefreshInstrumentDetails()
         {
-
+            return "ok";
             var config = new ConsumerConfig
             {
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Iz.Online.DataAccess.Migrations
 {
-    public partial class start : Migration
+    public partial class M : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,7 +48,7 @@ namespace Iz.Online.DataAccess.Migrations
                     BourseId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    borse = table.Column<long>(type: "bigint", nullable: false)
+                    borse = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

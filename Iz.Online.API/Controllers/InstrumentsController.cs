@@ -113,6 +113,9 @@ namespace Iz.Online.API.Controllers
         [HttpPost("Price")]
         public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
         {
+
+
+
             var result = _externalInstrumentService.Price(model);
             return new ResultModel<InstrumentPrice>(result);
         }
