@@ -44,7 +44,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ActiveOrdersResult GetAllActives(ViewBaseModel baseModel)
         {
-            var result = HttpPostRequest<ActiveOrdersResult>("order/all/active", JsonConvert.SerializeObject(baseModel));
+            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
             if (result.statusCode != 200)
             {
                 //TODO

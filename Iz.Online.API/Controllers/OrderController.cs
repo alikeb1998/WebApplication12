@@ -7,6 +7,7 @@ using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
+using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 
 namespace Iz.Online.API.Controllers
@@ -77,10 +78,10 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("all/active")]
-        public ResultModel<ActiveOrdersResult> AllActive([FromBody] ViewBaseModel addOrderModel)
+        public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);
-            return new ResultModel<ActiveOrdersResult>(result);
+            return new ResultModel<List<ActiveOrder>>(result);
         }
 
 

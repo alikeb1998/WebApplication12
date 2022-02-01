@@ -5,5 +5,5 @@ namespace Iz.Online.OmsModels.ResponsModels.Order;
 
 public class ActiveOrdersResult : OmsResponseBaseModel
 {
-     public List<ResponsModels.Order.Order> Orders { get; set; }
+     public List<Order> Orders { get; set; }
 }

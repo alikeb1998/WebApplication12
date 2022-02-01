@@ -1,7 +1,10 @@
-﻿namespace Iz.Online.OmsModels.InputModels.Order;
+﻿using Iz.Online.OmsModels.InputModels;
 
-public class ActiveOrderse : OmsBaseModel
+namespace Iz.Online.OmsModels.ResponsModels.Order;
+
+public class ActiveOrder 
 {
+     public Instrument instrument { get; set; }
      public string InstrumentName { get; set; }
      public int orderSide { get; set; }
      public long Quantity { get; set; }
