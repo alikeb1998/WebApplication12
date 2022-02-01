@@ -62,7 +62,7 @@ namespace Iz.Online.Services.Services
                          OrderId = "error",
                          Message = AddOrderResult.message
                     };
-                    //TOTO log
+                    
                }
           }
 
