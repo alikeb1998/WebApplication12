@@ -5,6 +5,7 @@ using Iz.Online.OmsModels.InputModels.Order;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Reopsitory.Repository;
 using Iz.Online.OmsModels.ResponsModels.Order;
+using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -33,14 +34,20 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpPostRequest<GetAllResult>("order/all", JsonConvert.SerializeObject(getAllModel));
             if (result.statusCode != 200)
             {
+               //TODO
+            }
+            return result;
+        }
+
+
+        public ActiveOrdersResult GetAllActives(ViewBaseModel baseModel)
+        {
+            var result = HttpPostRequest<ActiveOrdersResult>("order/all/active", JsonConvert.SerializeObject(baseModel));
+            if (result.statusCode != 200)
+            {
                 //TODO
             }
             return result;
         }
-       
-        
-      
-
-
     }
 }
