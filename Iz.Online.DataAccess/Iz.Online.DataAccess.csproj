@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

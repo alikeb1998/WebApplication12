@@ -1,14 +1,11 @@
 ﻿using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Iz.Online.API.Infrastructure;
-using Iz.Online.OmsModels.InputModels.Order;
-using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.Orders;
 using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
-using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 
 namespace Iz.Online.API.Controllers
 {
@@ -35,9 +32,9 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpGet("test")]
-        public void OnRefreshInstrumentDetails()
+        public string OnRefreshInstrumentDetails()
         {
-
+            return "ok";
             var config = new ConsumerConfig
             {
 
@@ -77,21 +74,19 @@ namespace Iz.Online.API.Controllers
         }
 
 
-        [HttpGet("order/all/active")]
-        public ResultModel<ActiveOrdersResult> AllActive([FromBody] ViewBaseModel viewBaseModel)
+        [HttpPost("all/active")]
+        public ResultModel<OrdersList> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
-            var result = _orderServices.AllActive(viewBaseModel);
-            return new ResultModel<ActiveOrdersResult>(result);
+            var result = _orderServices.AllActive(addOrderModel);
+            return new ResultModel<OrdersList>(result);
         }
 
 
-        [HttpGet("order/all")]
-        public ResultModel<GetAllResult> All([FromBody] GetAll getAllModel)
+        [HttpPost("order/all")]
+        public ResultModel<OrdersList> All([FromBody] ViewBaseModel addOrderModel)
         {
-            var result = _orderServices.All(getAllModel);
-            return new ResultModel<GetAllResult>(result);
+            var result = _orderServices.All(addOrderModel);
+            return new ResultModel<OrdersList>(result);
         }
-        
-      
     }
 }

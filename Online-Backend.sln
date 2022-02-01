@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iz.Online.API", "Iz.Online.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iz.Online.SignalR", "Iz.Online.SignalR\Iz.Online.SignalR.csproj", "{75D38220-C52C-46A7-8D8F-21352DFF5D96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dibaware.Api.Test", "Dibaware.Api.Test\Dibaware.Api.Test.csproj", "{1C963A5D-F610-483B-A837-8CA8D0FF7D51}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database1", "Database1\Database1.sqlproj", "{561AE838-2C01-415A-9A47-CBED02CBC960}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,16 @@ Global
 		{75D38220-C52C-46A7-8D8F-21352DFF5D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75D38220-C52C-46A7-8D8F-21352DFF5D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75D38220-C52C-46A7-8D8F-21352DFF5D96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C963A5D-F610-483B-A837-8CA8D0FF7D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C963A5D-F610-483B-A837-8CA8D0FF7D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C963A5D-F610-483B-A837-8CA8D0FF7D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C963A5D-F610-483B-A837-8CA8D0FF7D51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{561AE838-2C01-415A-9A47-CBED02CBC960}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,54 +108,10 @@ Global
 		{22EF61F6-EB7E-4D70-9B4D-B56F6F46A58C} = {088B230C-5EE5-4707-8C5A-33720F496228}
 		{1FB9225C-DDCC-41FD-828D-64DC610CDC52} = {B0C11B86-6BD3-49D7-9145-378E8AE65667}
 		{75D38220-C52C-46A7-8D8F-21352DFF5D96} = {088B230C-5EE5-4707-8C5A-33720F496228}
+		{1C963A5D-F610-483B-A837-8CA8D0FF7D51} = {B0C11B86-6BD3-49D7-9145-378E8AE65667}
+		{561AE838-2C01-415A-9A47-CBED02CBC960} = {B0C11B86-6BD3-49D7-9145-378E8AE65667}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {723986F2-AA45-4BCA-8D94-D8EC500B0DEA}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://localhost:4444/dibaware
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Iz.Online.API\\Iz.Online.API.csproj
-		SccProjectTopLevelParentUniqueName1 = Online-Backend.sln
-		SccProjectName1 = Iz.Online.API
-		SccLocalPath1 = Iz.Online.API
-		SccProjectUniqueName2 = Iz.Online.DataAccess\\Iz.Online.DataAccess.csproj
-		SccProjectTopLevelParentUniqueName2 = Online-Backend.sln
-		SccProjectName2 = Iz.Online.DataAccess
-		SccLocalPath2 = Iz.Online.DataAccess
-		SccProjectUniqueName3 = Iz.Online.Entities\\Iz.Online.Entities.csproj
-		SccProjectTopLevelParentUniqueName3 = Online-Backend.sln
-		SccProjectName3 = Iz.Online.Entities
-		SccLocalPath3 = Iz.Online.Entities
-		SccProjectUniqueName4 = Iz.Online.ExternalServices\\Iz.Online.ExternalServices.csproj
-		SccProjectTopLevelParentUniqueName4 = Online-Backend.sln
-		SccProjectName4 = Iz.Online.ExternalServices
-		SccLocalPath4 = Iz.Online.ExternalServices
-		SccProjectUniqueName5 = Iz.Online.Files\\Iz.Online.Files.csproj
-		SccProjectTopLevelParentUniqueName5 = Online-Backend.sln
-		SccProjectName5 = Iz.Online.Files
-		SccLocalPath5 = Iz.Online.Files
-		SccProjectUniqueName6 = Iz.Online.Models\\Iz.Online.OmsModels.csproj
-		SccProjectTopLevelParentUniqueName6 = Online-Backend.sln
-		SccProjectName6 = Iz.Online.Models
-		SccLocalPath6 = Iz.Online.Models
-		SccProjectUniqueName7 = Iz.Online.Reopsitory\\Iz.Online.Reopsitory.csproj
-		SccProjectTopLevelParentUniqueName7 = Online-Backend.sln
-		SccProjectName7 = Iz.Online.Reopsitory
-		SccLocalPath7 = Iz.Online.Reopsitory
-		SccProjectUniqueName8 = Iz.Online.Services\\Iz.Online.Services.csproj
-		SccProjectTopLevelParentUniqueName8 = Online-Backend.sln
-		SccProjectName8 = Iz.Online.Services
-		SccLocalPath8 = Iz.Online.Services
-		SccProjectUniqueName9 = Iz.Online.SignalR\\Iz.Online.SignalR.csproj
-		SccProjectTopLevelParentUniqueName9 = Online-Backend.sln
-		SccProjectName9 = Iz.Online.SignalR
-		SccLocalPath9 = Iz.Online.SignalR
-		SccProjectUniqueName10 = Izi.Online.ViewModels\\Izi.Online.ViewModels.csproj
-		SccProjectTopLevelParentUniqueName10 = Online-Backend.sln
-		SccProjectName10 = Izi.Online.ViewModels
-		SccLocalPath10 = Izi.Online.ViewModels
 	EndGlobalSection
 EndGlobal
