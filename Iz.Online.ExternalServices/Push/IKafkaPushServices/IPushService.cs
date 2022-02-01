@@ -10,6 +10,6 @@ namespace Iz.Online.ExternalServices.Push.IKafkaPushServices
 {
     public interface IPushService
     {
-        Task<List<InstrumentsDetails>> OnRefreshInstrumentDetails();
+        Task<List<InstrumentsDetails_Delete>> OnRefreshInstrumentDetails();
     }
 }

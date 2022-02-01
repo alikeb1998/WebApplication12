@@ -19,7 +19,7 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
 
 
 
-        public Task<List<InstrumentsDetails>> OnRefreshInstrumentDetails()
+        public Task<List<InstrumentsDetails_Delete>> OnRefreshInstrumentDetails()
         {
             _hubContext.Clients.All.SendCoreAsync("ReceiveMessage", new object[] {"asa" , "As"});
             var config = new ConsumerConfig
