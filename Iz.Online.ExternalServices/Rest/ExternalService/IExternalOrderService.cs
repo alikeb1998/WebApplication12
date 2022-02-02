@@ -7,9 +7,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalOrderService
     {
-        AddOrderResult Add(AddOrder addOrderModel);
-        AllOrders GetAll(OmsBaseModel getAllModel);
-        ActiveOrdersResult GetAllActives(ViewBaseModel baseModel);
+        AddOrderResult Add(AddOrder addOrderModel, string token);
+        AllOrders GetAll(OmsBaseModel getAllModel, string token);
+        ActiveOrdersResult GetAllActives(ViewBaseModel baseModel, string token);
 
     }
 }

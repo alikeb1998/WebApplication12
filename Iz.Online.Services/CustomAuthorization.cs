@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Iz.Online.Services
 {
@@ -34,6 +35,12 @@ namespace Iz.Online.Services
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+
+            //context.ActionArguments.ToList().First().Value;
+            ((Izi.Online.ViewModels.ShareModels.ViewBaseModel) context.ActionArguments.ToList().First().Value).Token =
+               context.HttpContext.Request.Headers["test1"].ToString();
+
+
             base.OnActionExecuting(context);
         }
 

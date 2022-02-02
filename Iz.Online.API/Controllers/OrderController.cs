@@ -20,15 +20,14 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         public IOrderServices _orderServices { get; set; }
-        //public IUserService _userService { get; set; }
+        
 
         public IHubContext<CustomersHub> _hubContext;
 
-        public OrderController(IOrderServices orderServices, IUserService userService, IHubContext<CustomersHub> hubContext)
+        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext )
         {
             _orderServices = orderServices; //new OrderServices();
             _hubContext = hubContext;
-            //_userService = userService;
         }
 
         #endregion
@@ -71,7 +70,9 @@ namespace Iz.Online.API.Controllers
         [HttpPost("add")]
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
-            var result = _orderServices.Add(addOrderModel);
+            //addOrderModel.Token = GetToken(Request);
+
+            var result = _orderServices.Add(addOrderModel, GetToken(Request));
             return new ResultModel<AddOrderResult>(result);
 
         }
@@ -80,7 +81,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("all/active")]
         public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
-            var result = _orderServices.AllActive(addOrderModel);
+            var result = _orderServices.AllActive(addOrderModel, GetToken(Request));
             return new ResultModel<List<ActiveOrder>>(result);
         }
 

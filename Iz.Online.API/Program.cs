@@ -37,8 +37,9 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBaseRepository, BaseRepository>();
 builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
-builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
+//builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
 
+//HttpRequest
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

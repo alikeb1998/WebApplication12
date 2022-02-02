@@ -17,14 +17,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             _instrumentsRepository = instrumentsRepository;
         }
-        public bool UpdateInstrumentList()
+        public bool UpdateInstrumentList(string token)
         {
             var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Select(x => x.InstrumentId).ToList();
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Select(x => x.SectorId).ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Select(x => x.SubSectorId).ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Select(x => x.BourseId).ToList();
 
-            var instruments = HttpGetRequest<Instruments>("order/instruments");
+            var instruments = HttpGetRequest<Instruments>("order/instruments", token);
 
             try
             {
@@ -67,19 +67,19 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         }
 
-        public BestLimits BestLimits(SelectedInstrument model)
+        public BestLimits BestLimits(SelectedInstrument model, string token)
         {
-           var result =  HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}");
+           var result =  HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", token);
            return result;
         }
 
-        public InstrumentPrice Price(SelectedInstrument model)
+        public InstrumentPrice Price(SelectedInstrument model, string token)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}");
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}", token);
             return result;
         }
 
-        public InstrumentDetails Details(InstrumentDetails model)
+        public InstrumentDetails Details(InstrumentDetails model, string token)
         {
             throw new NotImplementedException();
         }

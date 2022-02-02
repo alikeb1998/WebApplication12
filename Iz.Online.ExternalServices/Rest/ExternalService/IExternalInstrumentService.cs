@@ -9,9 +9,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalInstrumentService
     {
-        bool UpdateInstrumentList();
-        BestLimits BestLimits(SelectedInstrument model);
-        InstrumentPrice Price(SelectedInstrument model);
-        InstrumentDetails Details(InstrumentDetails model);
+        bool UpdateInstrumentList( string token);
+        BestLimits BestLimits(SelectedInstrument model, string token);
+        InstrumentPrice Price(SelectedInstrument model, string token);
+        InstrumentDetails Details(InstrumentDetails model, string token);
     }
 }

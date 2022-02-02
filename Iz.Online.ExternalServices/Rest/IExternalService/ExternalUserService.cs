@@ -14,9 +14,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
         }
         
-        public Wallet Wallet(OmsBaseModel model)
+        public Wallet Wallet(OmsBaseModel model, string token)
         {
-            return HttpGetRequest<Wallet>("user/wallet");
+            return HttpGetRequest<Wallet>("user/wallet", token);
         }
 
     }

@@ -16,13 +16,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ExternalOrderService(IBaseRepository baseRepository) : base(baseRepository)
         {
             _instrumentsRepository = baseRepository;
-
+            
         }
 
-        public AddOrderResult Add(AddOrder addOrderModel)
+        public AddOrderResult Add(AddOrder addOrderModel, string token)
         {
-            
-            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
+          
+
+            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), token);
             
             if (result.statusCode != 200)
             {
@@ -31,9 +32,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return result;
         }
         
-        public AllOrders GetAll(OmsBaseModel getAllModel)
+        public AllOrders GetAll(OmsBaseModel getAllModel, string token)
         {
-            var result = HttpGetRequest<AllOrders>("order/all");
+            var result = HttpGetRequest<AllOrders>("order/all", token);
             if (result.statusCode != 200)
             {
                //TODO
@@ -42,9 +43,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
 
 
-        public ActiveOrdersResult GetAllActives(ViewBaseModel baseModel)
+        public ActiveOrdersResult GetAllActives(ViewBaseModel baseModel, string token)
         {
-            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
+            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active", token);
             if (result.statusCode != 200)
             {
                 //TODO
