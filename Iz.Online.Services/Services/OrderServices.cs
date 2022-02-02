@@ -31,7 +31,7 @@ namespace Iz.Online.Services.Services
         public IOrderRepository _orderRepository { get; set; }
         public IExternalOrderService _externalOrderService { get; set; }
 
-        public Izi.Online.ViewModels.Orders.AddOrderResult Add(AddOrderModel addOrderModel, string token)
+        public Izi.Online.ViewModels.Orders.AddOrderResult Add(AddOrderModel addOrderModel)
         {
 
             //09:00
@@ -39,7 +39,7 @@ namespace Iz.Online.Services.Services
             dbEntity = addOrderModel;
             dbEntity.CreateOrderDate = DateTime.Now;
 
-            var addOrderResult = _externalOrderService.Add(addOrderModel , token);
+            var addOrderResult = _externalOrderService.Add(addOrderModel );
 
             dbEntity.OmsResponseDate = DateTime.Now;
             dbEntity.OrderId = addOrderResult.order.id;
@@ -47,7 +47,7 @@ namespace Iz.Online.Services.Services
             dbEntity.StatusCode = addOrderResult.statusCode;
 
 
-            var allOrders = _externalOrderService.GetAll(new OmsBaseModel(), token);
+            var allOrders = _externalOrderService.GetAll(new OmsBaseModel());
             if (allOrders.statusCode != 200)
             {
                 throw new Exception();
@@ -72,9 +72,9 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public List<ActiveOrder> AllActive(ViewBaseModel viewBaseModel, string token)
+        public List<ActiveOrder> AllActive(ViewBaseModel viewBaseModel)
         {
-            var activeOrders = _externalOrderService.GetAllActives(viewBaseModel, token);
+            var activeOrders = _externalOrderService.GetAllActives(viewBaseModel);
             var res = activeOrders.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = x.quantity,

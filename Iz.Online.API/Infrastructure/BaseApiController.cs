@@ -12,12 +12,12 @@ namespace Iz.Online.API.Infrastructure
 
     public class BaseApiController : ControllerBase
     {
-        protected string GetToken(HttpRequest request)
-        {
-            var token = request.Headers["test1"].ToString();
+        //protected string GetToken(HttpRequest request)
+        //{
+        //    var token = request.Headers["test1"].ToString();
 
-            return token;
-        }
+        //    return token;
+        //}
         protected string JsonSucceed(object data)
         {
             return "";

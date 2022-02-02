@@ -7,6 +7,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalUserService
     {
-        Wallet Wallet(OmsBaseModel model, string token);
+        Wallet Wallet(OmsBaseModel model);
     }
 }

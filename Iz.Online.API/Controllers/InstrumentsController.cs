@@ -38,7 +38,7 @@ namespace Iz.Online.API.Controllers
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
         {
-            var updateResult = _externalInstrumentService.UpdateInstrumentList(GetToken(Request));
+            var updateResult = _externalInstrumentService.UpdateInstrumentList();
             return new ResultModel<bool>(updateResult, updateResult);
         }
 
@@ -46,7 +46,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<InstrumentList>> List()
         {
             
-            var instruments = _instrumentsService.InstrumentList(GetToken(Request));
+            var instruments = _instrumentsService.InstrumentList();
             return new ResultModel<List<InstrumentList>>(instruments);
             
         }
@@ -54,35 +54,35 @@ namespace Iz.Online.API.Controllers
         [HttpGet("WatchLists")]
         public ResultModel<List<WatchList>> WatchLists([FromBody] ViewBaseModel model)
         {
-            var result = _instrumentsService.UserWatchLists(model, GetToken(Request));
+            var result = _instrumentsService.UserWatchLists(model );
             return new ResultModel<List<WatchList>>(result);
         }
 
         [HttpPost("WatchListsDetails")]
         public ResultModel<WatchListDetails> WatchListsDetails([FromBody] SearchWatchList model)
         {
-            var result = _instrumentsService.WatchListDetails(model, GetToken(Request));
+            var result = _instrumentsService.WatchListDetails(model );
             return new ResultModel<WatchListDetails>(result);
         }
 
         [HttpDelete("DeleteWatchList")]
         public ResultModel<List<WatchList>> DeleteWatchList([FromBody] SearchWatchList model)
         {
-            var result = _instrumentsService.DeleteWatchList(model, GetToken(Request));
+            var result = _instrumentsService.DeleteWatchList(model );
             return new ResultModel<List<WatchList>>(result);
         }
 
         [HttpPost("NewWatchList")]
         public ResultModel<WatchListDetails> NewWatchList([FromBody] NewWatchList model)
         {
-            var result = _instrumentsService.NewWatchList(model, GetToken(Request));
+            var result = _instrumentsService.NewWatchList(model );
             return new ResultModel<WatchListDetails>(result); 
         }
 
         [HttpPost("AddInstrumentToWatchList")]
         public ResultModel<WatchListDetails> AddInstrumentToWatchList([FromBody] EditEathListItems model)
         {
-            var result = _instrumentsService.AddInstrumentToWatchList(model, GetToken(Request));
+            var result = _instrumentsService.AddInstrumentToWatchList(model );
             return new ResultModel<WatchListDetails>(result); 
             
         }
@@ -90,7 +90,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("RemoveInstrumentFromWatchList")]
         public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
-            var result = _instrumentsService.RemoveInstrumentFromWatchList(model, GetToken(Request));
+            var result = _instrumentsService.RemoveInstrumentFromWatchList(model );
             return new ResultModel<WatchListDetails>(result);
             
         }
@@ -98,21 +98,21 @@ namespace Iz.Online.API.Controllers
         [HttpPost("InstrumentWatchLists")]
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
-            var result = _instrumentsService.InstrumentWatchLists(model, GetToken(Request));
+            var result = _instrumentsService.InstrumentWatchLists(model );
             return new ResultModel<List<WatchList>>(result);
         }
 
         [HttpPost("BestLimits")]
         public ResultModel<BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
-            var result = _externalInstrumentService.BestLimits(model, GetToken(Request));
+            var result = _externalInstrumentService.BestLimits(model );
             return new ResultModel<BestLimits>(result);
         }
 
         [HttpPost("Price")]
         public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
         {
-            var result = _externalInstrumentService.Price(model, GetToken(Request));
+            var result = _externalInstrumentService.Price(model );
             return new ResultModel<InstrumentPrice>(result);
         }
 

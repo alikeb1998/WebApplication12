@@ -14,11 +14,11 @@ namespace Iz.Online.Services.Services
             _instrumentsRepository = instrumentsRepository;
         }
 
-        public List<Instruments> Instruments(string token)
+        public List<Instruments> Instruments()
         {
             return _instrumentsRepository.GetInstrumentsList();
         }
-        public List<InstrumentList> InstrumentList(string token)
+        public List<InstrumentList> InstrumentList()
         {
             return _instrumentsRepository.GetInstrumentsList()
                 .Select(x =>  new InstrumentList()
@@ -28,40 +28,40 @@ namespace Iz.Online.Services.Services
             }).ToList();
         }
 
-        public List<WatchList> UserWatchLists(ViewBaseModel model, string token)
+        public List<WatchList> UserWatchLists(ViewBaseModel model)
         {
             return _instrumentsRepository.GetUserWatchLists(model);
         }
 
-        public WatchListDetails WatchListDetails(SearchWatchList model, string token)
+        public WatchListDetails WatchListDetails(SearchWatchList model)
         {
             return _instrumentsRepository.GetWatchListDetails(model);
         }
 
 
-        public List<WatchList> DeleteWatchList(SearchWatchList model, string token)
+        public List<WatchList> DeleteWatchList(SearchWatchList model)
         {
             return _instrumentsRepository.DeleteWatchList(model);
         }
 
-        public WatchListDetails NewWatchList(NewWatchList model, string token)
+        public WatchListDetails NewWatchList(NewWatchList model)
         {
             return _instrumentsRepository.NewWatchList(model);
         }
 
-        public WatchListDetails AddInstrumentToWatchList(EditEathListItems model, string token)
+        public WatchListDetails AddInstrumentToWatchList(EditEathListItems model)
         {
             return _instrumentsRepository.AddInstrumentToWatchList(model);
 
         }
 
-        public WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model, string token)
+        public WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model)
         {
             return _instrumentsRepository.RemoveInstrumentFromWatchList(model);
 
         }
 
-        public List<WatchList> InstrumentWatchLists(InstrumentWatchLists model, string token)
+        public List<WatchList> InstrumentWatchLists(InstrumentWatchLists model)
         {
             return _instrumentsRepository.InstrumentWatchLists(model);
 

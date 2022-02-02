@@ -9,8 +9,8 @@ namespace Iz.Online.Services.IServices
 {
     public interface IOrderServices
     {
-        AddOrderResult Add(AddOrderModel addOrderModel, string token);
-        List<ActiveOrder> AllActive(ViewBaseModel viewBaseModel, string token);
+        AddOrderResult Add(AddOrderModel addOrderModel);
+        List<ActiveOrder> AllActive(ViewBaseModel viewBaseMode);
         //List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel);
     }
 }
