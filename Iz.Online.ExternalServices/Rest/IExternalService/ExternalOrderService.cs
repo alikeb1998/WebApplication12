@@ -23,7 +23,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
           
 
-            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
+            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), addOrderModel.Authorization);
             
             if (result.statusCode != 200)
             {
@@ -34,7 +34,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         
         public AllOrders GetAll(OmsBaseModel getAllModel)
         {
-            var result = HttpGetRequest<AllOrders>("order/all");
+            var result = HttpGetRequest<AllOrders>("order/all", getAllModel.Authorization);
             if (result.statusCode != 200)
             {
                //TODO
@@ -45,7 +45,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ActiveOrdersResult GetAllActives(ViewBaseModel baseModel)
         {
-            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
+            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active",baseModel.Token);
             if (result.statusCode != 200)
             {
                 //TODO

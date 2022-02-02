@@ -10,7 +10,7 @@ namespace Izi.Online.ViewModels.Orders
         {
             return new oms.AddOrder()
             {
-                //Authorization = model.CustomerId,
+                Authorization = model.Token,
                 DisclosedQuantity = model.DisclosedQuantity,
                 InstrumentId = model.InstrumentId,
                 Price = model.Price,

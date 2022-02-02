@@ -35,14 +35,14 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
-        [HttpGet("UpdateInstrumentsDb")]
-        public ResultModel<bool> UpdateInstrumentsDb()
+        [HttpPost("UpdateInstrumentsDb")]
+        public ResultModel<bool> UpdateInstrumentsDb([FromBody] ViewBaseModel model)
         {
-            var updateResult = _externalInstrumentService.UpdateInstrumentList();
+            var updateResult = _externalInstrumentService.UpdateInstrumentList(model);
             return new ResultModel<bool>(updateResult, updateResult);
         }
 
-        [HttpGet("List")]
+        [HttpPost("List")]
         public ResultModel<List<InstrumentList>> List()
         {
             
@@ -51,7 +51,7 @@ namespace Iz.Online.API.Controllers
             
         }
 
-        [HttpGet("WatchLists")]
+        [HttpPost("WatchLists")]
         public ResultModel<List<WatchList>> WatchLists([FromBody] ViewBaseModel model)
         {
             var result = _instrumentsService.UserWatchLists(model );
@@ -65,7 +65,7 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<WatchListDetails>(result);
         }
 
-        [HttpDelete("DeleteWatchList")]
+        [HttpPost("DeleteWatchList")]
         public ResultModel<List<WatchList>> DeleteWatchList([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.DeleteWatchList(model );

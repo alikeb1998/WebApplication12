@@ -4,6 +4,7 @@ using Iz.Online.OmsModels.ResponsModels.BestLimits;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.ShareModels;
 using Instruments = Iz.Online.OmsModels.ResponsModels.Instruments.Instruments;
 
 
@@ -17,14 +18,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             _instrumentsRepository = instrumentsRepository;
         }
-        public bool UpdateInstrumentList()
+        public bool UpdateInstrumentList(ViewBaseModel model)
         {
             var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Select(x => x.InstrumentId).ToList();
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Select(x => x.SectorId).ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Select(x => x.SubSectorId).ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Select(x => x.BourseId).ToList();
 
-            var instruments = HttpGetRequest<Instruments>("order/instruments");
+            var instruments = HttpGetRequest<Instruments>("order/instruments", model.Token);
 
             try
             {
@@ -69,13 +70,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public BestLimits BestLimits(SelectedInstrument model)
         {
-           var result =  HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}");
+           var result =  HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", model.Token);
            return result;
         }
 
         public InstrumentPrice Price(SelectedInstrument model)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}");
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}", model.Token);
             return result;
         }
 
