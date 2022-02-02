@@ -6,6 +6,7 @@ using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ShareModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -25,6 +26,7 @@ namespace Iz.Online.API.Controllers
         }
     #endregion
         [HttpGet("Wallet")]
+        [EnableCors("CorsPolicy")]
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
         {
             var result = _externalUserService.Wallet(new OmsBaseModel()

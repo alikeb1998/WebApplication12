@@ -9,6 +9,7 @@ using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
+using Microsoft.AspNetCore.Cors;
 
 namespace Iz.Online.API.Controllers
 {
@@ -34,6 +35,7 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpGet("test")]
+        [EnableCors("CorsPolicy")]
         public string OnRefreshInstrumentDetails()
         {
             return "ok";
@@ -68,6 +70,7 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("add")]
+        [EnableCors("CorsPolicy")]
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
             var result = _orderServices.Add(addOrderModel);
@@ -76,6 +79,7 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("all/active")]
+        [EnableCors("CorsPolicy")]
         public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);

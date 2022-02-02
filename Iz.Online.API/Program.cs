@@ -51,12 +51,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 {
     builder.AllowAnyOrigin()
-           .WithMethods("GET", "POST")
-           
+           .AllowAnyMethod()
            .AllowAnyHeader()
            .AllowCredentials()
 
-           .WithOrigins("http://localhost:5148", "http://localhost:5224", "http://localhost:3000", "http://localhost:5221");
+           .WithOrigins("http://localhost:5148", "http://localhost:5224", "http://localhost:3000", "http://localhost:5221", "http://192.168.1.92:4444", "http://localhost:4444", "http://192.168.72.112:4444");
 }));
 
 
@@ -79,7 +78,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 
-app.UseCors();
+
 
 
 
@@ -89,7 +88,7 @@ app.UseCors();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 

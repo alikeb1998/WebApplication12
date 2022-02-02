@@ -37,8 +37,8 @@ namespace Iz.Online.Services
         {
 
             //context.ActionArguments.ToList().First().Value;
-            ((Izi.Online.ViewModels.ShareModels.ViewBaseModel) context.ActionArguments.ToList().First().Value).Token =
-               context.HttpContext.Request.Headers["test1"].ToString();
+            //((Izi.Online.ViewModels.ShareModels.ViewBaseModel) context.ActionArguments.ToList().First().Value).Token =
+              // context.HttpContext.Request.Headers["test1"].ToString();
 
 
             base.OnActionExecuting(context);
