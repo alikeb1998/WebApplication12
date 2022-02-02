@@ -20,11 +20,11 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         public IOrderServices _orderServices { get; set; }
-        
+
 
         public IHubContext<CustomersHub> _hubContext;
 
-        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext )
+        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext)
         {
             _orderServices = orderServices; //new OrderServices();
             _hubContext = hubContext;
@@ -70,11 +70,8 @@ namespace Iz.Online.API.Controllers
         [HttpPost("add")]
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
-            //addOrderModel.Token = GetToken(Request);
-
             var result = _orderServices.Add(addOrderModel, GetToken(Request));
             return new ResultModel<AddOrderResult>(result);
-
         }
 
 
