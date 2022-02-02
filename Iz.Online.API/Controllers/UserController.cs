@@ -31,7 +31,7 @@ namespace Iz.Online.API.Controllers
             {
                 Authorization = "",
                 UserId = ""
-            });
+            } , GetToken(Request));
 
             return new ResultModel<Wallet>(result);
 
