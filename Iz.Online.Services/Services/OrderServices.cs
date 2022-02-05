@@ -31,7 +31,7 @@ namespace Iz.Online.Services.Services
         public IOrderRepository _orderRepository { get; set; }
         public IExternalOrderService _externalOrderService { get; set; }
 
-        public Izi.Online.ViewModels.Orders.AddOrderResult Add(AddOrderModel addOrderModel)
+        public AddOrderResult Add(AddOrderModel addOrderModel)
         {
 
             //09:00

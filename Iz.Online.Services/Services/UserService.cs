@@ -31,7 +31,7 @@ namespace Iz.Online.Services.Services
         public List<Trade> Trades(ViewBaseModel viewBaseMode)
         {
             var trades = _externalUserService.Trades(viewBaseMode);
-            var res = trades.Trades.Select(x => new Trade()
+            var allTrades = trades.Trades.Where(t => t.TradedAt == DateTime.Today).Select(x => new Trade()
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
@@ -40,8 +40,8 @@ namespace Iz.Online.Services.Services
                 ExecutedQ = x.Order.executedQ,
                 TradedAt = x.TradedAt
             }).ToList();
-
-            return res;
+           
+            return allTrades;
         }
     }
 }
