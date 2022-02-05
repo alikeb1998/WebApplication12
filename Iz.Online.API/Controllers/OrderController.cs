@@ -86,6 +86,14 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<List<ActiveOrder>>(result);
         }
 
+        [HttpPost("order/assets/all")]
+        [EnableCors("CorsPolicy")]
+        public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
+        {
+            var result = _orderServices.AllAssets(model);
+            return new ResultModel<List<Asset>>(result);
+        }
+
 
         //[HttpPost("order/all")]
         //public ResultModel<OmsModels.ResponsModels.Order.AddOrderResult> All([FromBody] ViewBaseModel addOrderModel)

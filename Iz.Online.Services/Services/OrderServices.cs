@@ -16,6 +16,7 @@ using ActiveOrders = Izi.Online.ViewModels.Orders.ActiveOrders;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using OmsResponse = Iz.Online.OmsModels.ResponsModels.Order;
 using db = Iz.Online.Entities;
+using Asset = Izi.Online.ViewModels.Orders.Asset;
 
 namespace Iz.Online.Services.Services
 {
@@ -91,7 +92,26 @@ namespace Iz.Online.Services.Services
             }).ToList();
             return res;
         }
+        public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
+        {
+            var assets = _externalOrderService.GetAllAssets(viewBaseModel);
+            var res = assets.Assets.Select(x => new Asset() 
+            {
+            Name = x.Instrument.name,
+            LastPrice = x.LastPrice,
+            TradeableQuantity = x.TradeableQuantity,
+            Gav = x.Gav,
+            AvgPrice = x.AvgPrice,
+            FianlAmount = x.FinalAmount,
+            ProfitAmount = x.ProfitAmount,
+            ProfitPercent = x.ProfitPercent,
+            SellProfit = x.SellProfit
+            }).ToList();
 
+            return res;
+        }
+
+        
         //public List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel)
         //{
         //     var allResult = _externalOrderService.GetAll(getAllModel);

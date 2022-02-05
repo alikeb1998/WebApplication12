@@ -4,6 +4,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
+using Assets = Izi.Online.ViewModels.Orders.Asset;
 
 namespace Iz.Online.Services.IServices
 {
@@ -11,6 +12,7 @@ namespace Iz.Online.Services.IServices
     {
         AddOrderResult Add(AddOrderModel addOrderModel);
         List<ActiveOrder> AllActive(ViewBaseModel viewBaseMode);
+        List<Assets> AllAssets(ViewBaseModel viewBaseMode);
         //List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel);
     }
 }

@@ -10,6 +10,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         AddOrderResult Add(AddOrder addOrderModel);
         AllOrders GetAll(OmsBaseModel getAllModel);
         ActiveOrdersResult GetAllActives(ViewBaseModel baseModel);
+        AssetsList GetAllAssets(ViewBaseModel baseModel);
 
     }
 }
