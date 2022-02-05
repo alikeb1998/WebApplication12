@@ -30,6 +30,7 @@ builder.Services.AddScoped<IExternalOrderService, ExternalOrderService>();
 builder.Services.AddScoped<BaseService, BaseService>();
 builder.Services.AddScoped<OnlineBackendDbContext, OnlineBackendDbContext>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IExternalUserService, ExternalUserService>();
 builder.Services.AddScoped<IInstrumentsService, InstrumentsService>();
 builder.Services.AddScoped<IExternalInstrumentService, ExternalInstrumentService>();
 

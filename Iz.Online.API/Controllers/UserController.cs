@@ -6,9 +6,11 @@ using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ShareModels;
+using Izi.Online.ViewModels.Trades;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using model = Izi.Online.ViewModels.Trades;
 
 namespace Iz.Online.API.Controllers
 {
@@ -16,15 +18,18 @@ namespace Iz.Online.API.Controllers
     [Route("V1/[controller]")]
     public class UserController : BaseApiController
     {
+
         #region ctor
-
         private readonly IExternalUserService _externalUserService;
+        private readonly IUserService _userService;
 
-        public UserController(IExternalUserService externalUserService)
+        public UserController(IExternalUserService externalUserService, IUserService userService)
         {
             _externalUserService = externalUserService;
+            _userService = userService;
         }
-    #endregion
+
+        #endregion
         [HttpGet("Wallet")]
         [EnableCors("CorsPolicy")]
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
@@ -39,8 +44,15 @@ namespace Iz.Online.API.Controllers
 
         }
 
-    
 
+        [HttpPost("trade/all")]
+        [EnableCors("CorsPolicy")]
+        public ResultModel<List<model.Trade>>Trades([FromBody] ViewBaseModel model)
+        {
+            var result = _userService.Trades(model);
+            return new ResultModel<List<model.Trade>>(result);
+
+        }
 
 
     }
