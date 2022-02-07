@@ -1,17 +1,23 @@
-﻿using Iz.Online.Reopsitory.IRepository;
+﻿using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
+using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 
 namespace Iz.Online.Services.Services
 {
     public class InstrumentsService : IInstrumentsService
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
+        public IExternalInstrumentService _IExternalInstrumentsService { get; set; }
+        
 
-        public InstrumentsService(IInstrumentsRepository instrumentsRepository)
+        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
+            _IExternalInstrumentsService = externalInstrumentsService;
         }
 
         public List<Instruments> Instruments()
@@ -24,27 +30,14 @@ namespace Iz.Online.Services.Services
             var list = _instrumentsRepository.GetInstrumentsList().Select(x => new InstrumentList()
             {
                 Id = x.Id,
-                Name = $"{x.SymbolName} ({x.CompanyName}) {x.Bourse}",
-                NscCode = x.Isin
+                Name = x.SymbolName.Substring(0,x.SymbolName.Length-1),
+                FullName = x.CompanyName,
+                NscCode = x.Code,
+                Bourse = x.Bourse
             }).ToList();
-            var res = new List<InstrumentList>();  
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].NscCode.EndsWith('1'))
-                {
-                    if (list[i].Name.EndsWith('1') || list[i].Name.EndsWith('3'))
-                    {
-                        var name = list[i].Name.Substring(0, list[i].Name.Length-1);
-                        list[i].Name = name;
-                        res.Add(list[i]);
-                    }
-                }
-            }
+                      
+            return list;
            
-            return res;
-           
-          
         }
 
         public List<WatchList> UserWatchLists(ViewBaseModel model)
@@ -84,6 +77,17 @@ namespace Iz.Online.Services.Services
         {
             return _instrumentsRepository.InstrumentWatchLists(model);
 
+        }
+
+        public InstrumentStates States(Instrument model)
+        {
+            var respond = _IExternalInstrumentsService.States(model);
+
+            return new InstrumentStates()
+            {
+                State = respond.Instrument.State,
+                GroupState = respond.Instrument.Group.State,
+            };
         }
     }
 

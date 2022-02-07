@@ -23,11 +23,13 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
                 SubSector = model.subSector
             };
         }
+
         public int Id { get; set; }
         public string code { get; set; }
         public string name { get; set; }
         public string text { get; set; }
         public string isin { get; set; }
+        public int state { get; set; }
         public InstrumentGroup group { get; set; }
         public InstrumentSector subSector { get; set; }
         public InstrumentSector sector { get; set; }

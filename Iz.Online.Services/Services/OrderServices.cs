@@ -36,19 +36,28 @@ namespace Iz.Online.Services.Services
         {
 
             //09:00
-            
+            var dbEntity = new db.Orders()
+            {
+                OrderSide = addOrderModel.OrderSide,
+                OrderType = addOrderModel.OrderType,
+                DisclosedQuantity = addOrderModel.DisclosedQuantity,
+                InstrumentId = addOrderModel.InstrumentId,
+                ValidityDate = addOrderModel.ValidityDate,
+                ValidityType = addOrderModel.ValidityType,
+                Quantity = addOrderModel.Quantity,  
+                CreateOrderDate = DateTime.Now,
+                Price = addOrderModel.Price,
+
+            };
+           
             var addOrderResult = _externalOrderService.Add(addOrderModel );
 
-            //var dbEntity = new db.Orders();
-            //dbEntity = addOrderModel;
-            //dbEntity.CreateOrderDate = DateTime.Now;
+            dbEntity.OmsResponseDate = DateTime.Now;
 
-            //dbEntity.OmsResponseDate = DateTime.Now;
-            //dbEntity.OrderId = addOrderResult.order.id;
-            //dbEntity.Isr = addOrderResult.order.isr;
-            //dbEntity.StatusCode = addOrderResult.statusCode;
-
-
+            dbEntity.OrderId = addOrderResult.order.id;
+            dbEntity.Isr = addOrderResult.order.isr;
+            dbEntity.StatusCode = addOrderResult.statusCode;
+            
             var allOrders = _externalOrderService.GetAll(new OmsBaseModel()
             { 
             Authorization = addOrderModel.Token
@@ -64,10 +73,11 @@ namespace Iz.Online.Services.Services
                       x.id == addOrderResult.order.id && x.isr == addOrderResult.order.isr);
 
 
-            //dbEntity.OmsQty = result.quantity;
-            //dbEntity.Price = result.price;
+            dbEntity.OmsQty = result.quantity;
+            dbEntity.OmsPrice = result.price;
+            
 
-            //_orderRepository.Add(dbEntity);
+            _orderRepository.Add(dbEntity);
 
             return new AddOrderResult()
             {

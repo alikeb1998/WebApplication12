@@ -13,6 +13,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public string name { get; set; }
         public string code { get; set; }
         public int borse { get; set; }
+        public int State { get; set; }
 
     }
 }

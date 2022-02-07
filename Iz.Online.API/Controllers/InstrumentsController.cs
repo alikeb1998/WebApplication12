@@ -8,6 +8,9 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
+
 
 namespace Iz.Online.API.Controllers
 {
@@ -47,10 +50,8 @@ namespace Iz.Online.API.Controllers
         
         public ResultModel<List<InstrumentList>> List()
         {
-            
             var instruments = _instrumentsService.InstrumentList();
             return new ResultModel<List<InstrumentList>>(instruments);
-            
         }
 
         [HttpPost("WatchLists")]
@@ -125,6 +126,13 @@ namespace Iz.Online.API.Controllers
         {
             var result = _externalInstrumentService.Price(model);
             return new ResultModel<InstrumentPrice>(result);
+        }
+
+        [HttpPost("State")]
+        public ResultModel<InstrumentStates> State([FromBody] Instrument model)
+        {
+            var result = _instrumentsService.States(model);
+            return new ResultModel<InstrumentStates>(result);
         }
 
     }

@@ -10,7 +10,7 @@ namespace Iz.Online.Entities
     {
         public string Id { get; set; }
         public string CustomerId { get; set; }
-        public int InstrumentId { get; set; }
+        public long InstrumentId { get; set; }
         public int OrderSide { get; set; }
         public int OrderType { get; set; }
         public long Price { get; set; }

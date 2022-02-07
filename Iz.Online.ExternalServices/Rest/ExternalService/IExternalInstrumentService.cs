@@ -5,6 +5,8 @@ using Iz.Online.OmsModels.ResponsModels.BestLimits;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
+using InstrumentStates = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentStates;
+using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 
 namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
@@ -14,5 +16,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         BestLimits BestLimits(SelectedInstrument model);
         InstrumentPrice Price(SelectedInstrument model);
         InstrumentDetails Details(InstrumentDetails model);
+        InstrumentStates States(Instrument model);
     }
 }

@@ -18,7 +18,7 @@ namespace Izi.Online.ViewModels.Instruments
         public long BaseVolume { get; set; }
         public string SubSector { get; set; }
         public string Sector { get; set; }
-        public int? Bourse { get; set; }
+        public int Bourse { get; set; }
         public string ProductType { get; set; }
         public string ProductCode { get; set; }
 

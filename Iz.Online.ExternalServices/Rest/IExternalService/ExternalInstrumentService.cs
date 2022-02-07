@@ -6,6 +6,8 @@ using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Instruments = Iz.Online.OmsModels.ResponsModels.Instruments.Instruments;
+using InstrumentStates = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentStates;
+using InstrumentModel = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
@@ -83,6 +85,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public InstrumentDetails Details(InstrumentDetails model)
         {
             throw new NotImplementedException();
+        }
+
+        public InstrumentStates States(InstrumentModel model)
+        {
+            var result = HttpGetRequest<InstrumentStates>($"order/instrument/{model.InstrumentId}", model.Authorization);
+            return result;
         }
     }
 }

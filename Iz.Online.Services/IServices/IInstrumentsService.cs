@@ -1,6 +1,8 @@
 ﻿
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
+using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 
 namespace Iz.Online.Services.IServices
 {
@@ -15,5 +17,6 @@ namespace Iz.Online.Services.IServices
         WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model);
         List<WatchList> InstrumentWatchLists(InstrumentWatchLists model);
         List<InstrumentList> InstrumentList();
+        InstrumentStates States(Instrument model);
     }
 }

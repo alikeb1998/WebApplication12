@@ -17,9 +17,7 @@ namespace Iz.Online.Reopsitory.Repository
 
         public List<Instruments> GetInstrumentsList()
         {
-           // var list = _db.Instruments.Where(x => x.Isin.LastIndexOf('1') == x.Isin.Length).ToList();
-
-            var ins = _db.Instruments
+                     var ins = _db.Instruments
                 .Select(x => new Instruments()
                 {
                     CompanyName = x.CompanyName,
