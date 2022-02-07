@@ -11,7 +11,9 @@ using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.SignalR;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors();
 
 // Add services to the container.
 //test
@@ -30,6 +32,10 @@ builder.Services.AddScoped<IExternalOrderService, ExternalOrderService>();
 builder.Services.AddScoped<BaseService, BaseService>();
 builder.Services.AddScoped<OnlineBackendDbContext, OnlineBackendDbContext>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<ITradeServices, TradeService>();
+builder.Services.AddScoped<IExternalTradeService, ExternalTradeService>();
+
 builder.Services.AddScoped<IExternalUserService, ExternalUserService>();
 builder.Services.AddScoped<IInstrumentsService, InstrumentsService>();
 builder.Services.AddScoped<IExternalInstrumentService, ExternalInstrumentService>();
@@ -48,16 +54,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-
-builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
-{
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader()
-           .AllowCredentials()
-
-           .WithOrigins("http://localhost:5148", "http://localhost:5224", "http://localhost:3000", "http://localhost:5221", "http://192.168.1.92:4444", "http://localhost:4444", "http://192.168.72.112:4444");
-}));
 
 
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -78,23 +74,20 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-
-
-
-
-
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("CorsPolicy");
+
+app.UseCors(x => x
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(origin => true) // allow any origin
+                    .AllowCredentials());
 
 app.UseAuthorization();
-
-
-
 app.MapControllers();
 app.MapHub<CustomersHub>("/CustomersHub");
 

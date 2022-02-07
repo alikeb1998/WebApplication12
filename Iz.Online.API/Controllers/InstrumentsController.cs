@@ -8,7 +8,6 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Cors;
 
 namespace Iz.Online.API.Controllers
 {
@@ -37,7 +36,7 @@ namespace Iz.Online.API.Controllers
         #endregion
 
         [HttpPost("UpdateInstrumentsDb")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<bool> UpdateInstrumentsDb([FromBody] ViewBaseModel model)
         {
             var updateResult = _externalInstrumentService.UpdateInstrumentList(model);
@@ -45,7 +44,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("List")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<List<InstrumentList>> List()
         {
             
@@ -55,7 +54,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("WatchLists")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<List<WatchList>> WatchLists([FromBody] ViewBaseModel model)
         {
             var result = _instrumentsService.UserWatchLists(model );
@@ -63,7 +62,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("WatchListsDetails")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<WatchListDetails> WatchListsDetails([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.WatchListDetails(model );
@@ -71,7 +70,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("DeleteWatchList")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<List<WatchList>> DeleteWatchList([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.DeleteWatchList(model );
@@ -79,7 +78,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("NewWatchList")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<WatchListDetails> NewWatchList([FromBody] NewWatchList model)
         {
             var result = _instrumentsService.NewWatchList(model );
@@ -87,7 +86,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("AddInstrumentToWatchList")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<WatchListDetails> AddInstrumentToWatchList([FromBody] EditEathListItems model)
         {
             var result = _instrumentsService.AddInstrumentToWatchList(model );
@@ -96,7 +95,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("RemoveInstrumentFromWatchList")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
             var result = _instrumentsService.RemoveInstrumentFromWatchList(model );
@@ -105,7 +104,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("InstrumentWatchLists")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _instrumentsService.InstrumentWatchLists(model );
@@ -113,7 +112,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("BestLimits")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.BestLimits(model );
@@ -121,10 +120,10 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("Price")]
-        [EnableCors("CorsPolicy")]
+        
         public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
         {
-            var result = _externalInstrumentService.Price(model );
+            var result = _externalInstrumentService.Price(model);
             return new ResultModel<InstrumentPrice>(result);
         }
 

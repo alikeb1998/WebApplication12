@@ -1,6 +1,7 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.OmsModels.InputModels;
+using Iz.Online.OmsModels.ResponsModels.Order;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.ShareModels;
@@ -15,15 +16,20 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ExternalUserService(IBaseRepository baseRepository) : base(baseRepository)
         {
         }
-        
+
         public Wallet Wallet(OmsBaseModel model)
         {
             return HttpGetRequest<Wallet>("user/wallet",model.Authorization);
         }
 
-        public TradesList Trades(ViewBaseModel model)
+        public AssetsList GetAllAssets(ViewBaseModel baseModel)
         {
-            return HttpGetRequest<TradesList>("trade/all", model.Token);
+            var result = HttpGetRequest<AssetsList>("order/asset/all", baseModel.Token);
+            if (result.statusCode != 200)
+            {
+                //TODO
+            }
+            return result;
         }
 
     }

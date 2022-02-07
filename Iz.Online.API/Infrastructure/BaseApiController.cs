@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Iz.Online.API.Infrastructure
 {
     [CustomAuthorization]
-    [EnableCors("CorsPolicy")]
+    //
 
     public class BaseApiController : ControllerBase
     {

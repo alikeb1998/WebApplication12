@@ -8,6 +8,7 @@ using Iz.Online.Reopsitory.Repository;
 using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.ShareModels;
 using Assets = Iz.Online.OmsModels.ResponsModels.Order.Assets;
+using AddOrderModel = Izi.Online.ViewModels.Orders.AddOrderModel;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -20,11 +21,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             
         }
 
-        public AddOrderResult Add(AddOrder addOrderModel)
+        public AddOrderResult Add(AddOrderModel addOrderModel)
         {
           
 
-            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), addOrderModel.Authorization);
+            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), addOrderModel.Token);
             
             if (result.statusCode != 200)
             {
@@ -54,14 +55,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return result;
         }
 
-        public AssetsList GetAllAssets(ViewBaseModel baseModel)
-        {
-            var result = HttpGetRequest<AssetsList>("order/asset/all", baseModel.Token);
-            if (result.statusCode != 200)
-            {
-                //TODO
-            }
-            return result;
-        }
+      
+
+
+        //public AssetsList GetAllAssets(ViewBaseModel baseModel)
+        //{
+        //    var result = HttpGetRequest<AssetsList>("order/asset/all", baseModel.Token);
+        //    if (result.statusCode != 200)
+        //    {
+        //        //TODO
+        //    }
+        //    return result;
+        //}
     }
 }

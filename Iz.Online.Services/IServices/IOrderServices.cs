@@ -12,7 +12,7 @@ namespace Iz.Online.Services.IServices
     {
         AddOrderResult Add(AddOrderModel addOrderModel);
         List<ActiveOrder> AllActive(ViewBaseModel viewBaseMode);
-        List<Assets> AllAssets(ViewBaseModel viewBaseMode);
+        
         //List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel);
     }
 }

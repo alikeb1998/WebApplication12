@@ -8,10 +8,10 @@ namespace Iz.Online.OmsModels.ResponsModels.User
 {
     public class WalletDetails
     {
-        public int withdrawable { get; set; }
-        public int nonWithdrawable { get; set; }
-        public int lendedCredit { get; set; }
-        public int blockedValue { get; set; }
-        public int buyingPower { get; set; }
+        public long withdrawable { get; set; }
+        public long nonWithdrawable { get; set; }
+        public long lendedCredit { get; set; }
+        public long blockedValue { get; set; }
+        public long buyingPower { get; set; }
     }
 }

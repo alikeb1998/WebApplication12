@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
+using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
 
@@ -28,20 +29,23 @@ namespace Iz.Online.Services.Services
             return _userRepository.GetUserHubs(UserId);
 
         }
-        public List<Trade> Trades(ViewBaseModel viewBaseMode)
+        public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
         {
-            var trades = _externalUserService.Trades(viewBaseMode);
-            var allTrades = trades.Trades.Where(t => t.TradedAt == DateTime.Today).Select(x => new Trade()
+            var assets = _externalUserService.GetAllAssets(viewBaseModel);
+            var res = assets.Assets.Select(x => new Asset()
             {
-                Name = x.Order.instrument.name,
-                Price = x.Price,
-                State = x.Order.state,
-                OrderSide = x.Order.orderSide,
-                ExecutedQ = x.Order.executedQ,
-                TradedAt = x.TradedAt
+                Name = x.Instrument.name,
+                LastPrice = x.LastPrice,
+                TradeableQuantity = x.TradeableQuantity,
+                Gav = x.Gav,
+                AvgPrice = x.AvgPrice,
+                FianlAmount = x.FinalAmount,
+                ProfitAmount = x.ProfitAmount,
+                ProfitPercent = x.ProfitPercent,
+                SellProfit = x.SellProfit
             }).ToList();
-           
-            return allTrades;
+
+            return res;
         }
     }
 }

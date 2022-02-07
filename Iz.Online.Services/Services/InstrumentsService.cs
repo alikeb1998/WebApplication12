@@ -24,7 +24,8 @@ namespace Iz.Online.Services.Services
                 .Select(x =>  new InstrumentList()
             {
                 Id =x.Id,
-                Name = $"{x.SymbolName} ({x.CompanyName}) {x.Bourse}"
+                Name = $"{x.SymbolName} ({x.CompanyName}) {x.Bourse}",
+                NscCode = x.Isin
             }).ToList();
         }
 

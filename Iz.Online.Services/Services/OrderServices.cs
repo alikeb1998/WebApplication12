@@ -36,19 +36,23 @@ namespace Iz.Online.Services.Services
         {
 
             //09:00
-            var dbEntity = new db.Orders();
-            dbEntity = addOrderModel;
-            dbEntity.CreateOrderDate = DateTime.Now;
-
+            
             var addOrderResult = _externalOrderService.Add(addOrderModel );
 
-            dbEntity.OmsResponseDate = DateTime.Now;
-            dbEntity.OrderId = addOrderResult.order.id;
-            dbEntity.Isr = addOrderResult.order.isr;
-            dbEntity.StatusCode = addOrderResult.statusCode;
+            //var dbEntity = new db.Orders();
+            //dbEntity = addOrderModel;
+            //dbEntity.CreateOrderDate = DateTime.Now;
+
+            //dbEntity.OmsResponseDate = DateTime.Now;
+            //dbEntity.OrderId = addOrderResult.order.id;
+            //dbEntity.Isr = addOrderResult.order.isr;
+            //dbEntity.StatusCode = addOrderResult.statusCode;
 
 
-            var allOrders = _externalOrderService.GetAll(new OmsBaseModel());
+            var allOrders = _externalOrderService.GetAll(new OmsBaseModel()
+            { 
+            Authorization = addOrderModel.Token
+            });
             if (allOrders.statusCode != 200)
             {
                 throw new Exception();
@@ -60,10 +64,10 @@ namespace Iz.Online.Services.Services
                       x.id == addOrderResult.order.id && x.isr == addOrderResult.order.isr);
 
 
-            dbEntity.OmsQty = result.quantity;
-            dbEntity.Price = result.price;
+            //dbEntity.OmsQty = result.quantity;
+            //dbEntity.Price = result.price;
 
-            _orderRepository.Add(dbEntity);
+            //_orderRepository.Add(dbEntity);
 
             return new AddOrderResult()
             {
@@ -92,24 +96,24 @@ namespace Iz.Online.Services.Services
             }).ToList();
             return res;
         }
-        public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
-        {
-            var assets = _externalOrderService.GetAllAssets(viewBaseModel);
-            var res = assets.Assets.Select(x => new Asset() 
-            {
-            Name = x.Instrument.name,
-            LastPrice = x.LastPrice,
-            TradeableQuantity = x.TradeableQuantity,
-            Gav = x.Gav,
-            AvgPrice = x.AvgPrice,
-            FianlAmount = x.FinalAmount,
-            ProfitAmount = x.ProfitAmount,
-            ProfitPercent = x.ProfitPercent,
-            SellProfit = x.SellProfit
-            }).ToList();
+        //public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
+        //{
+        //    var assets = _externalOrderService.GetAllAssets(viewBaseModel);
+        //    var res = assets.Assets.Select(x => new Asset() 
+        //    {
+        //    Name = x.Instrument.name,
+        //    LastPrice = x.LastPrice,
+        //    TradeableQuantity = x.TradeableQuantity,
+        //    Gav = x.Gav,
+        //    AvgPrice = x.AvgPrice,
+        //    FianlAmount = x.FinalAmount,
+        //    ProfitAmount = x.ProfitAmount,
+        //    ProfitPercent = x.ProfitPercent,
+        //    SellProfit = x.SellProfit
+        //    }).ToList();
 
-            return res;
-        }
+        //    return res;
+        //}
 
         
         //public List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel)
