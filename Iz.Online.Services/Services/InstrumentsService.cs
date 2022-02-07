@@ -20,13 +20,31 @@ namespace Iz.Online.Services.Services
         }
         public List<InstrumentList> InstrumentList()
         {
-            return _instrumentsRepository.GetInstrumentsList()
-                .Select(x =>  new InstrumentList()
+            // var list = _instrumentsRepository.GetInstrumentsList().Where(x=>x.Isin.LastIndexOf('1') == x.Isin.Length).ToList();
+            var list = _instrumentsRepository.GetInstrumentsList().Select(x => new InstrumentList()
             {
-                Id =x.Id,
+                Id = x.Id,
                 Name = $"{x.SymbolName} ({x.CompanyName}) {x.Bourse}",
                 NscCode = x.Isin
             }).ToList();
+            var res = new List<InstrumentList>();  
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].NscCode.EndsWith('1'))
+                {
+                    if (list[i].Name.EndsWith('1') || list[i].Name.EndsWith('3'))
+                    {
+                        var name = list[i].Name.Substring(0, list[i].Name.Length-1);
+                        list[i].Name = name;
+                        res.Add(list[i]);
+                    }
+                }
+            }
+           
+            return res;
+           
+          
         }
 
         public List<WatchList> UserWatchLists(ViewBaseModel model)

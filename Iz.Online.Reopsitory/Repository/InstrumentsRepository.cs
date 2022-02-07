@@ -5,6 +5,7 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.EntityFrameworkCore;
 using WatchList = Izi.Online.ViewModels.Instruments.WatchList;
+using System.Linq;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -16,6 +17,8 @@ namespace Iz.Online.Reopsitory.Repository
 
         public List<Instruments> GetInstrumentsList()
         {
+           // var list = _db.Instruments.Where(x => x.Isin.LastIndexOf('1') == x.Isin.Length).ToList();
+
             var ins = _db.Instruments
                 .Select(x => new Instruments()
                 {
@@ -30,6 +33,7 @@ namespace Iz.Online.Reopsitory.Repository
                     SubSector = x.SubSector.Name,
 
                 }).ToList();
+            
 
             return ins;
         }
