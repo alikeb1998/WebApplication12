@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
@@ -16,6 +17,7 @@ namespace Iz.Online.API.Controllers
 {
     [Produces("application/json")]
     [Route("V1/[controller]")]
+    
 
     /// <summary>
     ///نام دیده بان

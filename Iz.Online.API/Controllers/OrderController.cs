@@ -6,6 +6,7 @@ using Izi.Online.ViewModels.Orders;
 using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
@@ -15,6 +16,7 @@ namespace Iz.Online.API.Controllers
 
     [Produces("application/json")]
     [Route("V1/[controller]")]
+
     public class OrderController : BaseApiController
     {
         #region ctor

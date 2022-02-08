@@ -9,6 +9,7 @@ using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using model = Izi.Online.ViewModels.Trades;
@@ -32,7 +33,7 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
-
+        [HttpPost("SetHubId")]
         public ResultModel<bool> SetHubId([FromBody] CustomerHub model)
         {
 

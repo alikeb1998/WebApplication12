@@ -1,11 +1,13 @@
 ﻿using Iz.Online.API.Infrastructure;
 using Iz.Online.Services.IServices;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Iz.Online.API.Controllers
 {
     [Produces("application/json")]
     [Route("V1/[controller]")]
+    
     public class AdministrationController : BaseApiController
     {
         #region ctor
