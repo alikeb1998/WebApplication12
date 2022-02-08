@@ -146,7 +146,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return result;
         }
         
-        public InstrumentDetails Details(InstrumentDetails model)
+        public InstrumentDetails Details(InstrumentModel model)
         {
             var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Authorization);
             return result;

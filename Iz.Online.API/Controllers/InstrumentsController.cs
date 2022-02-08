@@ -7,9 +7,9 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
-using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+
 
 
 namespace Iz.Online.API.Controllers
@@ -113,14 +113,14 @@ namespace Iz.Online.API.Controllers
 
         [HttpPost("BestLimits")]
         
-        public ResultModel< viewModel.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
+        public ResultModel< Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.BestLimits(model );
-            return new ResultModel<viewModel.Instruments.BestLimit.BestLimits>(result);
+            return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(result);
         }
 
         //[HttpPost("Price")]
-        
+
         //public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
         //{
         //    //var result = _externalInstrumentService.Price(model);
@@ -128,13 +128,13 @@ namespace Iz.Online.API.Controllers
         //    return new ResultModel<InstrumentPrice>(result);
         //}
 
-        //[HttpPost("Detail")]
+        [HttpPost("Detail")]
 
-        //public ResultModel<InstrumentDetail> Detail([FromBody] Instrument model)
-        //{
-        //    var result = _instrumentsService.Detail(model);
-        //    return new ResultModel<InstrumentDetail>(result);
-        //}
+        public ResultModel<InstrumentDetail> Detail([FromBody] Instrument model)
+        {
+            var result = _instrumentsService.Detail(model);
+            return new ResultModel<InstrumentDetail>(result);
+        }
 
     }
 }
