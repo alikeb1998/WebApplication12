@@ -13,6 +13,7 @@ namespace Izi.Online.ViewModels.Instruments
         public string FullName { get; set; }
         public string NscCode { get; set; }
         public int Bourse { get; set; }
+        public long InstrumentId { get; set; }
     
        
     }

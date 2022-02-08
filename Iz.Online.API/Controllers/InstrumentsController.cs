@@ -8,7 +8,7 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 
 
@@ -46,7 +46,7 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<bool>(updateResult, updateResult);
         }
 
-        [HttpPost("List")]
+        [HttpPost("List")]  
         
         public ResultModel<List<InstrumentList>> List()
         {
@@ -79,10 +79,9 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("NewWatchList")]
-        
         public ResultModel<WatchListDetails> NewWatchList([FromBody] NewWatchList model)
         {
-            var result = _instrumentsService.NewWatchList(model );
+            var result = _instrumentsService.NewWatchList(model);
             return new ResultModel<WatchListDetails>(result); 
         }
 
@@ -120,20 +119,22 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<BestLimits>(result);
         }
 
-        [HttpPost("Price")]
+        //[HttpPost("Price")]
         
-        public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
-        {
-            var result = _externalInstrumentService.Price(model);
-            return new ResultModel<InstrumentPrice>(result);
-        }
+        //public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
+        //{
+        //    //var result = _externalInstrumentService.Price(model);
+        //    var result = _instrumentsService.price(model);
+        //    return new ResultModel<InstrumentPrice>(result);
+        //}
 
-        [HttpPost("State")]
-        public ResultModel<InstrumentStates> State([FromBody] Instrument model)
-        {
-            var result = _instrumentsService.States(model);
-            return new ResultModel<InstrumentStates>(result);
-        }
+        //[HttpPost("Detail")]
+
+        //public ResultModel<InstrumentDetail> Detail([FromBody] Instrument model)
+        //{
+        //    var result = _instrumentsService.Detail(model);
+        //    return new ResultModel<InstrumentDetail>(result);
+        //}
 
     }
 }
