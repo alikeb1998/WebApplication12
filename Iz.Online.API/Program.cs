@@ -5,6 +5,8 @@ using Iz.Online.Reopsitory.Repository;
 using Iz.Online.Services.IServices;
 using Iz.Online.Services.Services;
 using Iz.Online.DataAccess;
+using Iz.Online.ExternalServices.Push.IKafkaPushServices;
+using Iz.Online.ExternalServices.Push.KafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
@@ -44,7 +46,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBaseRepository, BaseRepository>();
 builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
-//builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
+builder.Services.AddScoped<IPushService, PushService>();
 
 //HttpRequest
 

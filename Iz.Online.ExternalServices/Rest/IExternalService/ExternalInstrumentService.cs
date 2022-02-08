@@ -1,4 +1,5 @@
-﻿using Iz.Online.ExternalServices.Rest.ExternalService;
+﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.OmsModels.ResponsModels.BestLimits;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
@@ -15,10 +16,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     public class ExternalInstrumentService : BaseService, IExternalInstrumentService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
-
-        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository) : base(instrumentsRepository)
+        private readonly IPushService _pushService;
+        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
+            _pushService = pushService;
         }
         public bool UpdateInstrumentList(ViewBaseModel model)
         {
@@ -72,8 +74,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public BestLimits BestLimits(SelectedInstrument model)
         {
-           var result =  HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", model.Token);
-           return result;
+            //model.InstrumentId = "IRO1FOLD0001";
+
+            Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.InstrumentId));
+
+            var result = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", model.Token);
+            return result;
         }
 
         public InstrumentPrice Price(SelectedInstrument model)
@@ -81,7 +87,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}", model.Token);
             return result;
         }
-        
+
         public InstrumentDetails Details(InstrumentDetails model)
         {
             throw new NotImplementedException();
