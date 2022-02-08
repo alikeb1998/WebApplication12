@@ -15,8 +15,8 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     {
         bool UpdateInstrumentList(ViewBaseModel model);
         BestLimits BestLimits(SelectedInstrument model);
-        InstrumentPrice Price(Instrument model);
-        InstrumentDetails Details( Instrument model);
-       // InstrumentStates States(SelectedInstrument model);
+        InstrumentPrice Price(SelectedInstrument model);
+        InstrumentDetails Details(InstrumentDetails model);
+        InstrumentStates States(Instrument model);
     }
 }

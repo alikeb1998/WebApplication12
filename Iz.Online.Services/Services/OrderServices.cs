@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Iz.Online.ExternalServices.Push.IKafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.OmsModels.InputModels;
@@ -23,14 +24,20 @@ namespace Iz.Online.Services.Services
     public class OrderServices : IOrderServices
     {
 
-        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService)
+        #region ctor
+        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, IPushService pushService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
+            _pushService = pushService;
         }
 
-        public IOrderRepository _orderRepository { get; set; }
-        public IExternalOrderService _externalOrderService { get; set; }
+
+        private readonly IOrderRepository _orderRepository;
+        private readonly IExternalOrderService _externalOrderService;
+        private readonly IPushService _pushService;
+
+        #endregion
 
         public AddOrderResult Add(AddOrderModel addOrderModel)
         {
@@ -44,24 +51,25 @@ namespace Iz.Online.Services.Services
                 InstrumentId = addOrderModel.InstrumentId,
                 ValidityDate = addOrderModel.ValidityDate,
                 ValidityType = addOrderModel.ValidityType,
-                Quantity = addOrderModel.Quantity,  
+                Quantity = addOrderModel.Quantity,
                 CreateOrderDate = DateTime.Now,
                 Price = addOrderModel.Price,
 
             };
-           
-            var addOrderResult = _externalOrderService.Add(addOrderModel );
+
+            var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             dbEntity.OmsResponseDate = DateTime.Now;
 
             dbEntity.OrderId = addOrderResult.order.id;
             dbEntity.Isr = addOrderResult.order.isr;
             dbEntity.StatusCode = addOrderResult.statusCode;
-            
+
             var allOrders = _externalOrderService.GetAll(new OmsBaseModel()
-            { 
-            Authorization = addOrderModel.Token
+            {
+                Authorization = addOrderModel.Token
             });
+
             if (allOrders.statusCode != 200)
             {
                 throw new Exception();
@@ -75,7 +83,9 @@ namespace Iz.Online.Services.Services
 
             dbEntity.OmsQty = result.quantity;
             dbEntity.OmsPrice = result.price;
-            
+
+            Task.Run(async () => _pushService
+                .PushOrderAdded(new List<string>() { "as", "as" }, new Izi.Online.ViewModels.Orders.ActiveOrder()));//TODO
 
             _orderRepository.Add(dbEntity);
 
@@ -106,31 +116,6 @@ namespace Iz.Online.Services.Services
             }).ToList();
             return res;
         }
-        //public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
-        //{
-        //    var assets = _externalOrderService.GetAllAssets(viewBaseModel);
-        //    var res = assets.Assets.Select(x => new Asset() 
-        //    {
-        //    Name = x.Instrument.name,
-        //    LastPrice = x.LastPrice,
-        //    TradeableQuantity = x.TradeableQuantity,
-        //    Gav = x.Gav,
-        //    AvgPrice = x.AvgPrice,
-        //    FianlAmount = x.FinalAmount,
-        //    ProfitAmount = x.ProfitAmount,
-        //    ProfitPercent = x.ProfitPercent,
-        //    SellProfit = x.SellProfit
-        //    }).ToList();
 
-        //    return res;
-        //}
-
-        
-        //public List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel)
-        //{
-        //     var allResult = _externalOrderService.GetAll(getAllModel);
-        //     return allResult;
-
-        //}
     }
 }
