@@ -20,9 +20,10 @@ var builder = WebApplication.CreateBuilder(args);
 var corsOrigins = new List<string>()
 {
     "http://192.168.72.112:4444/" , "http://localhost:4444/" , "http://127.0.0.1:4444/",
-    "http://192.168.72.112:4545/" , "http://localhost:4545/" , "http://127.0.0.1:4545/",
-    "http://192.168.72.112:4545" , "http://localhost:4545" , "http://127.0.0.1:4545",
-    "http://192.168.72.112:4444" , "http://localhost:4444" , "http://127.0.0.1:4444"
+    "http://192.168.72.112:5555/" , "http://localhost:5555/" , "http://127.0.0.1:5555/",
+
+    "http://192.168.72.112:4444" , "http://localhost:4444" , "http://127.0.0.1:4444",
+    "http://192.168.72.112:5555" , "http://localhost:5555" , "http://127.0.0.1:5555",
 };
 
 builder.Services.AddCors(options =>
@@ -38,22 +39,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddCors();
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(builder => 
-//        builder
-//            .AllowAnyOrigin()
-//            .AllowAnyMethod()
-//            .AllowAnyHeader()
-//            .AllowCredentials()
-//            .SetIsOriginAllowed(origin => true)
-//);
-//});
-
-// Add services to the container.
-//test
 
 builder.Services.AddDbContext<OnlineBackendDbContext>(options =>
 {
