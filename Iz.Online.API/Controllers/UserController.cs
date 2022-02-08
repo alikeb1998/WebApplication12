@@ -5,6 +5,7 @@ using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Iz.Online.Services.IServices;
+using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
@@ -30,37 +31,32 @@ namespace Iz.Online.API.Controllers
         }
 
         #endregion
+
+
+        public ResultModel<bool> SetHubId([FromBody] CustomerHub model)
+        {
+
+            return new ResultModel<bool>(true);
+
+        }
+
         [HttpPost("Wallet")]
-        
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
         {
             var result = _externalUserService.Wallet(new OmsBaseModel()
             {
                 Authorization = model.Token
             }) ;
-           
-
             return new ResultModel<Wallet>(result);
-
         }
 
         [HttpPost("portfolio")]
-
         public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
         {
             var result = _userService.AllAssets(model);
             return new ResultModel<List<Asset>>(result);
         }
 
-        //[HttpPost("trade/all")]
-
-        //public ResultModel<List<model.Trade>> Trades([FromBody] ViewBaseModel model)
-        //{
-        //    var result = _userService.Trades(model);
-        //    return new ResultModel<List<model.Trade>>(result);
-
-        //}
-
-
+      
     }
 }

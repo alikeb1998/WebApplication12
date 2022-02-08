@@ -41,8 +41,8 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
                 {
                     var consumeResult = consumer.Consume();
                     var prices = consumeResult.Message.Value;
-
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, InstrumentId, " " });
+                    var p = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits(); //TODO caet price to p ...
+                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { p, InstrumentId, " " });
                 }
                 consumer.Close();
             }

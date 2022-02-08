@@ -15,6 +15,6 @@ namespace Iz.Online.SignalR
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
-
+       
     }
 }
