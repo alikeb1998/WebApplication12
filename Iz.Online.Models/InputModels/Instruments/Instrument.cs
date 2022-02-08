@@ -9,5 +9,7 @@ namespace Iz.Online.OmsModels.InputModels.Instruments
     public class Instrument: OmsBaseModel
     {
         public long InstrumentId { get; set; }
+        public string NscCode { get; set; }
+
     }
 }

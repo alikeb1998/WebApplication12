@@ -29,6 +29,7 @@ namespace Iz.Online.Reopsitory.Repository
                     Bourse = x.Bourse.borse,
                     Sector = x.Sector.Name,
                     SubSector = x.SubSector.Name,
+                    InstrumentId =x.InstrumentId,
 
                 }).ToList();
             

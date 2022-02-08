@@ -1,7 +1,6 @@
 ﻿using System.Dynamic;
 using Iz.Online.Services;
 using Izi.Online.ViewModels.ShareModels;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.Instruments
 {
-    public class InstrumentStates
+    public class InstrumentPrice
     {
-        public int State { get; set; }
-        public int GroupState{get;set;}
-
     }
 }

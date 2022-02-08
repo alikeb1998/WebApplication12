@@ -8,9 +8,9 @@ using Izi.Online.ViewModels.Instruments.BestLimit;
 using Izi.Online.ViewModels.ShareModels;
 using BestLimits = Iz.Online.OmsModels.ResponsModels.BestLimits.BestLimits;
 using Instruments = Iz.Online.OmsModels.ResponsModels.Instruments.Instruments;
-using InstrumentStates = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentStates;
+using InstrumentDetails = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentDetails;
 using InstrumentModel = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
-
+using InstrumentPrice = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentPrice;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -140,21 +140,22 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             };
         }
 
-        public InstrumentPrice Price(SelectedInstrument model)
+        public InstrumentPrice Price(InstrumentModel model)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.InstrumentId}", model.Token);
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Authorization);
+            return result;
+        }
+        
+        public InstrumentDetails Details(InstrumentModel model)
+        {
+            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Authorization);
             return result;
         }
 
-        public InstrumentDetails Details(InstrumentDetails model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public InstrumentStates States(InstrumentModel model)
-        {
-            var result = HttpGetRequest<InstrumentStates>($"order/instrument/{model.InstrumentId}", model.Authorization);
-            return result;
-        }
+        //public InstrumentStates States(SelectedInstrument model)
+        //{
+        //    var result = HttpGetRequest<InstrumentStates>($"order/instrument/{model.InstrumentId}", model.Authorization);
+        //    return result;
+        //}
     }
 }

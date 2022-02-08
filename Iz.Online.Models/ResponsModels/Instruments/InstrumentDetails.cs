@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.Instruments
 {
-    public class States
+    public class InstrumentDetails
     {
-        public int State { get; set; }
-        public InstrumentGroup Group { get; set; }
-
+        public Details Instrument { get; set; }
     }
 }
