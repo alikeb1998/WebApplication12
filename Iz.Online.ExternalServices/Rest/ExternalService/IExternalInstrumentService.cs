@@ -13,7 +13,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalInstrumentService
     {
         bool UpdateInstrumentList(ViewBaseModel model);
-        BestLimits BestLimits(SelectedInstrument model);
+        Izi.Online.ViewModels.Instruments.BestLimit.BestLimits BestLimits(SelectedInstrument model);
         InstrumentPrice Price(SelectedInstrument model);
         InstrumentDetails Details(InstrumentDetails model);
         InstrumentStates States(Instrument model);

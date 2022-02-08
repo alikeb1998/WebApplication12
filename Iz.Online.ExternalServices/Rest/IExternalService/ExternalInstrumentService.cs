@@ -1,11 +1,12 @@
 ﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
-using Iz.Online.OmsModels.ResponsModels.BestLimits;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.Instruments.BestLimit;
 using Izi.Online.ViewModels.ShareModels;
+using BestLimits = Iz.Online.OmsModels.ResponsModels.BestLimits.BestLimits;
 using Instruments = Iz.Online.OmsModels.ResponsModels.Instruments.Instruments;
 using InstrumentStates = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentStates;
 using InstrumentModel = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
@@ -72,14 +73,71 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         }
 
-        public BestLimits BestLimits(SelectedInstrument model)
+        public Izi.Online.ViewModels.Instruments.BestLimit.BestLimits BestLimits(SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.InstrumentId));
 
             var result = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", model.Token);
-            return result;
+            return new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
+            {
+                orderRow1 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow1.countBestBuy ,
+                    countBestSale = result.bestLimit.orderRow1.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow1.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow1.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow1.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow1.volumeBestSale
+                },
+                orderRow2 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow2.countBestBuy,
+                    countBestSale = result.bestLimit.orderRow2.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow2.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow2.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow2.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow2.volumeBestSale
+                },
+                orderRow3 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow3.countBestBuy,
+                    countBestSale = result.bestLimit.orderRow3.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow3.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow3.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow3.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow3.volumeBestSale
+                },
+                orderRow4 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow4.countBestBuy,
+                    countBestSale = result.bestLimit.orderRow4.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow4.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow4.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow4.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow4.volumeBestSale
+                },
+                orderRow5 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow5.countBestBuy,
+                    countBestSale = result.bestLimit.orderRow5.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow5.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow5.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow5.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow5.volumeBestSale
+                },
+                orderRow6 = new OrderRow()
+                {
+                    countBestBuy = result.bestLimit.orderRow6.countBestBuy,
+                    countBestSale = result.bestLimit.orderRow6.countBestSale,
+                    priceBestBuy = result.bestLimit.orderRow6.priceBestBuy,
+                    priceBestSale = result.bestLimit.orderRow6.priceBestSale,
+                    volumeBestBuy = result.bestLimit.orderRow6.volumeBestBuy,
+                    volumeBestSale = result.bestLimit.orderRow6.volumeBestSale
+                },
+
+            };
         }
 
         public InstrumentPrice Price(SelectedInstrument model)

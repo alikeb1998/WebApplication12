@@ -1,6 +1,5 @@
 ﻿using Iz.Online.API.Infrastructure;
 using Iz.Online.ExternalServices.Rest.ExternalService;
-using Iz.Online.OmsModels.ResponsModels.BestLimits;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Microsoft.AspNetCore.Mvc;
 using Iz.Online.Services.IServices;
@@ -8,8 +7,9 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
+using viewModel = Izi.Online.ViewModels;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
+using InstrumentStates = Izi.Online.ViewModels.Instruments.InstrumentStates;
 
 
 namespace Iz.Online.API.Controllers
@@ -114,10 +114,10 @@ namespace Iz.Online.API.Controllers
 
         [HttpPost("BestLimits")]
         
-        public ResultModel<BestLimits> BestLimits([FromBody] SelectedInstrument model)
+        public ResultModel< viewModel.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.BestLimits(model );
-            return new ResultModel<BestLimits>(result);
+            return new ResultModel<viewModel.Instruments.BestLimit.BestLimits>(result);
         }
 
         [HttpPost("Price")]
