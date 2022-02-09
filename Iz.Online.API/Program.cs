@@ -24,6 +24,8 @@ var corsOrigins = new List<string>()
 
     "http://192.168.72.112:4444" , "http://localhost:4444" , "http://127.0.0.1:4444",
     "http://192.168.72.112:5555" , "http://localhost:5555" , "http://127.0.0.1:5555",
+
+     "http://localhost:3000" , "http://localhost:3000"
 };
 
 builder.Services.AddCors(options =>
@@ -31,10 +33,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CustomCors", policy =>
     {
         policy.SetIsOriginAllowedToAllowWildcardSubdomains();
-        
+
         foreach (string item in corsOrigins)
         {
-            policy.WithOrigins(item).AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(x=>true);
+            policy.WithOrigins(item).AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(x => true);
         }
     });
 });
