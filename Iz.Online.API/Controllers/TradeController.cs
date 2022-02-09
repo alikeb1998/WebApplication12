@@ -1,12 +1,9 @@
 ﻿using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Iz.Online.API.Infrastructure;
-using Iz.Online.OmsModels.ResponsModels.Order;
-using Izi.Online.ViewModels.Orders;
 using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using model = Izi.Online.ViewModels.Trades;
 

@@ -18,7 +18,7 @@ namespace Iz.Online.Services.IServices
         WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model);
         List<WatchList> InstrumentWatchLists(InstrumentWatchLists model);
         List<InstrumentList> InstrumentList();
-        InstrumentPrice Price(Instrument model);
+        //InstrumentPrice Price(Instrument model);
         InstrumentDetail Detail(Instrument model);
     }
 }
