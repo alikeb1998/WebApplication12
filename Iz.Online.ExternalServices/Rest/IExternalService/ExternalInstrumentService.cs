@@ -145,7 +145,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Authorization);
             return result;
         }
-        
+
         public InstrumentDetails Details(InstrumentModel model)
         {
             var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Authorization);

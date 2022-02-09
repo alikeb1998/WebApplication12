@@ -80,13 +80,13 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public InstrumentPrice Price(Instrument model)
-        {
-            var respond = _IExternalInstrumentsService.Price(model);
+        //public InstrumentPrice Price(Instrument model)
+        //{
+        //    var respond = _IExternalInstrumentsService.Price(model);
 
-            return new InstrumentPrice() { };
+        //    return new InstrumentPrice() { };
 
-        }
+        //}
 
         public InstrumentDetail Detail(Instrument model)
         {

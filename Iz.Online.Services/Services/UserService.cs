@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.OmsModels.InputModels;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
+using Izi.Online.ViewModels.Users;
 
 namespace Iz.Online.Services.Services
 {
@@ -46,6 +48,24 @@ namespace Iz.Online.Services.Services
             }).ToList();
 
             return res;
+        }
+
+        public Wallet Wallet(ViewBaseModel model)
+        {
+            var respond = _externalUserService.Wallet(new OmsBaseModel()
+            {
+                Authorization = model.Token
+            }); ;
+            
+            var result = new Wallet()
+            {
+                Withdrawable = respond.wallet.withdrawable,
+                BlockedValue = respond.wallet.blockedValue,
+                BuyingPower = respond.wallet.buyingPower,
+                LendedCredit = respond.wallet.lendedCredit,
+                NonWithdrawable = respond.wallet.nonWithdrawable,
+            };
+            return result;
         }
     }
 }
