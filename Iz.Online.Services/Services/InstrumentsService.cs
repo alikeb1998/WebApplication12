@@ -88,31 +88,36 @@ namespace Iz.Online.Services.Services
 
         //}
 
-        public InstrumentDetail Detail(Instrument model)
+        public InstrumentDetail Detail(SelectInstrumentDetails model)
         {
+            var result = new InstrumentDetail();
             var detail = _IExternalInstrumentsService.Details(model);
+
             var priceDetail = _IExternalInstrumentsService.Price(model);
 
-            var res = new InstrumentDetail()
+            if (priceDetail.statusCode == 200)
             {
-                State = detail.Instrument.State,
-                GroupState = detail.Instrument.Group.State,
-                closingPrice = priceDetail.price.closingPrice,
-                firstPrice = priceDetail.price.firstPrice,
-                lastPrice = priceDetail.price.lastPrice,
-                instrumentId = priceDetail.price.instrumentId,
-                lastTradeDate = priceDetail.price.lastTradeDate,
-                valueOfTrades = priceDetail.price.valueOfTrades,
-                numberOfTrades = Convert.ToInt32(priceDetail.price.numberOfTrades),
-                volumeOfTrades = Convert.ToInt32(priceDetail.price.volumeOfTrades),
-                yesterdayPrice = priceDetail.price.yesterdayPrice,
-                PriceMax = detail.Instrument.PriceMax,
-                PriceMin = detail.Instrument.PriceMin,
-                highPrice = priceDetail.price.maximumPrice,
-                lowPrice = priceDetail.price.minimumPrice,
-            
-            };
-            return res;
+                result.closingPrice = priceDetail.price.closingPrice;
+                result.firstPrice = priceDetail.price.firstPrice;
+                result.lastPrice = priceDetail.price.lastPrice;
+                result.instrumentId = priceDetail.price.instrumentId;
+                result.lastTradeDate = priceDetail.price.lastTradeDate;
+                result.valueOfTrades = priceDetail.price.valueOfTrades;
+                result.numberOfTrades = Convert.ToInt32(priceDetail.price.numberOfTrades);
+                result.volumeOfTrades = Convert.ToInt32(priceDetail.price.volumeOfTrades);
+                result.yesterdayPrice = priceDetail.price.yesterdayPrice;
+                result.highPrice = priceDetail.price.maximumPrice;
+                result.lowPrice = priceDetail.price.minimumPrice;
+            }
+
+            if (detail.statusCode == 200)
+            {
+                result.State = detail.Instrument.State;
+                result.GroupState = detail.Instrument.Group.State;
+                result.PriceMax = detail.Instrument.PriceMax;
+                result.PriceMin = detail.Instrument.PriceMin;
+            }
+            return result;
         }
 
     }

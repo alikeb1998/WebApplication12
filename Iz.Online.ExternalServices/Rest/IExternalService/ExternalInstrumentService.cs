@@ -140,15 +140,15 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             };
         }
 
-        public InstrumentPrice Price(InstrumentModel model)
+        public InstrumentPrice Price(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Authorization);
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Token);
             return result;
         }
 
-        public InstrumentDetails Details(InstrumentModel model)
+        public InstrumentDetails Details(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Authorization);
+            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Token);
             return result;
         }
 

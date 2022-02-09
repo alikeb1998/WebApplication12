@@ -130,7 +130,7 @@ namespace Iz.Online.API.Controllers
 
         [HttpPost("Detail")]
 
-        public ResultModel<InstrumentDetail> Detail([FromBody] Instrument model)
+        public ResultModel<InstrumentDetail> Detail([FromBody] SelectInstrumentDetails model)
         {
             var result = _instrumentsService.Detail(model);
             return new ResultModel<InstrumentDetail>(result);

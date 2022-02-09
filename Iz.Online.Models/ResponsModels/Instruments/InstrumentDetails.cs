@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.Instruments
 {
-    public class InstrumentDetails
+    public class InstrumentDetails:OmsResponseBaseModel
     {
         public Details Instrument { get; set; }
     }
