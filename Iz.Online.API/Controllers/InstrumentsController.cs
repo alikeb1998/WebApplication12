@@ -119,14 +119,6 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(result);
         }
 
-        //[HttpPost("Price")]
-
-        //public ResultModel<InstrumentPrice> Price([FromBody] SelectedInstrument model)
-        //{
-        //    //var result = _externalInstrumentService.Price(model);
-        //    var result = _instrumentsService.price(model);
-        //    return new ResultModel<InstrumentPrice>(result);
-        //}
 
         [HttpPost("Detail")]
 
