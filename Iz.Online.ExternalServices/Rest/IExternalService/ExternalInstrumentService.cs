@@ -77,9 +77,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.InstrumentId));
+            Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
-            var result = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.InstrumentId}", model.Token);
+            var result = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}", model.Token);
+            if (result.bestLimit == null || result.statusCode != 200)
+                return new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits();
+           
             return new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
             {
                 orderRow1 = new OrderRow()

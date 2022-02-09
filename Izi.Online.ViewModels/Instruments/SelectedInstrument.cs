@@ -4,6 +4,6 @@ namespace Izi.Online.ViewModels.Instruments
 {
     public class SelectedInstrument : ViewBaseModel
     {
-        public string InstrumentId { get; set; }
+        public string NscCode { get; set; }
     }
 }
