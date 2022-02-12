@@ -82,7 +82,12 @@ namespace Iz.Online.API.Controllers
         [HttpGet("token/get")]
         public string Get()
         {
-            return _userService.GetToken();
+            var path = @"C:\jafarinejad\store\token.txt";
+            if (System.IO.File.Exists(path))
+            {
+                return  System.IO.File.ReadAllText(path);
+            }
+            return null;
             
         }
 
