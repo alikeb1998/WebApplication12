@@ -71,10 +71,10 @@ namespace Iz.Online.API.Controllers
         }
 
         //get a list of all active orders.
-        [HttpPost("all/active")]       
-        public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
+        [HttpGet("all/active")]       
+        public ResultModel<List<ActiveOrder>> AllActive()
         {
-            var result = _orderServices.AllActive(addOrderModel);
+            var result = _orderServices.AllActive();
             return result;
 
         }

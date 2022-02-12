@@ -20,9 +20,9 @@ namespace Iz.Online.Services.Services
             _externalTradeService = externalTradeService;
         }
 
-        public ResultModel<List<Trade>> Trades(ViewBaseModel viewBaseMode)
+        public ResultModel<List<Trade>> Trades()
         {
-            var trades = _externalTradeService.Trades(viewBaseMode);
+            var trades = _externalTradeService.Trades();
 
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);

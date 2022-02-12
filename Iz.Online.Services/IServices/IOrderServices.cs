@@ -14,7 +14,7 @@ namespace Iz.Online.Services.IServices
     public interface IOrderServices
     {
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
-        ResultModel<List<ActiveOrder>> AllActive(ViewBaseModel viewBaseMode);
+        ResultModel<List<ActiveOrder>> AllActive( );
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
         

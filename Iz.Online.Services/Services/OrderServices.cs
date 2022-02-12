@@ -60,10 +60,7 @@ namespace Iz.Online.Services.Services
             dbEntity.Isr = addOrderResult.Model.order.isr;
             dbEntity.StatusCode = addOrderResult.Model.statusCode;
 
-            var allOrders = _externalOrderService.GetAll(new OmsBaseModel()
-            {
-                Authorization = addOrderModel.Token
-            });
+            var allOrders = _externalOrderService.GetAll();
 
             //09:02
             var result =
@@ -90,9 +87,9 @@ namespace Iz.Online.Services.Services
             });
         }
 
-        public ResultModel<List<ActiveOrder>> AllActive(ViewBaseModel viewBaseModel)
+        public ResultModel<List<ActiveOrder>> AllActive()
         {
-            var activeOrders = _externalOrderService.GetAllActives(viewBaseModel);
+            var activeOrders = _externalOrderService.GetAllActives();
             if (activeOrders.StatusCode != 200)
                 return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
 
@@ -120,7 +117,6 @@ namespace Iz.Online.Services.Services
 
             var respond = _externalOrderService.Update(new OmsModels.InputModels.Order.UpdateOrder()
             {
-                Authorization = model.Token,
                 InstrumentId = model.InstrumentId,
                 Price = model.Price,
                 Quantity = model.Quantity,
@@ -147,7 +143,6 @@ namespace Iz.Online.Services.Services
 
             var respond = _externalOrderService.Cancel(new CancelOrder()
             {
-                Authorization = model.Token,
                 InstrumentId =model.InstrumentId
                 
             }) ;

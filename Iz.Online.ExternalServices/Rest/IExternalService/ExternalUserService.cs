@@ -17,18 +17,18 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
         }
 
-        public ResultModel<Wallet> Wallet(OmsBaseModel model)
+        public ResultModel<Wallet> Wallet()
         {
-            var result = HttpGetRequest<Wallet>("user/wallet", model.Authorization);
+            var result = HttpGetRequest<Wallet>("user/wallet");
 
             if (result.statusCode != 200)
                 return new ResultModel<Wallet>(result, false, result.clientMessage, result.statusCode);
             return new ResultModel<Wallet>(result);
         }
 
-        public ResultModel<AssetsList> GetAllAssets(ViewBaseModel baseModel)
+        public ResultModel<AssetsList> GetAllAssets()
         {
-            var result = HttpGetRequest<AssetsList>("order/asset/all", baseModel.Token);
+            var result = HttpGetRequest<AssetsList>("order/asset/all");
          
             if (result.statusCode != 200)
                 return new ResultModel<AssetsList>(result, false, result.clientMessage, result.statusCode);

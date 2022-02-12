@@ -24,11 +24,11 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         }
 
 
-        public T HttpGetRequest<T>(string RequestAddress, string token  )
+        public T HttpGetRequest<T>(string RequestAddress )
         {
             try
             {
-                token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+               string token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
               
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
@@ -51,11 +51,11 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public T HttpPostRequest<T>(string RequestAddress, string SerializedObject, string token)
+        public T HttpPostRequest<T>(string RequestAddress, string SerializedObject)
         {
             try
             {
-                token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+               string token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
 
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;

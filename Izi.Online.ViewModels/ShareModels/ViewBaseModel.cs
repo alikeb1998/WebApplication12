@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Izi.Online.ViewModels.ShareModels
 {
     //[BindProperties]
-    public  class ViewBaseModel
+    public abstract class ViewBaseModel
     {
-        public string Token { get; set; }
+        //public string Token { get; set; }
         public string CustomerId { get; set; }
     }
 }

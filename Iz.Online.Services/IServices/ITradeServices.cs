@@ -10,6 +10,6 @@ namespace Iz.Online.Services.IServices
 {
     public interface ITradeServices
     {
-        ResultModel<List<Trade>> Trades(ViewBaseModel viewBaseMode);
+        ResultModel<List<Trade>> Trades();
     }
 }

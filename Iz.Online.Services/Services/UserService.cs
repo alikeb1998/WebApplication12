@@ -27,15 +27,15 @@ namespace Iz.Online.Services.Services
             _externalUserService = externalUserService;
         }
 
-        public List<string> UserHubsList(string UserId)
+        public List<string> UserHubsList(string userId)
         {
 
-            return _userRepository.GetUserHubs(UserId);
+            return _userRepository.GetUserHubs(userId);
 
         }
-        public ResultModel<List<Asset>> AllAssets(ViewBaseModel viewBaseModel)
+        public ResultModel<List<Asset>> AllAssets()
         {
-            var assets = _externalUserService.GetAllAssets(viewBaseModel);
+            var assets = _externalUserService.GetAllAssets();
 
             if (!assets.IsSuccess)
                 return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
@@ -56,12 +56,9 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public ResultModel<Wallet> Wallet(ViewBaseModel model)
+        public ResultModel<Wallet> Wallet()
         {
-            var respond = _externalUserService.Wallet(new OmsBaseModel()
-            {
-                Authorization = model.Token
-            });
+            var respond = _externalUserService.Wallet();
 
             if (!respond.IsSuccess)
                 return new ResultModel<Wallet>(null, false, respond.Message, respond.StatusCode);
@@ -77,6 +74,17 @@ namespace Iz.Online.Services.Services
            
             return new ResultModel<Wallet>(result);
         }
+
+        public List<AppConfigs> AppConfigs()
+        {
+            throw new NotImplementedException();
+        }
+
+        public AppConfigs AppConfigs(string key)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetToken(string token)
         {
             var dbEntity = new db.TokenStore();

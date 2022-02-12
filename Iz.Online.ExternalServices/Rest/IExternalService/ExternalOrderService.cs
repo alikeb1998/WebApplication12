@@ -23,7 +23,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
         {
-            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), addOrderModel.Token);
+            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
             
 
 
@@ -34,9 +34,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<AddOrderResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
         
-        public ResultModel<AllOrders> GetAll(OmsBaseModel getAllModel)
+        public ResultModel<AllOrders> GetAll()
         {
-            var result = HttpGetRequest<AllOrders>("order/all", getAllModel.Authorization);
+            var result = HttpGetRequest<AllOrders>("order/all");
             if (result.statusCode != 200)
             {
                 return new ResultModel<AllOrders>(result);
@@ -45,9 +45,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
 
 
-        public ResultModel<ActiveOrdersResult> GetAllActives(ViewBaseModel baseModel)
+        public ResultModel<ActiveOrdersResult> GetAllActives()
         {
-            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active",baseModel.Token);
+            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
             if (result.statusCode != 200)
             {
                 return new ResultModel<ActiveOrdersResult>(result);

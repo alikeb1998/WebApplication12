@@ -43,10 +43,10 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public ResultModel<List<WatchList>> UserWatchLists(ViewBaseModel model)
+        public ResultModel<List<WatchList>> UserWatchLists(string customerId)
         {
 
-            return _instrumentsRepository.GetUserWatchLists(model);
+            return _instrumentsRepository.GetUserWatchLists(customerId);
         }
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)

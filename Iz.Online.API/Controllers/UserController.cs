@@ -47,17 +47,17 @@ namespace Iz.Online.API.Controllers
 
         //get customer wallet.
         [HttpPost("Wallet")]
-        public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
+        public ResultModel<Wallet> Wallet()
         {
-            var result = _userService.Wallet(model);
+            var result = _userService.Wallet();
             return result;
         }
 
         //get customer portfolio
         [HttpPost("portfolio")]
-        public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
+        public ResultModel<List<Asset>> AllAssets()
         {
-            var result = _userService.AllAssets(model);
+            var result = _userService.AllAssets();
             return result;
         }
 

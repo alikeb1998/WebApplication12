@@ -13,11 +13,11 @@ namespace Iz.Online.Services.IServices
     public interface IUserService
     {
         List<string> UserHubsList(string UserId);
-        ResultModel<List<Asset>> AllAssets(ViewBaseModel model);
-        ResultModel<Wallet>  Wallet(ViewBaseModel model);
+        ResultModel<List<Asset>> AllAssets();
+        ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
         Izi.Online.ViewModels.AppConfigs AppConfigs(string key);
-        ResultModel<Wallet> Wallet(ViewBaseModel model);
+        
         void SetToken(string token);
         string GetToken();
 

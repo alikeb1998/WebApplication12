@@ -154,12 +154,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<WatchList>> GetUserWatchLists(ViewBaseModel model)
+        public ResultModel<List<WatchList>> GetUserWatchLists(string CustomerId)
         {
             try
             {
                 var wl = _db.WathLists
-                .Where(x => x.CustomerId == model.CustomerId)
+                .Where(x => x.CustomerId == CustomerId)
                 .Select(x => new WatchList()
                 {
                     Id = x.Id,
@@ -225,11 +225,7 @@ namespace Iz.Online.Reopsitory.Repository
                 _db.WathLists.Remove(entity);
                 _db.SaveChanges();
 
-                return GetUserWatchLists(new ViewBaseModel()
-                {
-                    CustomerId = model.CustomerId,
-                    Token = model.Token
-                });
+                return GetUserWatchLists(model.CustomerId);
 
             }
             catch (Exception)
@@ -257,7 +253,6 @@ namespace Iz.Online.Reopsitory.Repository
                 return GetWatchListDetails(new SearchWatchList()
                 {
                     CustomerId = model.CustomerId,
-                    Token = model.Token,
                     WatchListId = wlId
                 });
             }
@@ -279,7 +274,6 @@ namespace Iz.Online.Reopsitory.Repository
                 return GetWatchListDetails(new SearchWatchList()
                 {
                     CustomerId = model.CustomerId,
-                    Token = model.Token,
                     WatchListId = model.WatchListId
                 });
 
@@ -301,7 +295,6 @@ namespace Iz.Online.Reopsitory.Repository
                 return GetWatchListDetails(new SearchWatchList()
                 {
                     CustomerId = model.CustomerId,
-                    Token = model.Token,
                     WatchListId = model.WatchListId
                 });
             }

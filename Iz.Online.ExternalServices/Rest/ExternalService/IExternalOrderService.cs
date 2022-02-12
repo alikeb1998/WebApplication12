@@ -14,8 +14,8 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalOrderService
     {
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
-        ResultModel<AllOrders> GetAll(OmsBaseModel getAllModel);
-        ResultModel <ActiveOrdersResult> GetAllActives(ViewBaseModel baseModel);
+        ResultModel<AllOrders> GetAll();
+        ResultModel <ActiveOrdersResult> GetAllActives();
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
 

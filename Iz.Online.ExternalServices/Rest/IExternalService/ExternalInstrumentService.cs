@@ -24,14 +24,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _pushService = pushService;
         }
      
-        public bool UpdateInstrumentList(ViewBaseModel model)
+        public bool UpdateInstrumentList()
         {
             var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Model.Select(x => x.InstrumentId).ToList();
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.Select(x => x.SectorId).ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.Select(x => x.SubSectorId).ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.Select(x => x.BourseId).ToList();
             //var instruments = HttpGetRequest<Instruments>("order/instruments-lightweight", model.Token);
-            var instruments = HttpGetRequest<Instruments>("order/instruments", model.Token);
+            var instruments = HttpGetRequest<Instruments>("order/instruments");
 
             try
             {
@@ -80,7 +80,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
-            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}", model.Token);
+            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}" );
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -147,7 +147,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Token);
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}" );
 
             if (result.statusCode == 200)
                 return new ResultModel<InstrumentPriceDetails>(result.price);
@@ -157,7 +157,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<Details> Details(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Token);
+            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}" );
 
 
             if (result.statusCode == 200)
