@@ -26,10 +26,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
      
         public bool UpdateInstrumentList(ViewBaseModel model)
         {
-            var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Select(x => x.InstrumentId).ToList();
-            var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Select(x => x.SectorId).ToList();
-            var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Select(x => x.SubSectorId).ToList();
-            var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Select(x => x.BourseId).ToList();
+            var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Model.Select(x => x.InstrumentId).ToList();
+            var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.Select(x => x.SectorId).ToList();
+            var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.Select(x => x.SubSectorId).ToList();
+            var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.Select(x => x.BourseId).ToList();
 
             var instruments = HttpGetRequest<Instruments>("order/instruments", model.Token);
 

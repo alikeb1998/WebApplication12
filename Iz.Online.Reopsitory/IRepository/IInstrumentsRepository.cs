@@ -7,23 +7,21 @@ namespace Iz.Online.Reopsitory.IRepository
 {
     public interface IInstrumentsRepository : IBaseRepository
     {
-        List<Instruments> GetInstrumentsList();
-        List<InstrumentBourse> GetInstrumentBourse();
-        List<InstrumentSector> GetInstrumentSector();
-        List<InstrumentSubSector> GetInstrumentSubSectors();
-
-        void AddInstrumentBourse(InstrumentBourse model);
-        void AddInstrumentSector(InstrumentSector model);
-        void AddInstrumentSubSectors(InstrumentSubSector model);
-        void AddInstrument(Instrument model);
-
-        List<WatchList> GetUserWatchLists(ViewBaseModel model);
-        WatchListDetails GetWatchListDetails(SearchWatchList model);
-        List<WatchList> DeleteWatchList(SearchWatchList model);
-        WatchListDetails NewWatchList(NewWatchList model);
-        WatchListDetails AddInstrumentToWatchList(EditEathListItems model);
-        WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model);
-        List<WatchList> InstrumentWatchLists(InstrumentWatchLists model);
+        ResultModel<List<Instruments>> GetInstrumentsList();
+        ResultModel<List<InstrumentBourse>> GetInstrumentBourse();
+        ResultModel<List<InstrumentSector>> GetInstrumentSector();
+        ResultModel<List<InstrumentSubSector>> GetInstrumentSubSectors();
+        ResultModel<bool> AddInstrumentBourse(InstrumentBourse model);
+        ResultModel<bool> AddInstrumentSector(InstrumentSector model);
+        ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model);
+        ResultModel<bool> AddInstrument(Instrument model);
+        ResultModel<List<WatchList>> GetUserWatchLists(ViewBaseModel model);
+        ResultModel<WatchListDetails> GetWatchListDetails(SearchWatchList model);
+        ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);
+        ResultModel<WatchListDetails> NewWatchList(NewWatchList model);
+        ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model);
+        ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
+        ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
 
 
     }

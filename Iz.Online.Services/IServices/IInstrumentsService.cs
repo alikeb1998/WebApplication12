@@ -9,16 +9,15 @@ namespace Iz.Online.Services.IServices
 {
     public interface IInstrumentsService
     {
-        List<Instruments> Instruments();
-        List<WatchList> UserWatchLists(ViewBaseModel model);
-        WatchListDetails WatchListDetails(SearchWatchList model);
-        List<WatchList> DeleteWatchList(SearchWatchList model);
-        WatchListDetails NewWatchList(NewWatchList model);
-        WatchListDetails AddInstrumentToWatchList(EditEathListItems model);
-        WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model);
-        List<WatchList> InstrumentWatchLists(InstrumentWatchLists model);
-        List<InstrumentList> InstrumentList();
-        //InstrumentPrice Price(Instrument model);
+        ResultModel<List<Instruments>> Instruments();
+        ResultModel<List<WatchList>> UserWatchLists(ViewBaseModel model);
+        ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model);
+        ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);
+        ResultModel<WatchListDetails> NewWatchList(NewWatchList model);
+        ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model);
+        ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
+        ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
+        ResultModel<List<InstrumentList>> InstrumentList();
         ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
     }
 }

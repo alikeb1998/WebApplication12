@@ -15,10 +15,11 @@ namespace Iz.Online.Reopsitory.Repository
         {
         }
 
-        public List<Instruments> GetInstrumentsList()
+        public ResultModel<List<Instruments>> GetInstrumentsList()
         {
-                     var ins = _db.Instruments
-                .Select(x => new Instruments()
+            try
+            {
+                var ins = _db.Instruments.Select(x => new Instruments()
                 {
                     CompanyName = x.CompanyName,
                     Id = x.Id,
@@ -29,56 +30,135 @@ namespace Iz.Online.Reopsitory.Repository
                     Bourse = x.Bourse.borse,
                     Sector = x.Sector.Name,
                     SubSector = x.SubSector.Name,
-                    InstrumentId =x.InstrumentId,
+                    InstrumentId = x.InstrumentId,
 
                 }).ToList();
-            
+                return new ResultModel<List<Instruments>>(ins);
+            }
+            catch (Exception)
+            {
+                return new ResultModel<List<Instruments>>(null, false);
 
-            return ins;
+            }
         }
 
-        public List<InstrumentBourse> GetInstrumentBourse()
+        public ResultModel<List<InstrumentBourse>> GetInstrumentBourse()
         {
-            return _db.InstrumentBourses.ToList();
+            try
+            {
+                var result = _db.InstrumentBourses.ToList();
+                return new ResultModel<List<InstrumentBourse>>(result);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<List<InstrumentBourse>>(null, false);
+
+            }
         }
 
-        public List<InstrumentSector> GetInstrumentSector()
+        public ResultModel<List<InstrumentSector>> GetInstrumentSector()
         {
-            return _db.InstrumentSectors.ToList();
+            try
+            {
+
+                return new ResultModel<List<InstrumentSector>>(_db.InstrumentSectors.ToList(), false);
+            }
+
+            catch (Exception)
+            {
+                return new ResultModel<List<InstrumentSector>>(null, false);
+
+            }
         }
 
-        public List<InstrumentSubSector> GetInstrumentSubSectors()
+        public ResultModel<List<InstrumentSubSector>> GetInstrumentSubSectors()
         {
-            return _db.InstrumentSubSectors.ToList();
+            try
+            {
+
+                return new ResultModel<List<InstrumentSubSector>>(_db.InstrumentSubSectors.ToList(), true);
+            }
+
+            catch (Exception)
+            {
+                return new ResultModel<List<InstrumentSubSector>>(null, false);
+
+            }
         }
 
-        public void AddInstrumentBourse(InstrumentBourse model)
+        public ResultModel<bool> AddInstrumentBourse(InstrumentBourse model)
         {
-            _db.InstrumentBourses.Add(model);
-            _db.SaveChanges();
+            try
+            {
+
+                _db.InstrumentBourses.Add(model);
+                _db.SaveChanges();
+                return new ResultModel<bool>(true);
+
+            }
+
+            catch (Exception)
+            {
+                return new ResultModel<bool>(false, false);
+
+            }
         }
 
-        public void AddInstrumentSector(InstrumentSector model)
+        public ResultModel<bool> AddInstrumentSector(InstrumentSector model)
         {
-            _db.InstrumentSectors.Add(model);
-            _db.SaveChanges();
+            try
+            {
+                _db.InstrumentSectors.Add(model);
+                _db.SaveChanges();
+                return new ResultModel<bool>(true);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<bool>(false, false);
+
+            }
         }
 
-        public void AddInstrumentSubSectors(InstrumentSubSector model)
+        public ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model)
         {
-            _db.InstrumentSubSectors.Add(model);
-            _db.SaveChanges();
+            try
+            {
+                _db.InstrumentSubSectors.Add(model);
+                _db.SaveChanges();
+                return new ResultModel<bool>(true);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<bool>(false, false);
+
+            }
         }
 
-        public void AddInstrument(Instrument model)
+        public ResultModel<bool> AddInstrument(Instrument model)
         {
-            _db.Instruments.Add(model);
-            _db.SaveChanges();
+            try
+
+            {
+                _db.Instruments.Add(model);
+                _db.SaveChanges();
+                return new ResultModel<bool>(true);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<bool>(false, false);
+
+            }
         }
 
-        public List<WatchList> GetUserWatchLists(ViewBaseModel model)
+        public ResultModel<List<WatchList>> GetUserWatchLists(ViewBaseModel model)
         {
-            var wl = _db.WathLists
+            try
+            {
+                var wl = _db.WathLists
                 .Where(x => x.CustomerId == model.CustomerId)
                 .Select(x => new WatchList()
                 {
@@ -86,107 +166,165 @@ namespace Iz.Online.Reopsitory.Repository
                     WatchListName = x.WatchListName
                 }).ToList();
 
-            return wl;
-        }
+                return new ResultModel<List<WatchList>>(wl, false);
 
-        public WatchListDetails GetWatchListDetails(SearchWatchList model)
-        {
-            var wl = _db.WathLists
-                .Where(x => x.Id == model.WatchListId)
-                .Select(x => new WatchListDetails
-                {
-                    WatchList = new WatchList()
-                    {
-                        Id = x.Id,
-                        WatchListName = x.WatchListName
-                    },
-                    Instruments = x.WatchListsInstruments
-                        .Select(x => new Instruments
-                        {
-                            CompanyName = x.Instrument.CompanyName,
-                            Id = x.Instrument.Id,
-                            SymbolName = x.Instrument.SymbolName,
-                            Isin = x.Instrument.Isin
-
-                        }).ToList()
-                }).FirstOrDefault();
-
-            return wl;
-        }
-
-        public List<WatchList> DeleteWatchList(SearchWatchList model)
-        {
-            var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
-            _db.WathLists.Remove(entity);
-            _db.SaveChanges();
-
-            return GetUserWatchLists(new ViewBaseModel()
-            {
-                CustomerId = model.CustomerId,
-                Token = model.Token
-            });
-
-        }
-
-        public WatchListDetails NewWatchList(NewWatchList model)
-        {
-            var wlId = Guid.NewGuid().ToString();
-            string query = $"INSERT  into WatchListsInstruments  values ";
-            foreach (var id in model.InstrumentsId)
-            {
-                query += $" ({id},'{wlId}') ,";
             }
-            query = query.Substring(0, query.Length - 1);
-
-            _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.CustomerId}');{query}");
-
-
-            return GetWatchListDetails(new SearchWatchList()
+            catch (Exception)
             {
-                CustomerId = model.CustomerId,
-                Token = model.Token,
-                WatchListId = wlId
-            });
+                return new ResultModel<List<WatchList>>(null, false);
+
+            }
         }
 
-        public WatchListDetails AddInstrumentToWatchList(EditEathListItems model)
+        public ResultModel<WatchListDetails> GetWatchListDetails(SearchWatchList model)
         {
-            _db.Database.ExecuteSqlRaw(
-                $"INSERT  into WatchListsInstruments (InstrumentId,WatchListId) values  ('{model.InstrumentsId}','{model.WatchListId}')");
-
-            return GetWatchListDetails(new SearchWatchList()
+            try
             {
-                CustomerId = model.CustomerId,
-                Token = model.Token,
-                WatchListId = model.WatchListId
-            });
+                var wl = _db.WathLists
+                    .Where(x => x.Id == model.WatchListId)
+                    .Select(x => new WatchListDetails
+                    {
+                        WatchList = new WatchList()
+                        {
+                            Id = x.Id,
+                            WatchListName = x.WatchListName
+                        },
+                        Instruments = x.WatchListsInstruments
+                            .Select(x => new Instruments
+                            {
+                                CompanyName = x.Instrument.CompanyName,
+                                Id = x.Instrument.Id,
+                                SymbolName = x.Instrument.SymbolName,
+                                Isin = x.Instrument.Isin
 
+                            }).ToList()
+                    }).FirstOrDefault();
+
+                return new ResultModel<WatchListDetails>(wl);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<WatchListDetails>(null, false);
+
+            }
         }
 
-        public WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model)
+        public ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model)
         {
-            _db.Database.ExecuteSqlRaw(
+            try
+            {
+                var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
+                _db.WathLists.Remove(entity);
+                _db.SaveChanges();
+
+                return GetUserWatchLists(new ViewBaseModel()
+                {
+                    CustomerId = model.CustomerId,
+                    Token = model.Token
+                });
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<List<WatchList>>(null, false);
+
+            }
+        }
+
+        public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
+        {
+            try
+            {
+                var wlId = Guid.NewGuid().ToString();
+                string query = $"INSERT  into WatchListsInstruments  values ";
+                foreach (var id in model.InstrumentsId)
+                {
+                    query += $" ({id},'{wlId}') ,";
+                }
+                query = query.Substring(0, query.Length - 1);
+
+                _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.CustomerId}');{query}");
+
+
+                return GetWatchListDetails(new SearchWatchList()
+                {
+                    CustomerId = model.CustomerId,
+                    Token = model.Token,
+                    WatchListId = wlId
+                });
+            }
+            catch (Exception)
+            {
+                return new ResultModel<WatchListDetails>(null, false);
+
+            }
+        }
+
+        public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
+        {
+            try
+            {
+                _db.Database.ExecuteSqlRaw(
+                    $"INSERT  into WatchListsInstruments (InstrumentId,WatchListId) values  ('{model.InstrumentsId}','{model.WatchListId}')");
+
+                return GetWatchListDetails(new SearchWatchList()
+                {
+                    CustomerId = model.CustomerId,
+                    Token = model.Token,
+                    WatchListId = model.WatchListId
+                });
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<WatchListDetails>(null, false);
+
+            }
+        }
+
+        public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model)
+        {
+            try
+            {
+                _db.Database.ExecuteSqlRaw(
                 $"DELETE FROM WatchListsInstruments WHERE InstrumentId='{model.InstrumentsId}' AND WatchListId='{model.WatchListId}'");
 
-            return GetWatchListDetails(new SearchWatchList()
+                return GetWatchListDetails(new SearchWatchList()
+                {
+                    CustomerId = model.CustomerId,
+                    Token = model.Token,
+                    WatchListId = model.WatchListId
+                });
+            }
+            catch (Exception)
             {
-                CustomerId = model.CustomerId,
-                Token = model.Token,
-                WatchListId = model.WatchListId
-            });
+                return new ResultModel<WatchListDetails>(null, false);
+
+            }
         }
 
-        public List<WatchList> InstrumentWatchLists(InstrumentWatchLists model)
+        public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
         {
-            var wl = _db.WathLists
-                .Where(w => w.CustomerId == model.CustomerId).Distinct()
-                .SelectMany(c => c.WatchListsInstruments, (c, w) =>
-                     new WatchList
-                     {
-                         WatchListName = w.WatchList.WatchListName,
-                         Id = w.WatchList.Id
-                     }).Distinct().ToList();
-            return wl;
+            try
+            {
+                var wl = _db.WathLists
+                    .Where(w => w.CustomerId == model.CustomerId).Distinct()
+                    .SelectMany(c => c.WatchListsInstruments, (c, w) =>
+                         new WatchList
+                         {
+                             WatchListName = w.WatchList.WatchListName,
+                             Id = w.WatchList.Id
+                         }).Distinct().ToList();
+
+                return new ResultModel<List<WatchList>>(wl, true);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<List<WatchList>>(null, false);
+
+            }
         }
 
 
