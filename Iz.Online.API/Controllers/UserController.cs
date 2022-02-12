@@ -55,12 +55,21 @@ namespace Iz.Online.API.Controllers
 
         //set a token in database.
         [HttpPost("token/set")]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public string Set(string token)
         {
            
             try
             {
-                _userService.SetToken(token);
+                // _userService.SetToken(token);
+                var path = @"C:\jafarinejad\store\token.txt";
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+                System.IO.File.Create(path).Close();
+                System.IO.File.WriteAllText(path, token);
+
                 return "token is set";
             }
             catch (Exception e)
