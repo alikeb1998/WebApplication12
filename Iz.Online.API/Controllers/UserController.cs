@@ -46,7 +46,7 @@ namespace Iz.Online.API.Controllers
         }
 
         //get customer wallet.
-        [HttpPost("Wallet")]
+        [HttpGet("Wallet")]
         public ResultModel<Wallet> Wallet()
         {
             var result = _userService.Wallet();
@@ -54,7 +54,7 @@ namespace Iz.Online.API.Controllers
         }
 
         //get customer portfolio
-        [HttpPost("portfolio")]
+        [HttpGet("portfolio")]
         public ResultModel<List<Asset>> AllAssets()
         {
             var result = _userService.AllAssets();

@@ -28,7 +28,7 @@ namespace Iz.Online.API.Controllers
         #endregion
 
         // show a list of customer today trades.
-        [HttpPost("dailyTrades")]
+        [HttpGet("dailyTrades")]
         public ResultModel<List<model.Trade>> Trades()
         {
             var result = _tradeServices.Trades();

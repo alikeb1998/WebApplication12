@@ -71,13 +71,18 @@ namespace Iz.Online.Services.Services
                 LendedCredit = respond.Model.wallet.lendedCredit,
                 NonWithdrawable = respond.Model.wallet.nonWithdrawable,
             };
-           
+
             return new ResultModel<Wallet>(result);
         }
 
         public List<AppConfigs> AppConfigs()
         {
-            throw new NotImplementedException();
+            return _userRepository.GetAppConfigs().Select(x => new Izi.Online.ViewModels.AppConfigs()
+            {
+                Description = x.Description,
+                Key = x.Key,
+                Value = x.Value
+            }).ToList();
         }
 
         public AppConfigs AppConfigs(string key)
@@ -90,7 +95,7 @@ namespace Iz.Online.Services.Services
             var dbEntity = new db.TokenStore();
             dbEntity.Token = token;
             _userRepository.SetToken(dbEntity);
-            
+
 
         }
         public string GetToken()

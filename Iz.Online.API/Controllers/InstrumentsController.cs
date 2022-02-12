@@ -53,7 +53,7 @@ namespace Iz.Online.API.Controllers
         }
 
         // get watchlist.
-        [HttpPost("WatchLists")]
+        [HttpGet("WatchLists")]
         public ResultModel<List<WatchList>> WatchLists(string customerId)
         {
             var result = _instrumentsService.UserWatchLists(customerId);

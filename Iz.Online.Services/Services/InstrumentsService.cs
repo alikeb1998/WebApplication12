@@ -68,6 +68,9 @@ namespace Iz.Online.Services.Services
 
             if (model.WatchListName.Length > Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
                 return new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
+            
+            if ( string.IsNullOrEmpty( model.CustomerId))
+                return new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
 
             if (string.IsNullOrEmpty(model.WatchListName))
                 return new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
