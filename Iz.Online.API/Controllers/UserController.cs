@@ -45,6 +45,7 @@ namespace Iz.Online.API.Controllers
 
         }
 
+        //get customer wallet.
         [HttpPost("Wallet")]
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
         {
@@ -52,6 +53,7 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        //get customer portfolio
         [HttpPost("portfolio")]
         public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
         {
@@ -59,25 +61,42 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        //set a token in database.
         [HttpPost("token/set")]
-        public string Set(ViewBaseModel model)
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
+        public string Set(string token)
         {
+           
             try
             {
-                System.IO.File.WriteAllText(@"C:\jafarinejad\store\token.txt", @$"{model.Token}");
-                return model.Token;
+                // _userService.SetToken(token);
+                var path = @"C:\jafarinejad\store\token.txt";
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+                System.IO.File.Create(path).Close();
+                System.IO.File.WriteAllText(path, token);
+
                 return "token is set";
             }
             catch (Exception e)
             {
-                return e.Message + " ___ " + e.InnerException;
+                return e.Message.ToString() + " ___ " + e.InnerException.Message.ToString();
             }
         }
 
+        //get a token from database.
         [HttpGet("token/get")]
         public string Get()
         {
-            return System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+            var path = @"C:\jafarinejad\store\token.txt";
+            if (System.IO.File.Exists(path))
+            {
+                return  System.IO.File.ReadAllText(path);
+            }
+            return null;
+            
         }
 
     }

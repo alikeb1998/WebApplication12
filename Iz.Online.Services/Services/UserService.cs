@@ -12,6 +12,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
 using Izi.Online.ViewModels.Users;
+using db = Iz.Online.Entities;
 
 namespace Iz.Online.Services.Services
 {
@@ -76,20 +77,20 @@ namespace Iz.Online.Services.Services
            
             return new ResultModel<Wallet>(result);
         }
-
-        public List<AppConfigs> AppConfigs()
+        public void SetToken(string token)
         {
-            return _userRepository.GetAppConfigs().Select(x => new AppConfigs()
-            {
-                Key = x.Key,
-                Description = x.Description,
-                Value = x.Value
-            }).ToList();
+            var dbEntity = new db.TokenStore();
+            dbEntity.Token = token;
+            _userRepository.SetToken(dbEntity);
+            
+
         }
-
-        public AppConfigs AppConfigs(string key)
+        public string GetToken()
         {
-            throw new NotImplementedException();
+
+            var res = _userRepository.GetToken();
+            return res;
+
         }
     }
 }

@@ -17,5 +17,10 @@ namespace Iz.Online.Services.IServices
         ResultModel<Wallet>  Wallet(ViewBaseModel model);
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
         Izi.Online.ViewModels.AppConfigs AppConfigs(string key);
+        ResultModel<Wallet> Wallet(ViewBaseModel model);
+        void SetToken(string token);
+        string GetToken();
+
+
     }
 }

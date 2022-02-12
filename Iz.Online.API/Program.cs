@@ -14,7 +14,7 @@ using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.Services.Infrastructure;
 using Iz.Online.SignalR;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,8 +91,17 @@ builder.Services.AddSignalR();
 
 
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<FormOptions>(o =>  // currently all set to max, configure it to your needs!
+{
+    o.ValueLengthLimit = int.MaxValue;
+    o.MultipartBodyLengthLimit = long.MaxValue; // <-- !!! long.MaxValue
+    o.MultipartBoundaryLengthLimit = int.MaxValue;
+    o.MultipartHeadersCountLimit = int.MaxValue;
+    o.MultipartHeadersLengthLimit = int.MaxValue;
+});
 
 var app = builder.Build();
+
 
 //if (app.Environment.IsDevelopment())
 {

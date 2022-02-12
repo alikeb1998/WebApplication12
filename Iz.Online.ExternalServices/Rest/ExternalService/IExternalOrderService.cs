@@ -13,11 +13,11 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalOrderService
     {
-        AddOrderResult Add(AddOrderModel addOrderModel);
-        AllOrders GetAll(OmsBaseModel getAllModel);
-        ActiveOrdersResult GetAllActives(ViewBaseModel baseModel);
-        UpdatedOrder Update(UpdateOrder model);
-        CanceledOrder Cancel(CancelOrder model);
+        ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
+        ResultModel<AllOrders> GetAll(OmsBaseModel getAllModel);
+        ResultModel <ActiveOrdersResult> GetAllActives(ViewBaseModel baseModel);
+        ResultModel<UpdatedOrder> Update(UpdateOrder model);
+        ResultModel<CanceledOrder> Cancel(CancelOrder model);
 
        // AssetsList GetAllAssets(ViewBaseModel baseModel);
 

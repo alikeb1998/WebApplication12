@@ -22,6 +22,8 @@ namespace Iz.Online.DataAccess
         public DbSet<ExceptionsLog> Exceptions { get; set; }
         public DbSet<AppConfigs> AppConfigs { get; set; }
 
+        public DbSet<TokenStore> Token { get; set; }
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,10 +40,8 @@ namespace Iz.Online.DataAccess
                 .HasOne(bc => bc.WatchList)
                 .WithMany(c => c.WatchListsInstruments)
                 .HasForeignKey(bc => bc.WatchListId);
-
-            //modelBuilder.Entity<Instrument>()
-            //    .HasOne(b=>b.Bourse)
-            //    .WithOne(i=>i.Id).
+            
+            
 
         }
 

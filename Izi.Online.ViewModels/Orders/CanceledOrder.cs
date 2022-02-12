@@ -9,5 +9,6 @@ namespace Izi.Online.ViewModels.Orders
 {
     public class CanceledOrder:ViewBaseModel
     {
+
     }
 }

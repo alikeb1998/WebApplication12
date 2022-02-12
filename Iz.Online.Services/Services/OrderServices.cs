@@ -56,24 +56,19 @@ namespace Iz.Online.Services.Services
 
             dbEntity.OmsResponseDate = DateTime.Now;
 
-            dbEntity.OrderId = addOrderResult.order.id;
-            dbEntity.Isr = addOrderResult.order.isr;
-            dbEntity.StatusCode = addOrderResult.statusCode;
+            dbEntity.OrderId = addOrderResult.Model.order.id;
+            dbEntity.Isr = addOrderResult.Model.order.isr;
+            dbEntity.StatusCode = addOrderResult.Model.statusCode;
 
             var allOrders = _externalOrderService.GetAll(new OmsBaseModel()
             {
                 Authorization = addOrderModel.Token
             });
 
-            if (allOrders.statusCode != 200)
-            {
-                throw new Exception();
-            }
-
             //09:02
             var result =
-                 allOrders.orders.FirstOrDefault(x =>
-                      x.id == addOrderResult.order.id && x.isr == addOrderResult.order.isr);
+                 allOrders.Model.orders.FirstOrDefault(x =>
+                      x.id == addOrderResult.Model.order.id && x.isr == addOrderResult.Model.order.isr);
 
 
             dbEntity.OmsQty = result.quantity;
@@ -84,24 +79,24 @@ namespace Iz.Online.Services.Services
 
             _orderRepository.Add(dbEntity);
 
-            if (addOrderResult.statusCode != 200)
-                return new ResultModel<AddOrderResult>(null, false, addOrderResult.clientMessage, addOrderResult.statusCode);
+            if (addOrderResult.StatusCode != 200)
+                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message, addOrderResult.StatusCode);
 
 
             return new ResultModel<AddOrderResult>(new AddOrderResult()
             {
                 Message = $"{result.state} {result.errorCode}",
-                IsSuccess = addOrderResult.statusCode == 200
+                IsSuccess = addOrderResult.StatusCode == 200
             });
         }
 
         public ResultModel<List<ActiveOrder>> AllActive(ViewBaseModel viewBaseModel)
         {
             var activeOrders = _externalOrderService.GetAllActives(viewBaseModel);
-            if (activeOrders.statusCode != 200)
-                return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.clientMessage, activeOrders.statusCode);
+            if (activeOrders.StatusCode != 200)
+                return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
 
-            var result = activeOrders.Orders.Select(x => new ActiveOrder()
+            var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = x.quantity,
                 ExecutedQ = x.executedQ,
@@ -140,8 +135,8 @@ namespace Iz.Online.Services.Services
 
             };
 
-            if (respond.statusCode != 200)
-                return new ResultModel<UpdatedOrder>(null, false, respond.clientMessage, respond.statusCode);
+            if (respond.StatusCode != 200)
+                return new ResultModel<UpdatedOrder>(null, false, respond.Message, respond.StatusCode);
 
             return new ResultModel<UpdatedOrder>(result);
         }
@@ -153,17 +148,17 @@ namespace Iz.Online.Services.Services
             var respond = _externalOrderService.Cancel(new CancelOrder()
             {
                 Authorization = model.Token,
-                InstrumentId = model.InstrumentId
-
-            });
-
+                InstrumentId =model.InstrumentId
+                
+            }) ;
+            
             var result = new CanceledOrder()
             {
-
+                
             };
 
-            if (respond.statusCode != 200)
-                return new ResultModel<CanceledOrder>(null, false, respond.clientMessage, respond.statusCode);
+            if (respond.StatusCode != 200)
+                return new ResultModel<CanceledOrder>(null, false, respond.Message, respond.StatusCode);
 
             return new ResultModel<CanceledOrder>(result);
 
