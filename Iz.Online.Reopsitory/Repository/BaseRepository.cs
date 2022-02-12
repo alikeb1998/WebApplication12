@@ -32,5 +32,17 @@ namespace Iz.Online.Reopsitory.Repository
             _db.Exceptions.Add(ex);
             _db.SaveChanges();
         }
+
+        public AppConfigs GetAppConfigs(string key)
+        {
+            var c = _db.AppConfigs.Where(x => x.Key == key).FirstOrDefault();
+            AppConfigs result = new AppConfigs()
+            {
+                Description = c.Description,
+                Key = c.Key,
+                Value = c.Value
+            };
+            return result;
+        }
     }
 }

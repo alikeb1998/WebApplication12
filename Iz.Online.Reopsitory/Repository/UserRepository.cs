@@ -1,5 +1,6 @@
 ﻿
 using Iz.Online.DataAccess;
+using Iz.Online.Entities;
 using Iz.Online.Reopsitory.IRepository;
 
 namespace Iz.Online.Reopsitory.Repository
@@ -19,7 +20,14 @@ namespace Iz.Online.Reopsitory.Repository
             return hubs;
         }
 
-
+        public List<AppConfigs> GetAppConfigs()
+        {
+           return _db.AppConfigs.ToList();
+        }
+        public AppConfigs GetAppConfigs(string key)
+        {
+           return _db.AppConfigs.FirstOrDefault(x=>x.Key==key);
+        }
 
     }
 }

@@ -15,7 +15,7 @@ namespace Iz.Online.Services.IServices
         List<string> UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets(ViewBaseModel model);
         ResultModel<Wallet>  Wallet(ViewBaseModel model);
-
-
+        List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
+        Izi.Online.ViewModels.AppConfigs AppConfigs(string key);
     }
 }

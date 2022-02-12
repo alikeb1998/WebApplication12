@@ -30,7 +30,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.Select(x => x.SectorId).ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.Select(x => x.SubSectorId).ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.Select(x => x.BourseId).ToList();
-
+            //var instruments = HttpGetRequest<Instruments>("order/instruments-lightweight", model.Token);
             var instruments = HttpGetRequest<Instruments>("order/instruments", model.Token);
 
             try

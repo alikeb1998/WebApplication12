@@ -17,6 +17,7 @@ namespace Iz.Online.API.Controllers
     public class UserController : BaseApiController
     {
 
+
         #region ctor
         private readonly IExternalUserService _externalUserService;
         private readonly IUserService _userService;
@@ -28,6 +29,13 @@ namespace Iz.Online.API.Controllers
         }
 
         #endregion
+
+
+        [HttpGet("Config")]
+        public ResultModel<List<AppConfigs>> Config()
+        {
+            return new ResultModel<List<AppConfigs>>( _userService.AppConfigs());
+        }
 
         [HttpPost("SetHubId")]
         public ResultModel<bool> SetHubId([FromBody] CustomerHub model)

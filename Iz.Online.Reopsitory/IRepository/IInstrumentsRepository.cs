@@ -23,6 +23,7 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
         ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
 
+        AppConfigs GetAppConfigs(string key);
 
     }
 }

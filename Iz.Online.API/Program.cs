@@ -11,6 +11,7 @@ using Iz.Online.ExternalServices.Push.KafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.Services.Infrastructure;
 using Iz.Online.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ var corsOrigins = new List<string>()
     "http://192.168.72.112:4444" , "http://localhost:4444" , "http://127.0.0.1:4444",
     "http://192.168.72.112:5555" , "http://localhost:5555" , "http://127.0.0.1:5555",
 
-     "http://localhost:3000" , "http://localhost:3000"
+    "http://localhost:3000" , "http://localhost:3000"
 };
 
 builder.Services.AddCors(options =>
@@ -53,7 +54,6 @@ builder.Services.AddScoped<OnlineBackendDbContext, OnlineBackendDbContext>();
 
 builder.Services.AddControllers();
 
-
 builder.Services.AddScoped<IOrderServices, OrderServices>();
 builder.Services.AddScoped<IExternalOrderService, ExternalOrderService>();
 builder.Services.AddScoped<BaseService, BaseService>();
@@ -71,6 +71,7 @@ builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
 builder.Services.AddScoped<IPushService, PushService>();
 
 #endregion
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -105,3 +106,4 @@ app.MapControllers();
 app.MapHub<CustomersHub>("/CustomersHub");
 
 app.Run();
+//CacheData.

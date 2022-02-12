@@ -35,10 +35,14 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
+        /// <summary>
+        ///نام دیده بان
+        /// </summary>
         [HttpPost("UpdateInstrumentsDb")]
 
         public ResultModel<bool> UpdateInstrumentsDb([FromBody] ViewBaseModel model)
         {
+            
             var updateResult = _externalInstrumentService.UpdateInstrumentList(model);
             return new ResultModel<bool>(updateResult, updateResult);
         }
@@ -88,20 +92,16 @@ namespace Iz.Online.API.Controllers
         {
             var result = _instrumentsService.AddInstrumentToWatchList(model);
             return result;
-
         }
 
         [HttpPost("RemoveInstrumentFromWatchList")]
-
         public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
             var result = _instrumentsService.RemoveInstrumentFromWatchList(model);
             return result;
-
         }
 
         [HttpPost("InstrumentWatchLists")]
-
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _instrumentsService.InstrumentWatchLists(model);
@@ -109,7 +109,6 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("BestLimits")]
-
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
             var result = _externalInstrumentService.BestLimits(model);
@@ -122,7 +121,6 @@ namespace Iz.Online.API.Controllers
         {
             var result = _instrumentsService.Detail(model);
             return result;
-
         }
 
     }

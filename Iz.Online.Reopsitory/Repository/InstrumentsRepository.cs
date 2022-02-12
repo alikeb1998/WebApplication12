@@ -37,7 +37,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<List<Instruments>>(null, false);
+                return new ResultModel<List<Instruments>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -52,7 +52,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<List<InstrumentBourse>>(null, false);
+                return new ResultModel<List<InstrumentBourse>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -67,7 +67,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             catch (Exception)
             {
-                return new ResultModel<List<InstrumentSector>>(null, false);
+                return new ResultModel<List<InstrumentSector>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -82,7 +82,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             catch (Exception)
             {
-                return new ResultModel<List<InstrumentSubSector>>(null, false);
+                return new ResultModel<List<InstrumentSubSector>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -100,7 +100,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             catch (Exception)
             {
-                return new ResultModel<bool>(false, false);
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -116,7 +116,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<bool>(false, false);
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -132,7 +132,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<bool>(false, false);
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -149,7 +149,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<bool>(false, false);
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -165,13 +165,16 @@ namespace Iz.Online.Reopsitory.Repository
                     Id = x.Id,
                     WatchListName = x.WatchListName
                 }).ToList();
+               
+                if (wl == null)
+                    return new ResultModel<List<WatchList>>(null, false, "دیده بان برای این مشتری تعریف نشده است", -1);
 
                 return new ResultModel<List<WatchList>>(wl);
 
             }
             catch (Exception)
             {
-                return new ResultModel<List<WatchList>>(null, false);
+                return new ResultModel<List<WatchList>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -205,7 +208,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<WatchListDetails>(null, false);
+                return new ResultModel<WatchListDetails>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -215,6 +218,10 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
+
+                if (entity == null)
+                    return new ResultModel<List<WatchList>>(null, false, "دیده بان یافت نشد", -1);
+
                 _db.WathLists.Remove(entity);
                 _db.SaveChanges();
 
@@ -227,7 +234,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<List<WatchList>>(null, false);
+                return new ResultModel<List<WatchList>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -256,7 +263,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<WatchListDetails>(null, false);
+                return new ResultModel<WatchListDetails>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -265,6 +272,7 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
+                
                 _db.Database.ExecuteSqlRaw(
                     $"INSERT  into WatchListsInstruments (InstrumentId,WatchListId) values  ('{model.InstrumentsId}','{model.WatchListId}')");
 
@@ -278,7 +286,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<WatchListDetails>(null, false);
+                return new ResultModel<WatchListDetails>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -299,7 +307,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             catch (Exception)
             {
-                return new ResultModel<WatchListDetails>(null, false);
+                return new ResultModel<WatchListDetails>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
@@ -317,17 +325,18 @@ namespace Iz.Online.Reopsitory.Repository
                              Id = w.WatchList.Id
                          }).Distinct().ToList();
 
-                return new ResultModel<List<WatchList>>(wl, true);
+                if (wl == null)
+                    return new ResultModel<List<WatchList>>(null, false, "دیده بان یافت نشد", -1);
+
+                return new ResultModel<List<WatchList>>(wl);
 
             }
             catch (Exception)
             {
-                return new ResultModel<List<WatchList>>(null, false);
+                return new ResultModel<List<WatchList>>(null, false, "خطای پایگاه داده", -1);
 
             }
         }
-
-
-
+        
     }
 }
