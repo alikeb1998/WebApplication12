@@ -20,61 +20,65 @@ namespace Iz.Online.Services.Services
             _IExternalInstrumentsService = externalInstrumentsService;
         }
 
-        public List<Instruments> Instruments()
+        public ResultModel<List<Instruments>> Instruments()
         {
             return _instrumentsRepository.GetInstrumentsList();
         }
-        public List<InstrumentList> InstrumentList()
+        public ResultModel<List<InstrumentList>> InstrumentList()
         {
-            // var list = _instrumentsRepository.GetInstrumentsList().Where(x=>x.Isin.LastIndexOf('1') == x.Isin.Length).ToList();
-            var list = _instrumentsRepository.GetInstrumentsList().Select(x => new InstrumentList()
-            {
-                Id = x.Id,
-                Name = x.SymbolName.Substring(0, x.SymbolName.Length - 1),
-                FullName = x.CompanyName,
-                NscCode = x.Code,
-                Bourse = x.Bourse,
-                InstrumentId = x.InstrumentId
-            }).ToList();
+            var ins = _instrumentsRepository.GetInstrumentsList();
+          
 
-            return list;
+            if (ins.IsSuccess)
+                return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
+                {
+                    Id = x.Id,
+                    Name = x.SymbolName.Substring(0, x.SymbolName.Length - 1),
+                    FullName = x.CompanyName,
+                    NscCode = x.Code,
+                    Bourse = x.Bourse,
+                    InstrumentId = x.InstrumentId
+                }).ToList());
+
+            return new ResultModel<List<InstrumentList>>(null,false);
+            
 
         }
 
-        public List<WatchList> UserWatchLists(ViewBaseModel model)
+        public ResultModel<List<WatchList>> UserWatchLists(ViewBaseModel model)
         {
             return _instrumentsRepository.GetUserWatchLists(model);
         }
 
-        public WatchListDetails WatchListDetails(SearchWatchList model)
+        public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
         {
             return _instrumentsRepository.GetWatchListDetails(model);
         }
+        
 
-
-        public List<WatchList> DeleteWatchList(SearchWatchList model)
+        public ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model)
         {
             return _instrumentsRepository.DeleteWatchList(model);
         }
 
-        public WatchListDetails NewWatchList(NewWatchList model)
+        public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
         {
             return _instrumentsRepository.NewWatchList(model);
         }
 
-        public WatchListDetails AddInstrumentToWatchList(EditEathListItems model)
+        public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
         {
             return _instrumentsRepository.AddInstrumentToWatchList(model);
 
         }
 
-        public WatchListDetails RemoveInstrumentFromWatchList(EditEathListItems model)
+        public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model)
         {
             return _instrumentsRepository.RemoveInstrumentFromWatchList(model);
 
         }
 
-        public List<WatchList> InstrumentWatchLists(InstrumentWatchLists model)
+        public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
         {
             return _instrumentsRepository.InstrumentWatchLists(model);
 
