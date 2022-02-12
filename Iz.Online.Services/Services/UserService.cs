@@ -11,6 +11,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
 using Izi.Online.ViewModels.Users;
+using db = Iz.Online.Entities;
 
 namespace Iz.Online.Services.Services
 {
@@ -66,6 +67,21 @@ namespace Iz.Online.Services.Services
                 NonWithdrawable = respond.wallet.nonWithdrawable,
             };
             return result;
+        }
+        public void SetToken(string token)
+        {
+            var dbEntity = new db.TokenStore();
+            dbEntity.Token = token;
+            _userRepository.SetToken(dbEntity);
+            
+
+        }
+        public string GetToken()
+        {
+
+            var res = _userRepository.GetToken();
+            return res;
+
         }
     }
 }

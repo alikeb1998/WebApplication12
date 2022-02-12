@@ -52,24 +52,33 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("token/set")]
-        public string Set(ViewBaseModel model)
+        public string Set(string token)
         {
+           
             try
             {
-                System.IO.File.WriteAllText(@"C:\jafarinejad\store\token.txt", @$"{model.Token}");
-                return model.Token;
+                //if (System.IO.File.Exists(@"C:\jafarinejad\store\token.txt"))
+                //{
+                //    System.IO.File.Delete(@"C:\jafarinejad\store\token.txt");
+                //}
+                //System.IO.File.Create(@"C:\jafarinejad\store\token.txt").Close();
+
+                //System.IO.File.WriteAllText(@"C:\jafarinejad\store\token.txt", @$"{Token}");
+
+                _userService.SetToken(token);
                 return "token is set";
             }
             catch (Exception e)
             {
-                return e.Message + " ___ " + e.InnerException;
+                return e.Message.ToString() + " ___ " + e.InnerException.Message.ToString();
             }
         }
 
         [HttpGet("token/get")]
         public string Get()
         {
-            return System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+            return _userService.GetToken();
+            
         }
 
     }

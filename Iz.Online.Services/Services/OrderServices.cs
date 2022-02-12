@@ -143,11 +143,11 @@ namespace Iz.Online.Services.Services
                 Authorization = model.Token,
                 InstrumentId =model.InstrumentId
                 
-            }) ;
+            });
             
             var result = new CanceledOrder()
             {
-
+                
             };
             return result;
         }

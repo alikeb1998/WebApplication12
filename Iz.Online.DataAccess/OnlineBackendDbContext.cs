@@ -20,6 +20,7 @@ namespace Iz.Online.DataAccess
         public DbSet<InstrumentSector> InstrumentSectors { get; set; }
         public DbSet<InstrumentBourse> InstrumentBourses { get; set; }
         public DbSet<ExceptionsLog> Exceptions { get; set; }
+        public DbSet<TokenStore> Token { get; set; }
         
 
 
@@ -37,10 +38,8 @@ namespace Iz.Online.DataAccess
                 .HasOne(bc => bc.WatchList)
                 .WithMany(c => c.WatchListsInstruments)
                 .HasForeignKey(bc => bc.WatchListId);
-
-            //modelBuilder.Entity<Instrument>()
-            //    .HasOne(b=>b.Bourse)
-            //    .WithOne(i=>i.Id).
+            
+            
 
         }
 

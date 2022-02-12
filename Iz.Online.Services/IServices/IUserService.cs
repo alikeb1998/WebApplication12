@@ -15,6 +15,8 @@ namespace Iz.Online.Services.IServices
         List<string> UserHubsList(string UserId);
         List<Asset> AllAssets(ViewBaseModel model);
         Wallet Wallet(ViewBaseModel model);
+        void SetToken(string token);
+        string GetToken();
 
 
     }
