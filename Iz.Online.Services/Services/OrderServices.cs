@@ -34,7 +34,7 @@ namespace Iz.Online.Services.Services
 
         #endregion
 
-        public AddOrderResult Add(AddOrderModel addOrderModel)
+        public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
         {
 
             //09:00
@@ -84,17 +84,24 @@ namespace Iz.Online.Services.Services
 
             _orderRepository.Add(dbEntity);
 
-            return new AddOrderResult()
+            if (addOrderResult.statusCode != 200)
+                return new ResultModel<AddOrderResult>(null, false, addOrderResult.clientMessage, addOrderResult.statusCode);
+
+
+            return new ResultModel<AddOrderResult>(new AddOrderResult()
             {
                 Message = $"{result.state} {result.errorCode}",
                 IsSuccess = addOrderResult.statusCode == 200
-            };
+            });
         }
 
-        public List<ActiveOrder> AllActive(ViewBaseModel viewBaseModel)
+        public ResultModel<List<ActiveOrder>> AllActive(ViewBaseModel viewBaseModel)
         {
             var activeOrders = _externalOrderService.GetAllActives(viewBaseModel);
-            var res = activeOrders.Orders.Select(x => new ActiveOrder()
+            if (activeOrders.statusCode != 200)
+                return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.clientMessage, activeOrders.statusCode);
+
+            var result = activeOrders.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = x.quantity,
                 ExecutedQ = x.executedQ,
@@ -108,10 +115,11 @@ namespace Iz.Online.Services.Services
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executePercent
             }).ToList();
-            return res;
+
+            return new ResultModel<List<ActiveOrder>>(result);
         }
 
-        public  UpdatedOrder Update(UpdateOrder model)
+        public ResultModel<UpdatedOrder> Update(UpdateOrder model)
         {
             var dbEntity = new db.Orders() { };
 
@@ -125,16 +133,20 @@ namespace Iz.Online.Services.Services
                 ValidityType = model.ValidityType,
             });
 
-          //  _orderRepository.Update(dbEntity);
+            //  _orderRepository.Update(dbEntity);
 
             var result = new UpdatedOrder()
             {
-                
+
             };
-            return result;
+
+            if (respond.statusCode != 200)
+                return new ResultModel<UpdatedOrder>(null, false, respond.clientMessage, respond.statusCode);
+
+            return new ResultModel<UpdatedOrder>(result);
         }
 
-        public CanceledOrder Cancel(CancelOrderModel model)
+        public ResultModel<CanceledOrder> Cancel(CancelOrderModel model)
         {
             var dbEntity = new db.Orders();
 
@@ -143,13 +155,18 @@ namespace Iz.Online.Services.Services
                 Authorization = model.Token,
                 InstrumentId =model.InstrumentId
                 
-            });
+            }) ;
             
             var result = new CanceledOrder()
             {
                 
             };
-            return result;
+
+            if (respond.statusCode != 200)
+                return new ResultModel<CanceledOrder>(null, false, respond.clientMessage, respond.statusCode);
+
+            return new ResultModel<CanceledOrder>(result);
+
         }
 
     }

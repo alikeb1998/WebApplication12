@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.User
 {
-    public class TradesList
+    public class TradesList:OmsResponseBaseModel
     {
         public List<Trade> Trades{get;set;}
     }

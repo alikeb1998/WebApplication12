@@ -23,6 +23,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _instrumentsRepository = instrumentsRepository;
             _pushService = pushService;
         }
+     
         public bool UpdateInstrumentList(ViewBaseModel model)
         {
             var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Select(x => x.InstrumentId).ToList();
@@ -73,92 +74,99 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         }
 
-        public Izi.Online.ViewModels.Instruments.BestLimit.BestLimits BestLimits(SelectedInstrument model)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
-            var result = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}", model.Token);
-            if (result.bestLimit == null || result.statusCode != 200)
-                return new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits();
-           
-            return new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
+            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}", model.Token);
+            if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
+                return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
+
+            var result = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
             {
                 orderRow1 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow1.countBestBuy ,
-                    countBestSale = result.bestLimit.orderRow1.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow1.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow1.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow1.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow1.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow1.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow1.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow1.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow1.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow1.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow1.volumeBestSale
                 },
                 orderRow2 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow2.countBestBuy,
-                    countBestSale = result.bestLimit.orderRow2.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow2.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow2.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow2.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow2.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow2.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow2.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow2.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow2.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow2.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow2.volumeBestSale
                 },
                 orderRow3 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow3.countBestBuy,
-                    countBestSale = result.bestLimit.orderRow3.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow3.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow3.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow3.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow3.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow3.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow3.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow3.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow3.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow3.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow3.volumeBestSale
                 },
                 orderRow4 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow4.countBestBuy,
-                    countBestSale = result.bestLimit.orderRow4.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow4.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow4.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow4.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow4.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow4.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow4.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow4.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow4.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow4.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow4.volumeBestSale
                 },
                 orderRow5 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow5.countBestBuy,
-                    countBestSale = result.bestLimit.orderRow5.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow5.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow5.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow5.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow5.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow5.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow5.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow5.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow5.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow5.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow5.volumeBestSale
                 },
                 orderRow6 = new OrderRow()
                 {
-                    countBestBuy = result.bestLimit.orderRow6.countBestBuy,
-                    countBestSale = result.bestLimit.orderRow6.countBestSale,
-                    priceBestBuy = result.bestLimit.orderRow6.priceBestBuy,
-                    priceBestSale = result.bestLimit.orderRow6.priceBestSale,
-                    volumeBestBuy = result.bestLimit.orderRow6.volumeBestBuy,
-                    volumeBestSale = result.bestLimit.orderRow6.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow6.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow6.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow6.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow6.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow6.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow6.volumeBestSale
                 },
 
             };
+            return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(result);
         }
 
-        public InstrumentPrice Price(SelectInstrumentDetails model)
+        public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
         {
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}", model.Token);
-            return result;
+
+            if (result.statusCode == 200)
+                return new ResultModel<InstrumentPriceDetails>(result.price);
+
+            return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public InstrumentDetails Details(SelectInstrumentDetails model)
+        public ResultModel<Details> Details(SelectInstrumentDetails model)
         {
             var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}", model.Token);
-            return result;
+
+
+            if (result.statusCode == 200)
+                return new ResultModel<Details>(result.Instrument);
+
+            return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
+
         }
 
-        //public InstrumentStates States(SelectedInstrument model)
-        //{
-        //    var result = HttpGetRequest<InstrumentStates>($"order/instrument/{model.InstrumentId}", model.Authorization);
-        //    return result;
-        //}
+
     }
 }

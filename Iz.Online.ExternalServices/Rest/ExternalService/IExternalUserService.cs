@@ -10,8 +10,8 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalUserService
     {
-        Wallet Wallet(OmsBaseModel model);
+        ResultModel<Wallet> Wallet(OmsBaseModel model);
 
-        AssetsList GetAllAssets(ViewBaseModel baseModel);
+        ResultModel<AssetsList>  GetAllAssets(ViewBaseModel baseModel);
     }
 }

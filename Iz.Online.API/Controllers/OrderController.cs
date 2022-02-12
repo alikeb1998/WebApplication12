@@ -74,7 +74,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
             var result = _orderServices.Add(addOrderModel);
-            return new ResultModel<AddOrderResult>(result);
+            return result;
         }
 
         //get a list of all active orders.
@@ -82,7 +82,8 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);
-            return new ResultModel<List<ActiveOrder>>(result);
+            return result;
+
         }
 
         //update & edit an order.
@@ -90,7 +91,8 @@ namespace Iz.Online.API.Controllers
         public ResultModel<UpdatedOrder> Update([FromBody] UpdateOrder model)
         {
             var result = _orderServices.Update(model);
-            return new ResultModel<UpdatedOrder>(result);
+            return result;
+
         }
 
         //cancel an order.
@@ -98,7 +100,8 @@ namespace Iz.Online.API.Controllers
         public ResultModel<CanceledOrder> Cancel([FromBody] CancelOrder model)
         {
             var result = _orderServices.Cancel(model);
-            return new ResultModel<CanceledOrder>(result);
+            return result;
+
         }
 
         //[HttpPost("order/all")]

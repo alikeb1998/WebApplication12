@@ -41,14 +41,14 @@ namespace Iz.Online.API.Controllers
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
         {
             var result = _userService.Wallet(model);
-            return new ResultModel<Wallet>(result);
+            return result;
         }
 
         [HttpPost("portfolio")]
         public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
         {
             var result = _userService.AllAssets(model);
-            return new ResultModel<List<Asset>>(result);
+            return result;
         }
 
         [HttpPost("token/set")]

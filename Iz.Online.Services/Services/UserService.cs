@@ -32,10 +32,14 @@ namespace Iz.Online.Services.Services
             return _userRepository.GetUserHubs(UserId);
 
         }
-        public List<Asset> AllAssets(ViewBaseModel viewBaseModel)
+        public ResultModel<List<Asset>> AllAssets(ViewBaseModel viewBaseModel)
         {
             var assets = _externalUserService.GetAllAssets(viewBaseModel);
-            var res = assets.Assets.Select(x => new Asset()
+
+            if (!assets.IsSuccess)
+                return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
+            
+            var result = assets.Model.Assets.Select(x => new Asset()
             {
                 Name = x.Instrument.name,
                 LastPrice = x.LastPrice,
@@ -47,26 +51,29 @@ namespace Iz.Online.Services.Services
                 ProfitPercent = x.ProfitPercent,
                 SellProfit = x.SellProfit
             }).ToList();
-
-            return res;
+            return new ResultModel<List<Asset>>(result);
+            
         }
 
-        public Wallet Wallet(ViewBaseModel model)
+        public ResultModel<Wallet> Wallet(ViewBaseModel model)
         {
             var respond = _externalUserService.Wallet(new OmsBaseModel()
             {
                 Authorization = model.Token
-            }); ;
-            
+            });
+
+            if (!respond.IsSuccess)
+                return new ResultModel<Wallet>(null, false, respond.Message, respond.StatusCode);
+           
             var result = new Wallet()
             {
-                Withdrawable = respond.wallet.withdrawable,
-                BlockedValue = respond.wallet.blockedValue,
-                BuyingPower = respond.wallet.buyingPower,
-                LendedCredit = respond.wallet.lendedCredit,
-                NonWithdrawable = respond.wallet.nonWithdrawable,
+                Withdrawable = respond.Model.wallet.withdrawable,
+                BlockedValue = respond.Model.wallet.blockedValue,
+                BuyingPower = respond.Model.wallet.buyingPower,
+                LendedCredit = respond.Model.wallet.lendedCredit,
+                NonWithdrawable = respond.Model.wallet.nonWithdrawable,
             };
-            return result;
+            return new ResultModel<Wallet>(result);
         }
         public void SetToken(string token)
         {

@@ -12,7 +12,7 @@ namespace Iz.Online.Services.Services
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
         public IExternalInstrumentService _IExternalInstrumentsService { get; set; }
-        
+
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
@@ -30,15 +30,15 @@ namespace Iz.Online.Services.Services
             var list = _instrumentsRepository.GetInstrumentsList().Select(x => new InstrumentList()
             {
                 Id = x.Id,
-                Name = x.SymbolName.Substring(0,x.SymbolName.Length-1),
+                Name = x.SymbolName.Substring(0, x.SymbolName.Length - 1),
                 FullName = x.CompanyName,
                 NscCode = x.Code,
                 Bourse = x.Bourse,
                 InstrumentId = x.InstrumentId
             }).ToList();
-                      
+
             return list;
-           
+
         }
 
         public List<WatchList> UserWatchLists(ViewBaseModel model)
@@ -79,45 +79,41 @@ namespace Iz.Online.Services.Services
             return _instrumentsRepository.InstrumentWatchLists(model);
 
         }
-
-        //public InstrumentPrice Price(Instrument model)
-        //{
-        //    var respond = _IExternalInstrumentsService.Price(model);
-
-        //    return new InstrumentPrice() { };
-
-        //}
-
-        public InstrumentDetail Detail(SelectInstrumentDetails model)
+        
+        public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
         {
             var result = new InstrumentDetail();
             var detail = _IExternalInstrumentsService.Details(model);
 
             var priceDetail = _IExternalInstrumentsService.Price(model);
 
-            if (priceDetail.statusCode == 200)
+            if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
-                result.closingPrice = priceDetail.price.closingPrice;
-                result.firstPrice = priceDetail.price.firstPrice;
-                result.lastPrice = priceDetail.price.lastPrice;
-                result.instrumentId = priceDetail.price.instrumentId;
-                result.lastTradeDate = priceDetail.price.lastTradeDate;
-                result.valueOfTrades = priceDetail.price.valueOfTrades;
-                result.numberOfTrades = Convert.ToInt32(priceDetail.price.numberOfTrades);
-                result.volumeOfTrades = Convert.ToInt32(priceDetail.price.volumeOfTrades);
-                result.yesterdayPrice = priceDetail.price.yesterdayPrice;
-                result.highPrice = priceDetail.price.maximumPrice;
-                result.lowPrice = priceDetail.price.minimumPrice;
+                result.closingPrice = priceDetail.Model.closingPrice;
+                result.firstPrice = priceDetail.Model.firstPrice;
+                result.lastPrice = priceDetail.Model.lastPrice;
+                result.instrumentId = priceDetail.Model.instrumentId;
+                result.lastTradeDate = priceDetail.Model.lastTradeDate;
+                result.valueOfTrades = priceDetail.Model.valueOfTrades;
+                result.numberOfTrades = Convert.ToInt32(priceDetail.Model.numberOfTrades);
+                result.volumeOfTrades = Convert.ToInt32(priceDetail.Model.volumeOfTrades);
+                result.yesterdayPrice = priceDetail.Model.yesterdayPrice;
+                result.highPrice = priceDetail.Model.maximumPrice;
+                result.lowPrice = priceDetail.Model.minimumPrice;
             }
 
-            if (detail.statusCode == 200)
+            if (detail.IsSuccess && detail.Model != null)
             {
-                result.State = detail.Instrument.State;
-                result.GroupState = detail.Instrument.Group.State;
-                result.PriceMax = detail.Instrument.PriceMax;
-                result.PriceMin = detail.Instrument.PriceMin;
+                result.State = detail.Model.State;
+                result.GroupState = detail.Model.Group.State;
+                result.PriceMax = detail.Model.PriceMax;
+                result.PriceMin = detail.Model.PriceMin;
             }
-            return result;
+
+            if (!(priceDetail.IsSuccess && detail.IsSuccess))
+                return new ResultModel<InstrumentDetail>(null,false, priceDetail.Message, priceDetail.StatusCode);
+
+            return new ResultModel<InstrumentDetail>(result) ;
         }
 
     }
