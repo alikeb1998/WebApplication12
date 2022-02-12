@@ -27,7 +27,7 @@ namespace Iz.Online.API.Controllers
 
         public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext)
         {
-            _orderServices = orderServices; //new OrderServices();
+            _orderServices = orderServices;
             _hubContext = hubContext;
         }
 
@@ -58,19 +58,12 @@ namespace Iz.Online.API.Controllers
                     _hubContext.Clients.All.SendAsync("ReceiveMessage", "asa", consumeResult.Value);
 
                 }
-
-                // handle consumed message.
-
-
-                //Console.WriteLine(tt);
-                //consumer.Close();
             }
 
         }
 
-
+        // add order
         [HttpPost("add")]
-        
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
             var result = _orderServices.Add(addOrderModel);
@@ -104,11 +97,5 @@ namespace Iz.Online.API.Controllers
 
         }
 
-        //[HttpPost("order/all")]
-        //public ResultModel<OmsModels.ResponsModels.Order.AddOrderResult> All([FromBody] ViewBaseModel addOrderModel)
-        //{
-        //    var result = _orderServices.All(addOrderModel);
-        //    return new ResultModel<OmsModels.ResponsModels.Order.AddOrderResult>(result);
-        //}
     }
 }

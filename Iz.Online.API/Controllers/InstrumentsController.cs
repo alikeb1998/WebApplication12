@@ -35,46 +35,47 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
+        //update instruments list.
         [HttpPost("UpdateInstrumentsDb")]
-
         public ResultModel<bool> UpdateInstrumentsDb([FromBody] ViewBaseModel model)
         {
             var updateResult = _externalInstrumentService.UpdateInstrumentList(model);
             return new ResultModel<bool>(updateResult, updateResult);
         }
 
+        //get instruments list.
         [HttpPost("List")]
-
         public ResultModel<List<InstrumentList>> List()
         {
             var instruments = _instrumentsService.InstrumentList();
             return instruments;
         }
 
+        // get watchlist.
         [HttpPost("WatchLists")]
-
         public ResultModel<List<WatchList>> WatchLists([FromBody] ViewBaseModel model)
         {
             var result = _instrumentsService.UserWatchLists(model);
             return result;
         }
 
+        //get watchlist details.
         [HttpPost("WatchListsDetails")]
-
         public ResultModel<WatchListDetails> WatchListsDetails([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.WatchListDetails(model);
             return result;
         }
 
+        //delete watchlist
         [HttpPost("DeleteWatchList")]
-
         public ResultModel<List<WatchList>> DeleteWatchList([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.DeleteWatchList(model);
             return  result;
         }
 
+        //add new watchlist.
         [HttpPost("NewWatchList")]
         public ResultModel<WatchListDetails> NewWatchList([FromBody] NewWatchList model)
         {
@@ -82,17 +83,16 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        //add an instrument to watchlists.
         [HttpPost("AddInstrumentToWatchList")]
-
         public ResultModel<WatchListDetails> AddInstrumentToWatchList([FromBody] EditEathListItems model)
         {
             var result = _instrumentsService.AddInstrumentToWatchList(model);
             return result;
 
         }
-
+        //remove an instrument from watchlist.
         [HttpPost("RemoveInstrumentFromWatchList")]
-
         public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
             var result = _instrumentsService.RemoveInstrumentFromWatchList(model);
@@ -101,7 +101,6 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("InstrumentWatchLists")]
-
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _instrumentsService.InstrumentWatchLists(model);
@@ -116,7 +115,7 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
-
+        //get instrument details as prices or states and so on.
         [HttpPost("Detail")]
         public ResultModel<InstrumentDetail> Detail([FromBody] SelectInstrumentDetails model)
         {

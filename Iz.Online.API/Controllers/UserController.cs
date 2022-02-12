@@ -37,6 +37,7 @@ namespace Iz.Online.API.Controllers
 
         }
 
+        //get customer wallet.
         [HttpPost("Wallet")]
         public ResultModel<Wallet> Wallet([FromBody] ViewBaseModel model)
         {
@@ -44,6 +45,7 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        //get customer portfolio
         [HttpPost("portfolio")]
         public ResultModel<List<Asset>> AllAssets([FromBody] ViewBaseModel model)
         {
@@ -51,20 +53,13 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        //set a token in database.
         [HttpPost("token/set")]
         public string Set(string token)
         {
            
             try
             {
-                //if (System.IO.File.Exists(@"C:\jafarinejad\store\token.txt"))
-                //{
-                //    System.IO.File.Delete(@"C:\jafarinejad\store\token.txt");
-                //}
-                //System.IO.File.Create(@"C:\jafarinejad\store\token.txt").Close();
-
-                //System.IO.File.WriteAllText(@"C:\jafarinejad\store\token.txt", @$"{Token}");
-
                 _userService.SetToken(token);
                 return "token is set";
             }
@@ -74,6 +69,7 @@ namespace Iz.Online.API.Controllers
             }
         }
 
+        //get a token from database.
         [HttpGet("token/get")]
         public string Get()
         {
