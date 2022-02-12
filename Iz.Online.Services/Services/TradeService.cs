@@ -20,10 +20,14 @@ namespace Iz.Online.Services.Services
             _externalTradeService = externalTradeService;
         }
 
-        public List<Trade> Trades(ViewBaseModel viewBaseMode)
+        public ResultModel<List<Trade>> Trades(ViewBaseModel viewBaseMode)
         {
             var trades = _externalTradeService.Trades(viewBaseMode);
-            var allTrades = trades.Trades.Where(t => t.TradedAt == DateTime.Today).Select(x => new Trade()
+
+            if (!trades.IsSuccess)
+                return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
+            
+            var allTrades = trades.Model.Trades.Where(t => t.TradedAt == DateTime.Today).Select(x => new Trade()
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
@@ -33,7 +37,7 @@ namespace Iz.Online.Services.Services
                 TradedAt = x.TradedAt
             }).ToList();
 
-            return allTrades;
+            return new ResultModel<List<Trade>>(allTrades);
         }
     }
 }

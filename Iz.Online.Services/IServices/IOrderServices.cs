@@ -13,11 +13,10 @@ namespace Iz.Online.Services.IServices
 {
     public interface IOrderServices
     {
-        AddOrderResult Add(AddOrderModel addOrderModel);
-        List<ActiveOrder> AllActive(ViewBaseModel viewBaseMode);
-        UpdatedOrder Update(UpdateOrder model);
-        CanceledOrder Cancel(CancelOrder model);
+        ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
+        ResultModel<List<ActiveOrder>> AllActive(ViewBaseModel viewBaseMode);
+        ResultModel<UpdatedOrder> Update(UpdateOrder model);
+        ResultModel<CanceledOrder> Cancel(CancelOrder model);
         
-        //List<OmsModels.ResponsModels.Order.AddOrderResult> All(GetAll getAllModel);
     }
 }

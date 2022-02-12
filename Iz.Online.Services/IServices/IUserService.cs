@@ -13,8 +13,8 @@ namespace Iz.Online.Services.IServices
     public interface IUserService
     {
         List<string> UserHubsList(string UserId);
-        List<Asset> AllAssets(ViewBaseModel model);
-        Wallet Wallet(ViewBaseModel model);
+        ResultModel<List<Asset>> AllAssets(ViewBaseModel model);
+        ResultModel<Wallet>  Wallet(ViewBaseModel model);
 
 
     }

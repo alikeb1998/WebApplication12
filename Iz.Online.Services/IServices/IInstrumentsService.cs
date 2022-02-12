@@ -19,6 +19,6 @@ namespace Iz.Online.Services.IServices
         List<WatchList> InstrumentWatchLists(InstrumentWatchLists model);
         List<InstrumentList> InstrumentList();
         //InstrumentPrice Price(Instrument model);
-        InstrumentDetail Detail(SelectInstrumentDetails model);
+        ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
     }
 }

@@ -12,7 +12,7 @@ namespace Iz.Online.API.Controllers
 
     [Produces("application/json")]
     [Route("V1/[controller]")]
-    public class TradeController:BaseApiController
+    public class TradeController : BaseApiController
     {
         #region ctor
         public ITradeServices _tradeServices { get; set; }
@@ -32,8 +32,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<model.Trade>> Trades([FromBody] ViewBaseModel model)
         {
             var result = _tradeServices.Trades(model);
-            return new ResultModel<List<model.Trade>>(result);
-
+            return result;
         }
     }
 }

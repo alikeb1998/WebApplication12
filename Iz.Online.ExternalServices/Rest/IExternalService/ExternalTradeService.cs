@@ -20,11 +20,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
         }
 
-        public TradesList Trades(ViewBaseModel model)
+        public ResultModel<TradesList> Trades(ViewBaseModel model)
         {
-           var list = HttpGetRequest<TradesList>("trade/all", model.Token);
-            return list;
-              
+            var list = HttpGetRequest<TradesList>("trade/all", model.Token);
+            if (list.statusCode != 200)
+                return new ResultModel<TradesList>(null, false, list.clientMessage, list.statusCode);
+
+            return new ResultModel<TradesList>(list);
         }
     }
 }

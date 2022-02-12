@@ -23,10 +23,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public AddOrderResult Add(AddOrderModel addOrderModel)
         {
-          
-
             var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel), addOrderModel.Token);
             
+
+
             if (result.statusCode != 200)
             {
                 //TODO

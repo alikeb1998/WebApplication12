@@ -14,9 +14,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalInstrumentService
     {
         bool UpdateInstrumentList(ViewBaseModel model);
-        Izi.Online.ViewModels.Instruments.BestLimit.BestLimits BestLimits(SelectedInstrument model);
-        InstrumentPrice Price(SelectInstrumentDetails model);
-        InstrumentDetails Details(SelectInstrumentDetails model);
+        ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model);
+        ResultModel<InstrumentPriceDetails>   Price(SelectInstrumentDetails model);
+        ResultModel<Details> Details(SelectInstrumentDetails model);
        // InstrumentStates States(Instrument model);
     }
 }

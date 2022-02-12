@@ -10,6 +10,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalTradeService
     {
-        TradesList Trades(ViewBaseModel model);
+        ResultModel<TradesList> Trades(ViewBaseModel model);
     }
 }
