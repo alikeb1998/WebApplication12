@@ -51,6 +51,26 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<List<Asset>>(result);
         }
 
-      
+        [HttpPost("token/set")]
+        public string Set(ViewBaseModel model)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(@"C:\jafarinejad\store\token.txt", @$"{model.Token}");
+                return model.Token;
+                return "token is set";
+            }
+            catch (Exception e)
+            {
+                return e.Message + " ___ " + e.InnerException;
+            }
+        }
+
+        [HttpGet("token/get")]
+        public string Get()
+        {
+            return System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+        }
+
     }
 }

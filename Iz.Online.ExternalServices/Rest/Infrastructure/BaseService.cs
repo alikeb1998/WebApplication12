@@ -26,7 +26,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
+                token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
+              
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
@@ -52,7 +53,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
+                token = System.IO.File.ReadAllText(@"C:\jafarinejad\store\token.txt");
 
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
