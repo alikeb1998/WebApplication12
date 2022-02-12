@@ -39,6 +39,36 @@ namespace Iz.Online.Reopsitory.Repository
         }
 
 
+        public void Update(Orders updateOrderModel)
+        {
+            try
+            {
+
+                _db.Orders.Update(updateOrderModel);
+
+                _db.SaveChanges();
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+        }
+
+        public void Cancel(Orders updateOrderModel)
+        {
+            try
+            {
+                _db.Orders.Remove(updateOrderModel);
+                _db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+        }
         public void LogException(Exception exception)
         {
             throw new NotImplementedException();

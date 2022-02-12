@@ -8,6 +8,7 @@ using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
+using Izi.Online.ViewModels.Orders;
 
 namespace Iz.Online.API.Controllers
 {
@@ -76,16 +77,31 @@ namespace Iz.Online.API.Controllers
             return new ResultModel<AddOrderResult>(result);
         }
 
-
-        [HttpPost("all/active")]
-        
+        //get a list of all active orders.
+        [HttpPost("all/active")]       
         public ResultModel<List<ActiveOrder>> AllActive([FromBody] ViewBaseModel addOrderModel)
         {
             var result = _orderServices.AllActive(addOrderModel);
             return new ResultModel<List<ActiveOrder>>(result);
         }
 
-                //[HttpPost("order/all")]
+        //update & edit an order.
+        [HttpPost("update")]
+        public ResultModel<UpdatedOrder> Update([FromBody] UpdateOrder model)
+        {
+            var result = _orderServices.Update(model);
+            return new ResultModel<UpdatedOrder>(result);
+        }
+
+        //cancel an order.
+        [HttpPost("cancel")]
+        public ResultModel<CanceledOrder> Cancel([FromBody] CancelOrder model)
+        {
+            var result = _orderServices.Cancel(model);
+            return new ResultModel<CanceledOrder>(result);
+        }
+
+        //[HttpPost("order/all")]
         //public ResultModel<OmsModels.ResponsModels.Order.AddOrderResult> All([FromBody] ViewBaseModel addOrderModel)
         //{
         //    var result = _orderServices.All(addOrderModel);

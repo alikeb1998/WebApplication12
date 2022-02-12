@@ -4,6 +4,10 @@ using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using AddOrderResult = Iz.Online.OmsModels.ResponsModels.Order.AddOrderResult;
+using UpdateOrder = Iz.Online.OmsModels.InputModels.Order.UpdateOrder;
+using UpdatedOrder = Iz.Online.OmsModels.ResponsModels.Order.UpdatedOrder;
+using CanceledOrder = Iz.Online.OmsModels.ResponsModels.Order.CanceledOrder;
+using CancelOrder = Iz.Online.OmsModels.InputModels.Order.CancelOrder;
 
 namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
@@ -12,6 +16,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         AddOrderResult Add(AddOrderModel addOrderModel);
         AllOrders GetAll(OmsBaseModel getAllModel);
         ActiveOrdersResult GetAllActives(ViewBaseModel baseModel);
+        UpdatedOrder Update(UpdateOrder model);
+        CanceledOrder Cancel(CancelOrder model);
+
        // AssetsList GetAllAssets(ViewBaseModel baseModel);
 
     }

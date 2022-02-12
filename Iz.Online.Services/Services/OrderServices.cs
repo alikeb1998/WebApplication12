@@ -1,23 +1,18 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Iz.Online.ExternalServices.Push.IKafkaPushServices;
+﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
-using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.OmsModels.InputModels;
-using Iz.Online.OmsModels.InputModels.Order;
-using Iz.Online.OmsModels.ResponsModels.Order;
 using Iz.Online.Reopsitory.IRepository;
-using Iz.Online.Reopsitory.Repository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
-using ActiveOrders = Izi.Online.ViewModels.Orders.ActiveOrders;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
-using OmsResponse = Iz.Online.OmsModels.ResponsModels.Order;
 using db = Iz.Online.Entities;
-using Asset = Izi.Online.ViewModels.Orders.Asset;
+using UpdateOrder = Izi.Online.ViewModels.Orders.UpdateOrder;
+using UpdatedOrder = Izi.Online.ViewModels.Orders.UpdatedOrder;
+using CanceledOrder = Izi.Online.ViewModels.Orders.CanceledOrder;
+using CancelOrderModel = Izi.Online.ViewModels.Orders.CancelOrder;
+using CancelOrder = Iz.Online.OmsModels.InputModels.Order.CancelOrder;
 
 namespace Iz.Online.Services.Services
 {
@@ -85,7 +80,7 @@ namespace Iz.Online.Services.Services
             dbEntity.OmsPrice = result.price;
 
             Task.Run(async () => _pushService
-                .PushOrderAdded(new List<string>() { "as", "as" }, new Izi.Online.ViewModels.Orders.ActiveOrder()));//TODO
+                .PushOrderAdded(new List<string>() { "as", "as" }, new ActiveOrder()));//TODO
 
             _orderRepository.Add(dbEntity);
 
@@ -95,7 +90,6 @@ namespace Iz.Online.Services.Services
                 IsSuccess = addOrderResult.statusCode == 200
             };
         }
-
 
         public List<ActiveOrder> AllActive(ViewBaseModel viewBaseModel)
         {
@@ -115,6 +109,47 @@ namespace Iz.Online.Services.Services
                 ExecutePercent = x.executePercent
             }).ToList();
             return res;
+        }
+
+        public  UpdatedOrder Update(UpdateOrder model)
+        {
+            var dbEntity = new db.Orders() { };
+
+            var respond = _externalOrderService.Update(new OmsModels.InputModels.Order.UpdateOrder()
+            {
+                Authorization = model.Token,
+                InstrumentId = model.InstrumentId,
+                Price = model.Price,
+                Quantity = model.Quantity,
+                ValidityDate = model.ValidityDate,
+                ValidityType = model.ValidityType,
+            });
+
+          //  _orderRepository.Update(dbEntity);
+
+            var result = new UpdatedOrder()
+            {
+                
+            };
+            return result;
+        }
+
+        public CanceledOrder Cancel(CancelOrderModel model)
+        {
+            var dbEntity = new db.Orders();
+
+            var respond = _externalOrderService.Cancel(new CancelOrder()
+            {
+                Authorization = model.Token,
+                InstrumentId =model.InstrumentId
+                
+            }) ;
+            
+            var result = new CanceledOrder()
+            {
+
+            };
+            return result;
         }
 
     }
