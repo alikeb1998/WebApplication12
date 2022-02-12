@@ -62,7 +62,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
 
-                return new ResultModel<List<InstrumentSector>>(_db.InstrumentSectors.ToList(), false);
+                return new ResultModel<List<InstrumentSector>>(_db.InstrumentSectors.ToList());
             }
 
             catch (Exception)
@@ -77,7 +77,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
 
-                return new ResultModel<List<InstrumentSubSector>>(_db.InstrumentSubSectors.ToList(), true);
+                return new ResultModel<List<InstrumentSubSector>>(_db.InstrumentSubSectors.ToList());
             }
 
             catch (Exception)
@@ -166,7 +166,7 @@ namespace Iz.Online.Reopsitory.Repository
                     WatchListName = x.WatchListName
                 }).ToList();
 
-                return new ResultModel<List<WatchList>>(wl, false);
+                return new ResultModel<List<WatchList>>(wl);
 
             }
             catch (Exception)
