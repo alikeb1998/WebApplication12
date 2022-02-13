@@ -38,7 +38,8 @@ namespace Iz.Online.Services.Services
                 FullName = x.CompanyName,
                 NscCode = x.Code,
                 Bourse = x.Bourse,
-                InstrumentId = x.InstrumentId
+                InstrumentId = x.InstrumentId,
+                Tick = x.Tick
             }).ToList());
 
         }

@@ -17,10 +17,10 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
                 ProductType = model.product.typeCode1 + model.product.typeCode2,
                 ProductCode = model.product.code,
                 InstrumentId = model.Id,
-
                 Bourse = model.group,
                 Sector = model.sector,
-                SubSector = model.subSector
+                SubSector = model.subSector,
+                Tick = model.tick
             };
         }
 
@@ -37,5 +37,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public DateTime updatedAt { get; set; }
         public long baseVolume { get; set; }
         public long borse { get; set; }
+        public long tick { get; set; }
+        
     }
 }

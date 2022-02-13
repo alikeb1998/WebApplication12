@@ -25,6 +25,7 @@ namespace Iz.Online.Entities
         public string ProductType { get; set; }
         public string ProductCode { get; set; }
         public ICollection<WatchListsInstruments> WatchListsInstruments { get; set; }
-
+        public float CommisionRate { get; set; }
+        public long Tick { get; set; }
     }
 }

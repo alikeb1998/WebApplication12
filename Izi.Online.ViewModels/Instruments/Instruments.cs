@@ -21,6 +21,7 @@ namespace Izi.Online.ViewModels.Instruments
         public int Bourse { get; set; }
         public string ProductType { get; set; }
         public string ProductCode { get; set; }
+        public int Tick { get; set; }
 
         
     }
