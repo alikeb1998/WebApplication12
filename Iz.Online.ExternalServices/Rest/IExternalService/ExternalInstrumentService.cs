@@ -85,6 +85,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id);
 
                     }
+                    else
+                    {
+                        
+                        _instrumentsRepository.UpdateInstruments(instrument
+                            , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
+                            , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
+                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id,instrument.tick);
+                    }
 
                 }
 
