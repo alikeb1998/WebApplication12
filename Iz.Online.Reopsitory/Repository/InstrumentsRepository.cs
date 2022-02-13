@@ -371,7 +371,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
             query = query.Substring(0, query.Length - 1);
 
-            _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ({query}");
+            _db.Database.ExecuteSqlRaw(query);
 
             return GetWatchListDetails(new SearchWatchList()
             {
