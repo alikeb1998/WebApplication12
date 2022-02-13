@@ -21,12 +21,14 @@ namespace Izi.Online.ViewModels.Instruments
         public int Bourse { get; set; }
         public string ProductType { get; set; }
         public string ProductCode { get; set; }
-        public long SellPrice { get; set; }
-        public long BuyPrice { get; set; }
-        public long LastPrice { get; set; }
-        public long ClosePrice { get; set; }
-        public long ChangePercent { get; set; }
         public int Tick { get; set; }
+
+        public string BidPrice { get; set; }
+        public string AskPrice { get; set; }
+        public string LastPrice { get; set; }
+        public string ClosePrice { get; set; }
+        public float ChangePercent { get; set; }
+        
 
         
     }
