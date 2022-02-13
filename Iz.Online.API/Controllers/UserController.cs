@@ -7,6 +7,7 @@ using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Users;
+using Izi.Online.ViewModels.ValidityType;
 using Microsoft.AspNetCore.Mvc;
 using model = Izi.Online.ViewModels.Trades;
 
@@ -21,7 +22,7 @@ namespace Iz.Online.API.Controllers
         #region ctor
         private readonly IExternalUserService _externalUserService;
         private readonly IUserService _userService;
-        
+
         public UserController(IExternalUserService externalUserService, IUserService userService)
         {
             _externalUserService = externalUserService;
@@ -34,13 +35,43 @@ namespace Iz.Online.API.Controllers
         public ActionResult login()
         {
             return Ok(new ResultModel<List<AppConfigs>>(null));
-            
+
         }
 
         [HttpGet("Config")]
         public ResultModel<List<AppConfigs>> Config()
         {
-            return new ResultModel<List<AppConfigs>>( _userService.AppConfigs());
+            return new ResultModel<List<AppConfigs>>(_userService.AppConfigs());
+        }
+        [HttpGet("Validity")]
+        public ResultModel<List<ValidityType>> Validity()
+        {
+            return new ResultModel<List<ValidityType>>(
+                new List<ValidityType>() {
+                new ValidityType(){
+                    Key ="Day",
+                    Type = "int",
+                    Value = "روز"
+                },
+                    new ValidityType()
+                    {
+                        Key ="FillAndKill",
+                        Type = "int",
+                        Value = "انجام و حذف"
+                    },
+                new ValidityType()
+                {
+                    Key ="GoodTillCanceled",
+                    Type = "int",
+                    Value = "معتبر تا لغو"
+                },
+                new ValidityType()
+                {
+                    Key ="GoodTillDate",
+                    Type = "DateTime",
+                    Value ="معتبر تا تاریخ"
+                }
+                });
         }
 
         [HttpPost("SetHubId")]
@@ -72,7 +103,7 @@ namespace Iz.Online.API.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public string Set(string token)
         {
-           
+
             try
             {
                 // _userService.SetToken(token);
@@ -99,10 +130,10 @@ namespace Iz.Online.API.Controllers
             var path = @"C:\jafarinejad\store\token.txt";
             if (System.IO.File.Exists(path))
             {
-                return  System.IO.File.ReadAllText(path);
+                return System.IO.File.ReadAllText(path);
             }
             return null;
-            
+
         }
 
     }
