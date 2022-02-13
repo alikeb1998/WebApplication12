@@ -82,6 +82,13 @@ namespace Iz.Online.API.Controllers
         {
             var result = _instrumentsService.NewWatchList(model);
             return result;
+        } 
+        //add new watchlist.
+        [HttpPost("UpdateWatchList")]
+        public ResultModel<WatchListDetails> UpdateWatchList([FromBody] EditWatchList model)
+        {
+            var result = _instrumentsService.UpdateWatchList(model);
+            return result;
         }
 
         //add an instrument to watchlists.

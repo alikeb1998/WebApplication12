@@ -162,7 +162,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 var entity = _db.Instruments.Find(model.Id);
-                
+
 
                 entity.SubSectorId = subSectorId;
                 entity.SectorId = sectorId;
@@ -356,6 +356,28 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
+        public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
+        {
+            var entity = _db.WathLists.Find(model.Id);
 
+            entity.WatchListName = model.WatchListName;
+            entity.WatchListsInstruments.Clear();
+            _db.SaveChanges();
+
+            string query = $"INSERT  into WatchListsInstruments  values ";
+            foreach (var id in model.InstrumentsId)
+            {
+                query += $" ({id},'{model.Id}') ,";
+            }
+            query = query.Substring(0, query.Length - 1);
+
+            _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ({query}");
+
+            return GetWatchListDetails(new SearchWatchList()
+            {
+                CustomerId = model.CustomerId,
+                WatchListId = model.Id
+            });
+        }
     }
 }
