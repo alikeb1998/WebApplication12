@@ -83,23 +83,85 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
         {
-            var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
-            if (model.InstrumentsId.Count() > maxLen)
-                return new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
-
-            if (model.WatchListName.Length > Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
-                return new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
-            
-            if ( string.IsNullOrEmpty( model.CustomerId))
-                return new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
-
-            if (string.IsNullOrEmpty(model.WatchListName))
-                return new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
-
-            if (model.InstrumentsId.Distinct().Count() != model.InstrumentsId.Count())
-                return new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
+            if (ValidateWatchList(model, out var resultModel)) 
+                return resultModel;
 
             return _instrumentsRepository.NewWatchList(model);
+        }
+
+        private bool ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
+        {
+            var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            if (model.InstrumentsId.Count() > maxLen)
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
+                return true;
+            }
+
+            if (model.WatchListName.Length >
+                Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(model.CustomerId))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(model.WatchListName))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
+                return true;
+            }
+
+            if (model.InstrumentsId.Distinct().Count() != model.InstrumentsId.Count())
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
+                return true;
+            }
+
+            resultModel = new ResultModel<WatchListDetails>(null);
+            return false;
+        }
+        private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
+        {
+            var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            if (model.InstrumentsId.Count() > maxLen)
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
+                return true;
+            }
+
+            if (model.WatchListName.Length >
+                Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(model.CustomerId))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(model.WatchListName))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
+                return true;
+            }
+
+            if (model.InstrumentsId.Distinct().Count() != model.InstrumentsId.Count())
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
+                return true;
+            }
+
+            resultModel = new ResultModel<WatchListDetails>(null);
+            return false;
         }
 
         public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
@@ -171,6 +233,14 @@ namespace Iz.Online.Services.Services
             return new ResultModel<InstrumentDetail>(result);
         }
 
+        public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
+        {
+            if (ValidateWatchList(model, out var resultModel))
+                return resultModel;
+
+            return _instrumentsRepository.UpdateWatchList(model);
+
+        }
     }
 
 }

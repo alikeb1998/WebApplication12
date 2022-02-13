@@ -13,6 +13,7 @@ using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.Services.Infrastructure;
 using Iz.Online.SignalR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
 
@@ -71,6 +72,18 @@ builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
 builder.Services.AddScoped<IPushService, PushService>();
 
 #endregion
+
+builder.Services.AddAuthentication()
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Unauthorized/";
+        options.AccessDeniedPath = "/Account/Forbidden/";
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Audience = "http://localhost:5001/";
+        options.Authority = "http://localhost:5000/";
+    });
 
 
 builder.Services.AddEndpointsApiExplorer();

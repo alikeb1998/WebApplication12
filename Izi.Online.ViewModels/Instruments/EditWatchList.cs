@@ -1,17 +1,20 @@
-﻿
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Izi.Online.ViewModels.ShareModels;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Izi.Online.ViewModels.Instruments
 {
-    public class NewWatchList : ViewBaseModel
+    public class EditWatchList: ViewBaseModel
     {
-        public NewWatchList()
+        public EditWatchList()
         {
             InstrumentsId = new List<long>();
         }
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "اجباری")]
         public string WatchListName { get; set; }

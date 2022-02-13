@@ -21,7 +21,7 @@ namespace Iz.Online.API.Controllers
         #region ctor
         private readonly IExternalUserService _externalUserService;
         private readonly IUserService _userService;
-
+        
         public UserController(IExternalUserService externalUserService, IUserService userService)
         {
             _externalUserService = externalUserService;
@@ -30,6 +30,12 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
+        [HttpGet("login")]
+        public ActionResult login()
+        {
+            return Ok(new ResultModel<List<AppConfigs>>(null));
+            
+        }
 
         [HttpGet("Config")]
         public ResultModel<List<AppConfigs>> Config()
