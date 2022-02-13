@@ -53,7 +53,9 @@ namespace Iz.Online.Services.Services
                 FianlAmount = x.FinalAmount,
                 ProfitAmount = x.ProfitAmount,
                 ProfitPercent = x.ProfitPercent,
-                SellProfit = x.SellProfit
+                SellProfit = x.SellProfit,
+                InstrumentId =x.Instrument.id,
+                NscCode = x.Instrument.code
             }).ToList();
             return new ResultModel<List<Asset>>(result);
 

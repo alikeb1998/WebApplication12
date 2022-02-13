@@ -35,6 +35,8 @@ namespace Iz.Online.Services.Services
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = x.Order.executedQ,
                 TradedAt = x.TradedAt
+                ,InstrumentId= x.Order.instrument.id,
+                NscCode = x.Order.instrument.code
             }).ToList();
 
             return new ResultModel<List<Trade>>(allTrades);

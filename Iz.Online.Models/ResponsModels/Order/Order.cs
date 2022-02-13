@@ -34,7 +34,7 @@
 
           public int orderQtyWait { get; set; }
 
-          public string state { get; set; }
+          public int state { get; set; }
           public int executePercent { get; set; }
           //public int disclosedQuantity { get; set; }
      }
