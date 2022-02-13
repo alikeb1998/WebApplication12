@@ -116,6 +116,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("BestLimits")]
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
+            //model.InstrumentId = "IRO1FOLD0001";
             var result = _externalInstrumentService.BestLimits(model);
             return result;
         }
@@ -124,6 +125,8 @@ namespace Iz.Online.API.Controllers
         [HttpPost("Detail")]
         public ResultModel<InstrumentDetail> Detail([FromBody] SelectInstrumentDetails model)
         {
+            //model.InstrumentId = 658;
+            //model.NscCode = "IRO1FOLD0001";
             var result = _instrumentsService.Detail(model);
             return result;
         }

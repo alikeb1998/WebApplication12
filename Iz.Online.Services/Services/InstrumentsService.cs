@@ -110,6 +110,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
+            resultModel = new ResultModel<WatchListDetails>(null);
             return false;
         }
         private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
@@ -146,6 +147,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
+            resultModel = new ResultModel<WatchListDetails>(null);
             return false;
         }
 

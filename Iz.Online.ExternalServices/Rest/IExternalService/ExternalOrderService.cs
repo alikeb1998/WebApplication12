@@ -57,7 +57,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
         {
-            var result = HttpPutRequest<UpdatedOrder>($"order/update/{model.InstrumentId}", JsonConvert.SerializeObject(model), model.Authorization);
+            var result = HttpPutRequest<UpdatedOrder>($"order/update/{model.InstrumentId}", JsonConvert.SerializeObject(model));
             if (result.statusCode != 200)
             {
                 return new ResultModel<UpdatedOrder>(result);
@@ -67,7 +67,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<CanceledOrder> Cancel(CancelOrder model)
         {
-            var result = HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model), model.Authorization);
+            var result = HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model));
             if (result.statusCode != 200)
             {
                 return new ResultModel<CanceledOrder>(result);

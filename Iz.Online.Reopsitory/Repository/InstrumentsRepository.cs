@@ -358,6 +358,7 @@ namespace Iz.Online.Reopsitory.Repository
 
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
+            
             var entity = _db.WathLists.Find(model.Id);
 
             entity.WatchListName = model.WatchListName;
