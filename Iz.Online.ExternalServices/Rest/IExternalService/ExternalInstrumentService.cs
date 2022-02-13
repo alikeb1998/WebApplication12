@@ -23,43 +23,67 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _instrumentsRepository = instrumentsRepository;
             _pushService = pushService;
         }
-     
+
         public bool UpdateInstrumentList()
         {
             var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Model.Select(x => x.InstrumentId).ToList();
-            var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.Select(x => x.SectorId).ToList();
-            var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.Select(x => x.SubSectorId).ToList();
-            var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.Select(x => x.BourseId).ToList();
-            //var instruments = HttpGetRequest<Instruments>("order/instruments-lightweight", model.Token);
+            var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
+            var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
+            var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
+
+
             var instruments = HttpGetRequest<Instruments>("order/instruments");
 
             try
             {
-                foreach (var instrument in instruments.instruments)
+                var receivedSector = instruments.instruments.Select(x => x.sector).DistinctBy(x => x.id).ToList();
+                foreach (var sector in receivedSector)
+                {
+                    if (!onDbInstrumentSector.Select(x => x.SectorId).ToList().Contains(sector.id))
+                    {
+                        onDbInstrumentSector.Add(sector);
+                        _instrumentsRepository.AddInstrumentSector(sector);
+                    }
+                }
+
+                var receivedSubector = instruments.instruments.Select(x => x.subSector).DistinctBy(x => x.id).ToList();
+                foreach (var subsector in receivedSubector)
+                {
+                    if (!onDbInstrumentSubSectors.Select(x => x.SubSectorId).ToList().Contains(subsector.id))
+                    {
+                        onDbInstrumentSubSectors.Add(subsector);
+                        _instrumentsRepository.AddInstrumentSubSectors(subsector);
+                    }
+                }
+
+
+                var receivedGroup = instruments.instruments.Select(x => x.group).DistinctBy(x => x.id).ToList();
+                foreach (var group in receivedGroup)
                 {
 
-                    if (!onDbInstrumentSector.Contains(instrument.sector.id))
+                    if (!onDbInstrumentBourse.Select(x => x.BourseId).ToList().Contains(group.id))
                     {
-                        _instrumentsRepository.AddInstrumentSector(instrument.sector);
-                        onDbInstrumentSector.Add(instrument.sector.id);
+                        onDbInstrumentBourse.Add(group);
+                        _instrumentsRepository.AddInstrumentBourse(group);
                     }
+                }
 
-                    if (!onDbInstrumentSubSectors.Contains(instrument.subSector.id))
-                    {
-                        _instrumentsRepository.AddInstrumentSubSectors(instrument.subSector);
-                        onDbInstrumentSubSectors.Add(instrument.subSector.id);
-                    }
+                onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
+                onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
+                onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
 
-                    if (!onDbInstrumentBourse.Contains(instrument.group.id))
-                    {
-                        _instrumentsRepository.AddInstrumentBourse(instrument.group);
-                        onDbInstrumentBourse.Add(instrument.group.id);
-                    }
 
+
+                foreach (var instrument in instruments.instruments)
+                {
                     if (!onDbInstrumentsList.Contains(instrument.Id))
                     {
-                        _instrumentsRepository.AddInstrument(instrument);
                         onDbInstrumentsList.Add(instrument.Id);
+                        _instrumentsRepository.AddInstrument(instrument
+                            , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
+                            , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
+                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id);
+
                     }
 
                 }
@@ -80,7 +104,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
-            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}" );
+            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -147,7 +171,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}" );
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}");
 
             if (result.statusCode == 200)
                 return new ResultModel<InstrumentPriceDetails>(result.price);
@@ -157,7 +181,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<Details> Details(SelectInstrumentDetails model)
         {
-            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}" );
+            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}");
 
 
             if (result.statusCode == 200)

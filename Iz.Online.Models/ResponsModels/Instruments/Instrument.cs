@@ -18,9 +18,9 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
                 ProductCode = model.product.code,
                 InstrumentId = model.Id,
 
-                Bourse = model.group,
-                Sector = model.sector,
-                SubSector = model.subSector
+                //Bourse = model.group,
+                //Sector = model.sector,
+                //SubSector = model.subSector
             };
         }
 

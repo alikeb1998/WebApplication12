@@ -137,11 +137,15 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrument(Instrument model)
+        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId , int bourseId)
         {
             try
 
             {
+                model.SubSectorId = subSectorId;
+                model.SectorId = sectorId;
+                model.BourseId = bourseId;
+
                 _db.Instruments.Add(model);
                 _db.SaveChanges();
                 return new ResultModel<bool>(true);
