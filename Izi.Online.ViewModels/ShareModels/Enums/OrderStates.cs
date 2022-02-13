@@ -6,9 +6,5 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.ShareModels.Enums
 {
-    public enum OrderStates
-    {
-        انجام شد  = 1,
-        خطا = 2,
-    }
+   
 }

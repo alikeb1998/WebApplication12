@@ -6,7 +6,7 @@ using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
-using Izi.Online.ViewModels.ShareModels.Enums;
+
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using db = Iz.Online.Entities;
