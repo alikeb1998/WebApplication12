@@ -14,7 +14,7 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<bool> AddInstrumentBourse(InstrumentBourse model);
         ResultModel<bool> AddInstrumentSector(InstrumentSector model);
         ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model);
-        ResultModel<bool> AddInstrument(Instrument model);
+        ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId);
         ResultModel<List<WatchList>> GetUserWatchLists(string customerId);
         ResultModel<WatchListDetails> GetWatchListDetails(SearchWatchList model);
         ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);
@@ -22,7 +22,6 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model);
         ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
         ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
-
         AppConfigs GetAppConfigs(string key);
 
     }

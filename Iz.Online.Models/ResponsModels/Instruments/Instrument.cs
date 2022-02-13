@@ -17,9 +17,10 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
                 ProductType = model.product.typeCode1 + model.product.typeCode2,
                 ProductCode = model.product.code,
                 InstrumentId = model.Id,
-                Bourse = model.group,
-                Sector = model.sector,
-                SubSector = model.subSector,
+
+                //Bourse = model.group,
+                //Sector = model.sector,
+                //SubSector = model.subSector
                 Tick = model.tick
             };
         }
