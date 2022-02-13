@@ -21,6 +21,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
                 //Bourse = model.group,
                 //Sector = model.sector,
                 //SubSector = model.subSector
+                Tick = model.tick
             };
         }
 
@@ -37,5 +38,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public DateTime updatedAt { get; set; }
         public long baseVolume { get; set; }
         public long borse { get; set; }
+        public long tick { get; set; }
+        
     }
 }

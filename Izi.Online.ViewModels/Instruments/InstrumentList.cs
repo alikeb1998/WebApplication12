@@ -14,6 +14,7 @@ namespace Izi.Online.ViewModels.Instruments
         public string NscCode { get; set; }
         public int Bourse { get; set; }
         public long InstrumentId { get; set; }
+        public long Tick { get; set; }
     
        
     }

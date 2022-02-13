@@ -26,5 +26,8 @@ namespace Izi.Online.ViewModels.Instruments
         public long LastPrice { get; set; }
         public long ClosePrice { get; set; }
         public long ChangePercent { get; set; }
+        public int Tick { get; set; }
+
+        
     }
 }
