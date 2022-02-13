@@ -39,6 +39,9 @@ namespace Iz.Online.Services.Services
 
             if (!assets.IsSuccess)
                 return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
+            
+            if (assets.Model.Assets==null)
+                return new ResultModel<List<Asset>>(null, false,"مدل خالی برگشته است", assets.StatusCode);
 
             var result = assets.Model.Assets.Select(x => new Asset()
             {
@@ -60,8 +63,11 @@ namespace Iz.Online.Services.Services
         {
             var respond = _externalUserService.Wallet();
 
-            if (!respond.IsSuccess)
+            if (!respond.IsSuccess )
                 return new ResultModel<Wallet>(null, false, respond.Message, respond.StatusCode);
+
+            if (respond.Model.wallet == null)
+                return new ResultModel<Wallet>(null, false, "مدل خالی برگشته است", respond.StatusCode);
 
             var result = new Wallet()
             {

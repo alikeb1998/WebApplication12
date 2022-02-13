@@ -51,7 +51,14 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
         {
-            return _instrumentsRepository.GetWatchListDetails(model);
+            var wl  = _instrumentsRepository.GetWatchListDetails(model);
+
+            foreach (var ins in wl.Model.Instruments)
+            {
+                //ins.ClosePrice
+            }
+
+            return wl;
         }
 
 

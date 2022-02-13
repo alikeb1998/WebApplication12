@@ -17,7 +17,5 @@ namespace Iz.Online.OmsModels.ResponsModels.Order
         public long ProfitAmount { get; set; }
         public long ProfitPercent { get; set; }
         public long SellProfit { get; set; }
-
-
     }
 }
