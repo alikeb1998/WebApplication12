@@ -15,6 +15,7 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<bool> AddInstrumentSector(InstrumentSector model);
         ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model);
         ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId);
+        ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick);
         ResultModel<List<WatchList>> GetUserWatchLists(string customerId);
         ResultModel<WatchListDetails> GetWatchListDetails(SearchWatchList model);
         ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);

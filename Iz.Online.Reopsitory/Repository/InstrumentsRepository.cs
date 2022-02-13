@@ -137,7 +137,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId , int bourseId)
+        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId)
         {
             try
 
@@ -157,7 +157,28 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
+        public ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick)
+        {
+            try
+            {
+                var entity = _db.Instruments.Find(model.Id);
+                
 
+                entity.SubSectorId = subSectorId;
+                entity.SectorId = sectorId;
+                entity.BourseId = bourseId;
+                entity.Tick = tick;
+
+                _db.SaveChanges();
+                return new ResultModel<bool>(true);
+
+            }
+            catch (Exception)
+            {
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
+
+            }
+        }
         public ResultModel<List<WatchList>> GetUserWatchLists(string CustomerId)
         {
             try
@@ -169,8 +190,8 @@ namespace Iz.Online.Reopsitory.Repository
                     Id = x.Id,
                     WatchListName = x.WatchListName
                 }).ToList();
-               
-                if (wl == null || wl.Count==0)
+
+                if (wl == null || wl.Count == 0)
                     return new ResultModel<List<WatchList>>(null, false, "دیده بان برای این مشتری تعریف نشده است", -1);
 
                 return new ResultModel<List<WatchList>>(wl);
@@ -271,7 +292,7 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-                
+
                 _db.Database.ExecuteSqlRaw(
                     $"INSERT  into WatchListsInstruments (InstrumentId,WatchListId) values  ('{model.InstrumentsId}','{model.WatchListId}')");
 
@@ -334,6 +355,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        
+
+
     }
 }
