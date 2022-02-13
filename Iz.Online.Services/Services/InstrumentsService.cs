@@ -53,10 +53,23 @@ namespace Iz.Online.Services.Services
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
         {
             var wl  = _instrumentsRepository.GetWatchListDetails(model);
+           
 
             foreach (var ins in wl.Model.Instruments)
             {
-                //ins.ClosePrice
+                
+                var bestLimit = _IExternalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode=ins.Code});
+                var price = _IExternalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
+
+                ins.ClosePrice = price.Model.closingPrice;
+                ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
+                ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+                var now = Convert.ToDouble(bestLimit.Model.orderRow1.priceBestBuy);
+                var last = Convert.ToDouble(price.Model.lastPrice);
+         
+                ins.ChangePercent = (float)((now - last) / last) * 100;
+                ins.LastPrice = price.Model.lastPrice;
+                ins.SymbolName = ins.SymbolName.Substring(0, ins.SymbolName.Length - 1);
             }
 
             return wl;
@@ -109,6 +122,7 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
         {
+            
             return _instrumentsRepository.InstrumentWatchLists(model);
 
         }
@@ -116,9 +130,12 @@ namespace Iz.Online.Services.Services
         public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
         {
             var result = new InstrumentDetail();
-            var detail = _IExternalInstrumentsService.Details(model);
+            
 
+            var detail = _IExternalInstrumentsService.Details(model);
             var priceDetail = _IExternalInstrumentsService.Price(model);
+            var insModel = new SelectedInstrument() { NscCode = model.NscCode };
+            var bestLimit = _IExternalInstrumentsService.BestLimits(insModel);
 
             if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
@@ -133,6 +150,11 @@ namespace Iz.Online.Services.Services
                 result.yesterdayPrice = priceDetail.Model.yesterdayPrice;
                 result.highPrice = priceDetail.Model.maximumPrice;
                 result.lowPrice = priceDetail.Model.minimumPrice;
+
+                result.ChangePercent = 10.2f;
+                result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
+                result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+                
             }
 
             if (detail.IsSuccess && detail.Model != null)

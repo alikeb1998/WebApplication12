@@ -223,7 +223,13 @@ namespace Iz.Online.Reopsitory.Repository
                                 CompanyName = x.Instrument.CompanyName,
                                 Id = x.Instrument.Id,
                                 SymbolName = x.Instrument.SymbolName,
-                                Isin = x.Instrument.Isin
+                                Isin = x.Instrument.Isin,
+                                //AskPrice = "10",
+                                //BidPrice = "10",
+                                //ChangePercent = 10.23f,
+                                //ClosePrice = "10",
+                                //LastPrice ="10",
+                                Code=x.Instrument.Code
 
                             }).ToList()
                     }).FirstOrDefault();

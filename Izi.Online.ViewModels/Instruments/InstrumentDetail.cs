@@ -24,6 +24,11 @@ namespace Izi.Online.ViewModels.Instruments
         public string valueOfTrades { get; set; }
         public string lastTradeDate { get; set; }
 
+         public string BidPrice { get; set; }
+        public string AskPrice { get; set; }
+        public float ChangePercent { get; set; }
+
+
 
 
     }
