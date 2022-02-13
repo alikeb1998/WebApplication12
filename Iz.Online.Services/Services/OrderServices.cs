@@ -1,10 +1,12 @@
 ﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.Files;
 using Iz.Online.OmsModels.InputModels;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
+using Izi.Online.ViewModels.ShareModels.Enums;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using db = Iz.Online.Entities;
@@ -99,11 +101,18 @@ namespace Iz.Online.Services.Services
                 ExecutedQ = x.executedQ,
                 InstrumentName = x.instrument.name,
                 OrderSide = x.orderSide,
+                OrderSideText = x.orderSide == 1 ? "فروش" : "خرید",
                 RemainedQ = x.remainedQ,
                 ValidityType = x.validityType,
                 OrderQtyWait = x.orderQtyWait,
                 CreatedAt = x.createdAt,
+                
                 State = x.state,
+                StateText = EnumHelper.OrderStates(x.state),
+
+                NscCode = x.instrument.code,
+                InstrumentId = x.instrument.id,
+                
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executePercent
             }).ToList();
@@ -143,13 +152,13 @@ namespace Iz.Online.Services.Services
 
             var respond = _externalOrderService.Cancel(new CancelOrder()
             {
-                InstrumentId =model.InstrumentId
-                
-            }) ;
-            
+                InstrumentId = model.InstrumentId
+
+            });
+
             var result = new CanceledOrder()
             {
-                
+
             };
 
             if (respond.StatusCode != 200)

@@ -6,6 +6,7 @@ public class ActiveOrder
 {
      public string InstrumentName { get; set; }
      public int OrderSide { get; set; }
+     public string OrderSideText { get; set; }
      public long Quantity { get; set; }
      public long ExecutedQ { get; set; }
      public long RemainedQ { get; set; }
@@ -13,6 +14,9 @@ public class ActiveOrder
      public int ValidityType { get; set; }
      public ValidityInfo ValidityInfo { get; set; }
      public DateTime CreatedAt { get; set; }
-     public string State { get; set; }
+     public int State { get; set; }
+     public string StateText { get; set; }
      public int ExecutePercent { get; set; }
+     public int InstrumentId { get; set; }
+     public string NscCode { get; set; }
 }
