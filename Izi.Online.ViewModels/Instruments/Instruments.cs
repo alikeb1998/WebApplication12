@@ -23,10 +23,10 @@ namespace Izi.Online.ViewModels.Instruments
         public string ProductCode { get; set; }
         public int Tick { get; set; }
 
-        public string BidPrice { get; set; }
-        public string AskPrice { get; set; }
-        public string LastPrice { get; set; }
-        public string ClosePrice { get; set; }
+        public double BidPrice { get; set; }
+        public double AskPrice { get; set; }
+        public double LastPrice { get; set; }
+        public double ClosePrice { get; set; }
         public float ChangePercent { get; set; }
         
 

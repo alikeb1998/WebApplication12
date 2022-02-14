@@ -12,20 +12,20 @@ namespace Izi.Online.ViewModels.Instruments
         public int GroupState{get;set;}
         public long PriceMax { get; set; }
         public long PriceMin { get; set; }
-        public string instrumentId { get; set; }
-        public string yesterdayPrice { get; set; }
-        public string closingPrice { get; set; }
-        public string lastPrice { get; set; }
-        public string firstPrice { get; set; }
-        public string lowPrice { get; set; }
-        public string highPrice { get; set; }
+        public double instrumentId { get; set; }
+        public double yesterdayPrice { get; set; }
+        public double closingPrice { get; set; }
+        public double lastPrice { get; set; }
+        public double firstPrice { get; set; }
+        public double lowPrice { get; set; }
+        public double highPrice { get; set; }
         public int numberOfTrades { get; set; }
         public int volumeOfTrades { get; set; }
-        public string valueOfTrades { get; set; }
-        public string lastTradeDate { get; set; }
+        public double valueOfTrades { get; set; }
+        public double lastTradeDate { get; set; }
 
-         public string BidPrice { get; set; }
-        public string AskPrice { get; set; }
+         public double  BidPrice { get; set; }
+        public double AskPrice { get; set; }
         public float ChangePercent { get; set; }
 
 

@@ -8,11 +8,15 @@ namespace Izi.Online.ViewModels.Instruments.BestLimit
 {
     public class OrderRow
     {
-        public string volumeBestBuy { get; set; }
-        public string countBestBuy { get; set; }
-        public string priceBestBuy { get; set; }
-        public string priceBestSale { get; set; }
-        public string countBestSale { get; set; }
-        public string volumeBestSale { get; set; }
+        public double volumeBestBuy { get; set; }
+        public double countBestBuy { get; set; }
+        public double priceBestBuy { get; set; }
+        public double priceBestSale { get; set; }
+        public double countBestSale { get; set; }
+        public double volumeBestSale { get; set; }
+        public bool HasOrderBuy { get; set; }
+        public bool HasOrderSell { get; set; }
+        public int QtyOrderBuy { get; set; }
+        public int QtyOrderSell { get; set; }
     }
 }

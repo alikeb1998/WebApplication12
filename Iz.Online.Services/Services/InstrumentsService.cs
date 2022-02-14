@@ -11,13 +11,13 @@ namespace Iz.Online.Services.Services
     public class InstrumentsService : IInstrumentsService
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
-        public IExternalInstrumentService _IExternalInstrumentsService { get; set; }
+        public IExternalInstrumentService _externalInstrumentsService { get; set; }
 
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
-            _IExternalInstrumentsService = externalInstrumentsService;
+            _externalInstrumentsService = externalInstrumentsService;
         }
 
         public ResultModel<List<Instruments>> Instruments()
@@ -27,7 +27,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
             var ins = _instrumentsRepository.GetInstrumentsList();
-
+            
             if (!ins.IsSuccess)
                 return new ResultModel<List<InstrumentList>>(null, false, "خطای پایگاه داده", -1);
 
@@ -39,7 +39,8 @@ namespace Iz.Online.Services.Services
                 NscCode = x.Code,
                 Bourse = x.Bourse,
                 InstrumentId = x.InstrumentId,
-                Tick = x.Tick
+                Tick = x.Tick,
+
             }).ToList());
 
         }
@@ -58,14 +59,14 @@ namespace Iz.Online.Services.Services
             foreach (var ins in wl.Model.Instruments)
             {
                 
-                var bestLimit = _IExternalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode=ins.Code});
-                var price = _IExternalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
+                var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode=ins.Code});
+                var price = _externalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
 
                 ins.ClosePrice = price.Model.closingPrice;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-                var now = Convert.ToDouble(bestLimit.Model.orderRow1.priceBestBuy);
-                var last = Convert.ToDouble(price.Model.lastPrice);
+                var now = bestLimit.Model.orderRow1.priceBestBuy;
+                var last = price.Model.lastPrice;
          
                 ins.ChangePercent = (float)((now - last) / last) * 100;
                 ins.LastPrice = price.Model.lastPrice;
@@ -195,10 +196,10 @@ namespace Iz.Online.Services.Services
             var result = new InstrumentDetail();
             
 
-            var detail = _IExternalInstrumentsService.Details(model);
-            var priceDetail = _IExternalInstrumentsService.Price(model);
-            var insModel = new SelectedInstrument() { NscCode = model.NscCode };
-            var bestLimit = _IExternalInstrumentsService.BestLimits(insModel);
+            var detail = _externalInstrumentsService.Details(model);
+            var priceDetail = _externalInstrumentsService.Price(model);
+            
+            var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
 
             if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
@@ -208,8 +209,8 @@ namespace Iz.Online.Services.Services
                 result.instrumentId = priceDetail.Model.instrumentId;
                 result.lastTradeDate = priceDetail.Model.lastTradeDate;
                 result.valueOfTrades = priceDetail.Model.valueOfTrades;
-                result.numberOfTrades = Convert.ToInt32(priceDetail.Model.numberOfTrades);
-                result.volumeOfTrades = Convert.ToInt32(priceDetail.Model.volumeOfTrades);
+                result.numberOfTrades = priceDetail.Model.numberOfTrades;
+                result.volumeOfTrades = priceDetail.Model.volumeOfTrades;
                 result.yesterdayPrice = priceDetail.Model.yesterdayPrice;
                 result.highPrice = priceDetail.Model.maximumPrice;
                 result.lowPrice = priceDetail.Model.minimumPrice;

@@ -117,6 +117,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
+           
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
