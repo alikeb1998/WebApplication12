@@ -6,6 +6,7 @@ using Izi.Online.ViewModels.ShareModels;
 using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using DateHelper = Iz.Online.Files.DateHelper;
+using Iz.Online.Files;
 
 namespace Iz.Online.Services.Services
 {
@@ -253,8 +254,8 @@ namespace Iz.Online.Services.Services
                 result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
                 result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;
                 result.yesterdayPrice = priceDetail.Model.yesterdayPrice.Value;
-                result.highPrice = priceDetail.Model.maximumPrice.Value;
-                result.lowPrice = priceDetail.Model.minimumPrice.Value;
+                result.highPrice = detail.Model.PriceMax;
+                result.lowPrice = detail.Model.PriceMin;
 
                 var lastPrice = priceDetail.Model.lastPrice.Value;
                 var yesterdayPrice = priceDetail.Model.yesterdayPrice;
@@ -264,15 +265,20 @@ namespace Iz.Online.Services.Services
                 
                 result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+                
+                
 
             }
 
             if (detail.IsSuccess && detail.Model != null)
             {
                 result.State = detail.Model.State;
+                result.StateText = EnumHelper.InstrumentStates(result.State.ToString());
                 result.GroupState = detail.Model.Group.State;
-                result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMin;
+                result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
+                result.PriceMax = (long) priceDetail.Model.maximumPrice;
+                result.PriceMin = (long) priceDetail.Model.minimumPrice;
+                result.Tick = detail.Model.Tick;
             }
 
             if (!(priceDetail.IsSuccess && detail.IsSuccess))
