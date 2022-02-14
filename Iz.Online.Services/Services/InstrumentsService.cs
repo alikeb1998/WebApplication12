@@ -61,19 +61,19 @@ namespace Iz.Online.Services.Services
 
                 var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = ins.Code });
                 var price = _externalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
-                
+
                 if (!(bestLimit.IsSuccess && price.IsSuccess))
                     continue;
-               
+
                 ins.ClosePrice = price.Model.closingPrice.Value;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
                 var now = bestLimit.Model.orderRow1.priceBestBuy;
                 var last = price.Model.lastPrice;
-              
+
                 if (last > 0 && now > 0)
                     ins.ChangePercent = (float)((now - last) / last) * 100;
-               
+
                 ins.LastPrice = price.Model.lastPrice.Value;
                 var name = ins.SymbolName;
                 ins.SymbolName = name.EndsWith("1") ? name.Substring(0, ins.SymbolName.Length - 1) : name;
@@ -103,11 +103,12 @@ namespace Iz.Online.Services.Services
             var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
 
             var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
-            if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
-            {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
-                return true;
-            }
+            if (oldWl.IsSuccess)
+                if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
+                {
+                    resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
+                    return true;
+                }
 
             if (model.InstrumentsId.Count() > maxLen)
             {
@@ -148,12 +149,25 @@ namespace Iz.Online.Services.Services
             var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
 
             var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
-            if (oldWl.Model.Where(x => x.Id != model.Id).Select(x => x.WatchListName).Contains(model.WatchListName))
+            if (oldWl.IsSuccess)
+                if (oldWl.Model.Where(x => x.Id != model.Id).Select(x => x.WatchListName).Contains(model.WatchListName))
+                {
+                    resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
+                    return true;
+                }
+
+            var entity = _instrumentsRepository.GetWatchListDetails(new SearchWatchList()
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
+                CustomerId = model.CustomerId,
+                WatchListId = model.Id
+
+            });
+
+            if (!entity.IsSuccess)
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد" );
                 return true;
             }
-
             if (model.InstrumentsId.Count() > maxLen)
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");

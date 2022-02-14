@@ -233,7 +233,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}");
 
-            if (result.statusCode == 200)
+            if (result.statusCode == -1)
                 return new ResultModel<InstrumentPriceDetails>(result.price);
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
