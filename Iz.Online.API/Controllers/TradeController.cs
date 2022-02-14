@@ -28,11 +28,11 @@ namespace Iz.Online.API.Controllers
         #endregion
 
         // show a list of customer today trades.
-        [HttpGet("dailyTrades")]
-        public ResultModel<List<model.Trade>> Trades()
-        {
-            var result = _tradeServices.Trades();
-            return result;
-        }
+            [HttpGet("dailyTrades")]
+            public ResultModel<List<model.Trade>> Trades()
+            {
+                var result = _tradeServices.Trades();
+                return result;
+            }
     }
 }
