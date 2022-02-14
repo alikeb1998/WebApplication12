@@ -12,6 +12,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public InstrumentGroup Group { get; set; }
         public long PriceMax { get; set; }
         public long PriceMin { get; set; }
+        public long Tick { get; set; }
 
 
     }

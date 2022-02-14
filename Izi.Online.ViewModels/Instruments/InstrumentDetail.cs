@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Iz.Online.Files;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,9 @@ namespace Izi.Online.ViewModels.Instruments
     public class InstrumentDetail
     {
         public int State { get; set; }
+        public string StateText { get; set; }
         public int GroupState{get;set;}
+        public string GroupStateText { get; set; }
         public long PriceMax { get; set; }
         public long PriceMin { get; set; }
         public string NscCode { get; set; }
@@ -27,6 +30,7 @@ namespace Izi.Online.ViewModels.Instruments
          public double  BidPrice { get; set; }
         public double AskPrice { get; set; }
         public float ChangePercent { get; set; }
+        public long Tick { get; set; }
 
 
 
