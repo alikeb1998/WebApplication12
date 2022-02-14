@@ -93,7 +93,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode != 200)
+            if (activeOrders.StatusCode != 1)
                 return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
@@ -108,8 +108,8 @@ namespace Iz.Online.Services.Services
                 OrderQtyWait = x.orderQtyWait,
                 CreatedAt = x.createdAt,
                 
-                State = Convert.ToInt32(x.state),
-                StateText = EnumHelper.OrderStates(x.state),
+                State = x.state,
+               // StateText = EnumHelper.OrderStates(x.state),
 
                 NscCode = x.instrument.code,
                 InstrumentId = x.instrument.id,

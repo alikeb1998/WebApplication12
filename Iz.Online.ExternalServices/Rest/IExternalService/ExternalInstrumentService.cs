@@ -221,8 +221,6 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                  if (order.instrument.priceMin == result.orderRow6.priceBestSale)
                     result.orderRow6.HasOrderSell = true;
                 
-
-
             }
 
             var  proccessedResult = GetTotalvolume(result);
@@ -268,19 +266,19 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                       bestLimits.orderRow5.volumeBestSale +
                       bestLimits.orderRow6.volumeBestSale;
 
-            bestLimits.orderRow1.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow1.priceBestBuy);
-            bestLimits.orderRow2.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow2.priceBestBuy);
-            bestLimits.orderRow3.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow3.priceBestBuy);
-            bestLimits.orderRow4.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow4.priceBestBuy);
-            bestLimits.orderRow5.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow5.priceBestBuy); 
-            bestLimits.orderRow6.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow6.priceBestBuy);
+            bestLimits.orderRow1.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy !=0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow1.priceBestBuy)  : 0;
+            bestLimits.orderRow2.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow2.priceBestBuy) : 0;
+            bestLimits.orderRow3.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow3.priceBestBuy) : 0;
+            bestLimits.orderRow4.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow4.priceBestBuy) : 0;
+            bestLimits.orderRow5.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow5.priceBestBuy) : 0;
+            bestLimits.orderRow6.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow6.priceBestBuy) : 0;
 
-            bestLimits.orderRow1.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale);
-            bestLimits.orderRow2.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow2.priceBestSale);
-            bestLimits.orderRow3.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow3.priceBestSale);
-            bestLimits.orderRow4.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow4.priceBestSale);
-            bestLimits.orderRow5.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow5.priceBestSale);
-            bestLimits.orderRow6.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow6.priceBestSale);
+            bestLimits.orderRow1.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell !=0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale)  : 0;
+            bestLimits.orderRow2.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
+            bestLimits.orderRow3.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
+            bestLimits.orderRow4.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
+            bestLimits.orderRow5.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
+            bestLimits.orderRow6.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
 
             return bestLimits;            
         }
