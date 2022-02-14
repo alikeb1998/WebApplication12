@@ -246,7 +246,7 @@ namespace Iz.Online.Services.Services
             if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
                 result.closingPrice = priceDetail.Model.closingPrice.Value;
-                result.firstPrice = priceDetail.Model.firstPrice.Value;// priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
+                result.firstPrice =  priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
                 result.lastPrice = priceDetail.Model.lastPrice.Value;
                 result.NscCode = priceDetail.Model.instrumentId;
                 result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
