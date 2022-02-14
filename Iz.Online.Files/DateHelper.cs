@@ -10,6 +10,9 @@ namespace Iz.Online.Files
     {
         public static DateTime GetTimeFromString(string dateTime)
         {
+            if (string.IsNullOrEmpty(dateTime))
+                return DateTime.Now;
+
             var year = Convert.ToInt32(dateTime.Substring(0, 4));
             var month = Convert.ToInt32(dateTime.Substring(4, 2));
             var day = Convert.ToInt32(dateTime.Substring(6, 2));

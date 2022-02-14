@@ -19,23 +19,13 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-
                 _db.Orders.Add(addOrderModel);
-
                 _db.SaveChanges();
-                //return true;
-
             }
             catch (Exception e)
             {
-               
-                
-                //return false;
-
-                //Log
-
+                LogException(e);
             }
-
         }
 
 

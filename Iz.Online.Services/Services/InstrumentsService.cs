@@ -65,18 +65,18 @@ namespace Iz.Online.Services.Services
 
                 if (!(bestLimit.IsSuccess && price.IsSuccess))
                     continue;
-                 
-                if (bestLimit.Model==null || price.Model==null)
+
+                if (bestLimit.Model == null || price.Model == null)
                     continue;
 
                 ins.ClosePrice = price.Model.closingPrice.Value;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-                var now = bestLimit.Model.orderRow1.priceBestBuy;
-                var last = price.Model.lastPrice;
+                var lastPrice = price.Model.lastPrice.Value;
+                var yesterdayPrice = price.Model.yesterdayPrice;
 
-                if (last > 0 && now > 0)
-                    ins.ChangePercent = (float)((now - last) / last) * 100;
+                if (yesterdayPrice > 0 && lastPrice > 0)
+                    ins.LastPriceChangePercent = (float)((lastPrice - yesterdayPrice) / yesterdayPrice) * 100;
 
                 ins.LastPrice = price.Model.lastPrice.Value;
                 var name = ins.SymbolName;
@@ -169,7 +169,7 @@ namespace Iz.Online.Services.Services
 
             if (!entity.IsSuccess)
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد" );
+                resultModel = new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد");
                 return true;
             }
             if (model.InstrumentsId.Count() > maxLen)
@@ -245,7 +245,7 @@ namespace Iz.Online.Services.Services
             if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
                 result.closingPrice = priceDetail.Model.closingPrice.Value;
-                result.firstPrice = priceDetail.Model.firstPrice.Value;
+                result.firstPrice = priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
                 result.lastPrice = priceDetail.Model.lastPrice.Value;
                 result.NscCode = priceDetail.Model.instrumentId;
                 result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
@@ -256,7 +256,12 @@ namespace Iz.Online.Services.Services
                 result.highPrice = priceDetail.Model.maximumPrice.Value;
                 result.lowPrice = priceDetail.Model.minimumPrice.Value;
 
-                result.ChangePercent = 10.2f;
+                var lastPrice = priceDetail.Model.lastPrice.Value;
+                var yesterdayPrice = priceDetail.Model.yesterdayPrice;
+
+                if (yesterdayPrice > 0 && lastPrice > 0)
+                    result.LastPriceChangePercent = (float)((lastPrice - yesterdayPrice) / yesterdayPrice) * 100;
+                
                 result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
 

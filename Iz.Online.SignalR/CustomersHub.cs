@@ -14,6 +14,10 @@ namespace Iz.Online.SignalR
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
-       
+        public override async Task OnConnectedAsync()
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
+            await base.OnConnectedAsync();
+        }
     }
 }

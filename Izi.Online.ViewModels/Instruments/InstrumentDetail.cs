@@ -26,10 +26,7 @@ namespace Izi.Online.ViewModels.Instruments
 
          public double  BidPrice { get; set; }
         public double AskPrice { get; set; }
-        public float ChangePercent { get; set; }
-
-
-
-
+        public float LastPriceChangePercent { get; set; }
+        
     }
 }
