@@ -359,7 +359,7 @@ namespace Iz.Online.Reopsitory.Repository
                 return new ResultModel<List<WatchList>>(wl);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return new ResultModel<List<WatchList>>(null, false, "خطای پایگاه داده", -1);
 
@@ -370,7 +370,6 @@ namespace Iz.Online.Reopsitory.Repository
         {
             
             var entity = _db.WathLists.Find(model.Id);
-
             entity.WatchListName = model.WatchListName;
             entity.WatchListsInstruments.Clear();
             _db.SaveChanges();
@@ -389,6 +388,21 @@ namespace Iz.Online.Reopsitory.Repository
                 CustomerId = model.CustomerId,
                 WatchListId = model.Id
             });
+        }
+
+        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        {
+            try
+            {
+                //_db.Instruments
+                return new ResultModel<bool>(true);
+
+            }
+            catch (Exception e)
+            {
+                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
+
+            }
         }
     }
 }

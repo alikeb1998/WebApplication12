@@ -8,16 +8,16 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
 {
     public class InstrumentPriceDetails
     {
-        public double instrumentId { get; set; }
-        public double yesterdayPrice { get; set; }
-        public double closingPrice { get; set; }
-        public double lastPrice { get; set; }
-        public double firstPrice { get; set; }
-        public double minimumPrice { get; set; }
-        public double maximumPrice { get; set; }
-        public int numberOfTrades { get; set; }
-        public int volumeOfTrades { get; set; }
-        public double valueOfTrades { get; set; }
-        public double lastTradeDate { get; set; }
+        public string  instrumentId { get; set; }
+        public double? yesterdayPrice { get; set; }
+        public double? closingPrice { get; set; }
+        public double? lastPrice { get; set; }
+        public double? firstPrice { get; set; }
+        public double? minimumPrice { get; set; }
+        public double? maximumPrice { get; set; }
+        public int? numberOfTrades { get; set; }
+        public int? volumeOfTrades { get; set; }
+        public double? valueOfTrades { get; set; }
+        public DateTime? lastTradeDate { get; set; }
     }
 }

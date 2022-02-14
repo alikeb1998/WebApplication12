@@ -105,14 +105,20 @@ namespace Iz.Online.API.Controllers
             var result = _instrumentsService.RemoveInstrumentFromWatchList(model);
             return result;
         }
-
+        //یک نماد در چکدام دیده بان ها است ؟
         [HttpPost("InstrumentWatchLists")]
         public ResultModel<List<WatchList>> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _instrumentsService.InstrumentWatchLists(model);
             return result;
         }
-
+        // گذاشتن یادداشت برای  نماد
+        [HttpPost("AddComment")]
+        public ResultModel<bool> AddComment([FromBody] AddCommentForInstrument model)
+        {
+            var result = _instrumentsService.AddCommentToInstrument(model);
+            return result;
+        }
         [HttpPost("BestLimits")]
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {

@@ -28,5 +28,6 @@ namespace Iz.Online.Entities
         public float BuyCommisionRate { get; set; } 
         public float SellCommisionRate { get; set; }
         public long Tick { get; set; }
+
     }
 }
