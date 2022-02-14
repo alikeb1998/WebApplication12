@@ -254,8 +254,8 @@ namespace Iz.Online.Services.Services
                 result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
                 result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;
                 result.yesterdayPrice = priceDetail.Model.yesterdayPrice.Value;
-                result.highPrice = detail.Model.PriceMax;
-                result.lowPrice = detail.Model.PriceMin;
+                result.highPrice = (long)priceDetail.Model.maximumPrice;
+                result.lowPrice = (long)priceDetail.Model.minimumPrice;
 
                 var lastPrice = priceDetail.Model.lastPrice.Value;
                 var yesterdayPrice = priceDetail.Model.yesterdayPrice;
@@ -276,8 +276,10 @@ namespace Iz.Online.Services.Services
                 result.StateText = EnumHelper.InstrumentStates(result.State.ToString());
                 result.GroupState = detail.Model.Group.State;
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
-                result.PriceMax = (long) priceDetail.Model.maximumPrice;
-                result.PriceMin = (long) priceDetail.Model.minimumPrice;
+                result.PriceMax = detail.Model.PriceMax;
+                result.PriceMin = detail.Model.PriceMax;
+
+
                 result.Tick = detail.Model.Tick;
             }
 
