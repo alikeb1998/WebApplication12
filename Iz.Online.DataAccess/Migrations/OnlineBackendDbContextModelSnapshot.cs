@@ -199,6 +199,31 @@ namespace Iz.Online.DataAccess.Migrations
                     b.ToTable("InstrumentBourse", "Symbols");
                 });
 
+            modelBuilder.Entity("Iz.Online.Entities.InstrumentComment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("InstrumentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("InstrumentId");
+
+                    b.ToTable("InstrumentComments");
+                });
+
             modelBuilder.Entity("Iz.Online.Entities.InstrumentSector", b =>
                 {
                     b.Property<int>("Id")
@@ -387,6 +412,25 @@ namespace Iz.Online.DataAccess.Migrations
                     b.Navigation("SubSector");
                 });
 
+            modelBuilder.Entity("Iz.Online.Entities.InstrumentComment", b =>
+                {
+                    b.HasOne("Iz.Online.Entities.Customer", "Customer")
+                        .WithMany("InstrumentComments")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Iz.Online.Entities.Instrument", "Instrument")
+                        .WithMany("InstrumentComments")
+                        .HasForeignKey("InstrumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Instrument");
+                });
+
             modelBuilder.Entity("Iz.Online.Entities.WatchList", b =>
                 {
                     b.HasOne("Iz.Online.Entities.Customer", "Customer")
@@ -421,11 +465,15 @@ namespace Iz.Online.DataAccess.Migrations
                 {
                     b.Navigation("CustomersHubs");
 
+                    b.Navigation("InstrumentComments");
+
                     b.Navigation("WathLists");
                 });
 
             modelBuilder.Entity("Iz.Online.Entities.Instrument", b =>
                 {
+                    b.Navigation("InstrumentComments");
+
                     b.Navigation("WatchListsInstruments");
                 });
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Iz.Online.DataAccess.Migrations
 {
     [DbContext(typeof(OnlineBackendDbContext))]
-    [Migration("20220214052751_commissionratee")]
-    partial class commissionratee
+    [Migration("20220214084115_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -118,6 +118,9 @@ namespace Iz.Online.DataAccess.Migrations
                     b.Property<int?>("BourseId")
                         .HasColumnType("int");
 
+                    b.Property<float>("BuyCommisionRate")
+                        .HasColumnType("real");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -143,6 +146,9 @@ namespace Iz.Online.DataAccess.Migrations
 
                     b.Property<int?>("SectorId")
                         .HasColumnType("int");
+
+                    b.Property<float>("SellCommisionRate")
+                        .HasColumnType("real");
 
                     b.Property<int?>("SubSectorId")
                         .HasColumnType("int");
@@ -193,6 +199,31 @@ namespace Iz.Online.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("InstrumentBourse", "Symbols");
+                });
+
+            modelBuilder.Entity("Iz.Online.Entities.InstrumentComment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("InstrumentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("InstrumentId");
+
+                    b.ToTable("InstrumentComments");
                 });
 
             modelBuilder.Entity("Iz.Online.Entities.InstrumentSector", b =>
@@ -383,6 +414,25 @@ namespace Iz.Online.DataAccess.Migrations
                     b.Navigation("SubSector");
                 });
 
+            modelBuilder.Entity("Iz.Online.Entities.InstrumentComment", b =>
+                {
+                    b.HasOne("Iz.Online.Entities.Customer", "Customer")
+                        .WithMany("InstrumentComments")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Iz.Online.Entities.Instrument", "Instrument")
+                        .WithMany("InstrumentComments")
+                        .HasForeignKey("InstrumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Instrument");
+                });
+
             modelBuilder.Entity("Iz.Online.Entities.WatchList", b =>
                 {
                     b.HasOne("Iz.Online.Entities.Customer", "Customer")
@@ -417,11 +467,15 @@ namespace Iz.Online.DataAccess.Migrations
                 {
                     b.Navigation("CustomersHubs");
 
+                    b.Navigation("InstrumentComments");
+
                     b.Navigation("WathLists");
                 });
 
             modelBuilder.Entity("Iz.Online.Entities.Instrument", b =>
                 {
+                    b.Navigation("InstrumentComments");
+
                     b.Navigation("WatchListsInstruments");
                 });
 

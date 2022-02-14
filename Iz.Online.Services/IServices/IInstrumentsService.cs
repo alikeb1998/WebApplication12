@@ -21,5 +21,6 @@ namespace Iz.Online.Services.IServices
         ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
         ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
+        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
     }
 }

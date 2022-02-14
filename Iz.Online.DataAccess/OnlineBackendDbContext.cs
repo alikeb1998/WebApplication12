@@ -23,6 +23,7 @@ namespace Iz.Online.DataAccess
         public DbSet<AppConfigs> AppConfigs { get; set; }
 
         public DbSet<TokenStore> Token { get; set; }
+        public DbSet<InstrumentComment> InstrumentComments { get; set; }
         
 
 

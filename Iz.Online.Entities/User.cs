@@ -12,6 +12,7 @@ namespace Iz.Online.Entities
         public string Token  { get; set; }
         public  ICollection<CustomerHubs> CustomersHubs { get; set; }
         public ICollection<WatchList> WathLists { get; set; }
+        public ICollection<InstrumentComment> InstrumentComments { get; set; }
 
     }
 }
