@@ -34,7 +34,7 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
             {
                 Id = x.Id,
-                Name = x.SymbolName.Substring(0, x.SymbolName.Length - 1),
+                Name = x.SymbolName.EndsWith("1") ? x.SymbolName.Substring(0, x.SymbolName.Length - 1) : x.SymbolName,
                 FullName = x.CompanyName,
                 NscCode = x.Code,
                 Bourse = x.Bourse,
@@ -69,7 +69,8 @@ namespace Iz.Online.Services.Services
          
                 ins.ChangePercent = (float)((now - last) / last) * 100;
                 ins.LastPrice = price.Model.lastPrice;
-                ins.SymbolName = ins.SymbolName.Substring(0, ins.SymbolName.Length - 1);
+                var name = ins.SymbolName;
+                ins.SymbolName = name.EndsWith("1") ? name.Substring(0, ins.SymbolName.Length - 1) : name;
             }
 
             return wl;

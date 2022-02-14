@@ -157,24 +157,28 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        public ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick)
+        public ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
         {
             try
             {
-                var entity = _db.Instruments.Find(model.Id);
+                var entity = _db.Instruments.FirstOrDefault(x=>x.InstrumentId  == model.InstrumentId);
 
 
                 entity.SubSectorId = subSectorId;
                 entity.SectorId = sectorId;
                 entity.BourseId = bourseId;
                 entity.Tick = tick;
-
+                //////this numbers got from sattar.
+                entity.BuyCommisionRate = BuyCommissionRate;
+                entity.SellCommisionRate = SellCommissionRate;
+                //////
                 _db.SaveChanges();
                 return new ResultModel<bool>(true);
 
             }
-            catch (Exception)
+            catch (Exception e )
             {
+                LogException(e);
                 return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
