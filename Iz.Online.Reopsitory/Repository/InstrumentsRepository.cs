@@ -31,7 +31,7 @@ namespace Iz.Online.Reopsitory.Repository
                     Sector = x.Sector.Name,
                     SubSector = x.SubSector.Name,
                     InstrumentId = x.InstrumentId,
-                    
+
                 }).ToList();
                 return new ResultModel<List<Instruments>>(ins);
             }
@@ -161,7 +161,7 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-                var entity = _db.Instruments.FirstOrDefault(x=>x.InstrumentId  == model.InstrumentId);
+                var entity = _db.Instruments.FirstOrDefault(x => x.InstrumentId == model.InstrumentId);
 
 
                 entity.SubSectorId = subSectorId;
@@ -176,7 +176,7 @@ namespace Iz.Online.Reopsitory.Repository
                 return new ResultModel<bool>(true);
 
             }
-            catch (Exception e )
+            catch (Exception e)
             {
                 LogException(e);
                 return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
@@ -233,7 +233,7 @@ namespace Iz.Online.Reopsitory.Repository
                                 //ChangePercent = 10.23f,
                                 //ClosePrice = "10",
                                 //LastPrice ="10",
-                                Code=x.Instrument.Code
+                                Code = x.Instrument.Code
 
                             }).ToList()
                     }).FirstOrDefault();
@@ -368,7 +368,7 @@ namespace Iz.Online.Reopsitory.Repository
 
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
-            
+
             var entity = _db.WathLists.Find(model.Id);
             entity.WatchListName = model.WatchListName;
             entity.WatchListsInstruments.Clear();
@@ -394,15 +394,45 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-                //_db.Instruments
-                return new ResultModel<bool>(true);
+                var entity = _db.InstrumentComments.FirstOrDefault(x =>
+                    x.CustomerId == model.CustomerId && x.InstrumentId == model.InstrumentId);
 
+                if (entity != null)
+                {
+                    entity.CommentText = entity.CommentText + Environment.NewLine + model.Comment;
+                    _db.SaveChanges();
+                    return new ResultModel<bool>(true);
+                }
+                else
+                {
+                    _db.InstrumentComments.Add(new InstrumentComment()
+                    {
+                        InstrumentId = model.InstrumentId,
+                        CommentText = model.Comment,
+                        Id = Guid.NewGuid().ToString(),
+                        CustomerId = model.CustomerId
+                    });
+                    _db.SaveChanges();
+                }
+
+                return new ResultModel<bool>(true);
             }
             catch (Exception e)
             {
                 return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
 
             }
+        }
+
+        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        {
+            var entity = _db.InstrumentComments.FirstOrDefault(x =>
+                x.CustomerId == model.CustomerId && x.InstrumentId == model.InstrumentId);
+
+            if (entity != null)
+                return new ResultModel<string>(entity.CommentText);
+            
+            return new ResultModel<string>(null, false, "یادداشتی ثبت نشده است", -1);
         }
     }
 }

@@ -273,6 +273,11 @@ namespace Iz.Online.Services.Services
         {
             return _instrumentsRepository.AddCommentToInstrument(model);
         }
+
+        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        {
+            return _instrumentsRepository.GetInstrumentComment(model);
+        }
     }
 
 }
