@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Iz.Online.Files;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public int? numberOfTrades { get; set; }
         public int? volumeOfTrades { get; set; }
         public double? valueOfTrades { get; set; }
-        public DateTime? lastTradeDate { get; set; }
+        public string lastTradeDate { get; set; }
+        public DateTime lastTradeDate2 => DateHelper.GetTimeFromString(lastTradeDate);
     }
 }

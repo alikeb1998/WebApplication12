@@ -5,6 +5,7 @@ using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
+using DateHelper = Iz.Online.Files.DateHelper;
 
 namespace Iz.Online.Services.Services
 {
@@ -247,7 +248,7 @@ namespace Iz.Online.Services.Services
                 result.firstPrice = priceDetail.Model.firstPrice.Value;
                 result.lastPrice = priceDetail.Model.lastPrice.Value;
                 result.NscCode = priceDetail.Model.instrumentId;
-                result.lastTradeDate = priceDetail.Model.lastTradeDate;
+                result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
                 result.valueOfTrades = priceDetail.Model.valueOfTrades.Value;
                 result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
                 result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;

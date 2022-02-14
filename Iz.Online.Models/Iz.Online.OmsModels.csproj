@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Entities\Iz.Online.Entities.csproj" />
+    <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
   </ItemGroup>
 
 </Project>
