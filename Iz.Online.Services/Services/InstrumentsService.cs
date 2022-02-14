@@ -64,6 +64,9 @@ namespace Iz.Online.Services.Services
 
                 if (!(bestLimit.IsSuccess && price.IsSuccess))
                     continue;
+                 
+                if (bestLimit.Model==null || price.Model==null)
+                    continue;
 
                 ins.ClosePrice = price.Model.closingPrice.Value;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
