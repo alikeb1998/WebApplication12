@@ -183,9 +183,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             };
             var activeOrders = _externalOrderService.GetAllActives();
+
+           
             foreach (var order in activeOrders.Model.Orders)
-            { 
-                if(order.instrument.priceMax == result.orderRow1.priceBestBuy)
+            {
+               
+                if (order.instrument.priceMax == result.orderRow1.priceBestBuy)
                         result.orderRow1.HasOrderBuy = true;
 
                  if(order.instrument.priceMax == result.orderRow2.priceBestBuy)
