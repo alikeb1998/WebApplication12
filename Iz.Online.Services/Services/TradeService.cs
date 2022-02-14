@@ -31,7 +31,7 @@ namespace Iz.Online.Services.Services
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
-                State = x.Order.state,
+                State = Convert.ToInt32(x.Order.state),
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = x.Order.executedQ,
                 TradedAt = x.TradedAt

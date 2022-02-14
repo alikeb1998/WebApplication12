@@ -29,7 +29,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             var token = JsonConvert.DeserializeObject<string>(response.Content);
-            ;
+           
             return token;
         }
 

@@ -78,7 +78,7 @@ namespace Iz.Online.Services.Services
 
             _orderRepository.Add(dbEntity);
 
-            if (addOrderResult.StatusCode != 200)
+            if (addOrderResult.StatusCode != 1)
                 return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message, addOrderResult.StatusCode);
 
 
@@ -107,7 +107,7 @@ namespace Iz.Online.Services.Services
                 OrderQtyWait = x.orderQtyWait,
                 CreatedAt = x.createdAt,
                 
-                State = x.state,
+                State = Convert.ToInt32(x.state),
                 StateText = EnumHelper.OrderStates(x.state),
 
                 NscCode = x.instrument.code,

@@ -11,16 +11,19 @@ using Instruments = Iz.Online.OmsModels.ResponsModels.Instruments.Instruments;
 using InstrumentDetails = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentDetails;
 using InstrumentModel = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using InstrumentPrice = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentPrice;
+using BestLimitsView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalInstrumentService : BaseService, IExternalInstrumentService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
+        private IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
-        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService) : base(instrumentsRepository)
+        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService, IExternalOrderService externalOrderService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
+            _externalOrderService = externalOrderService;
             _pushService = pushService;
         }
 
@@ -121,7 +124,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
-            var result = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
+            var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
                 {
@@ -179,7 +182,53 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 },
 
             };
-            return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(result);
+            var activeOrders = _externalOrderService.GetAllActives();
+            foreach (var order in activeOrders.Model.Orders)
+            { 
+                if(order.instrument.priceMax == result.orderRow1.priceBestBuy)
+                        result.orderRow1.HasOrderBuy = true;
+
+                 if(order.instrument.priceMax == result.orderRow2.priceBestBuy)
+                        result.orderRow2.HasOrderBuy = true;
+
+                 if (order.instrument.priceMax == result.orderRow3.priceBestBuy)
+                    result.orderRow3.HasOrderBuy = true;
+
+                 if (order.instrument.priceMax == result.orderRow4.priceBestBuy)
+                    result.orderRow4.HasOrderBuy = true;
+
+                 if (order.instrument.priceMax == result.orderRow5.priceBestBuy)
+                    result.orderRow5.HasOrderBuy = true;
+
+                 if (order.instrument.priceMax == result.orderRow6.priceBestBuy)
+                    result.orderRow6.HasOrderBuy = true;
+
+                if (order.instrument.priceMin == result.orderRow1.priceBestSale)
+                        result.orderRow1.HasOrderSell = true;
+
+                 if (order.instrument.priceMin == result.orderRow2.priceBestSale)
+                    result.orderRow2.HasOrderSell = true;
+
+                if(order.instrument.priceMin == result.orderRow3.priceBestSale)
+                    result.orderRow3.HasOrderSell = true;
+
+                 if (order.instrument.priceMin == result.orderRow4.priceBestSale)
+                    result.orderRow4.HasOrderSell = true;
+
+                if(order.instrument.priceMin == result.orderRow5.priceBestSale)
+                    result.orderRow5.HasOrderSell = true;
+
+                 if (order.instrument.priceMin == result.orderRow6.priceBestSale)
+                    result.orderRow6.HasOrderSell = true;
+                
+
+
+            }
+
+            var  proccessedResult = GetTotalvolume(result);
+
+
+            return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 
         public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
@@ -202,6 +251,43 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 
+        }
+        public BestLimitsView GetTotalvolume(BestLimitsView bestLimits)
+        {
+            var totalBuys = bestLimits.orderRow1.volumeBestBuy +
+                      bestLimits.orderRow2.volumeBestBuy +
+                      bestLimits.orderRow3.volumeBestBuy +
+                      bestLimits.orderRow4.volumeBestBuy +
+                      bestLimits.orderRow5.volumeBestBuy +
+                      bestLimits.orderRow6.volumeBestBuy;
+
+            var totalSells = bestLimits.orderRow1.volumeBestSale +
+                      bestLimits.orderRow2.volumeBestSale +
+                      bestLimits.orderRow3.volumeBestSale +
+                      bestLimits.orderRow4.volumeBestSale +
+                      bestLimits.orderRow5.volumeBestSale +
+                      bestLimits.orderRow6.volumeBestSale;
+
+            bestLimits.orderRow1.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow1.priceBestBuy);
+            bestLimits.orderRow2.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow2.priceBestBuy);
+            bestLimits.orderRow3.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow3.priceBestBuy);
+            bestLimits.orderRow4.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow4.priceBestBuy);
+            bestLimits.orderRow5.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow5.priceBestBuy); 
+            bestLimits.orderRow6.QtyOrderBuy = (int)PercentProccessor(totalBuys, bestLimits.orderRow6.priceBestBuy);
+
+            bestLimits.orderRow1.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale);
+            bestLimits.orderRow2.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow2.priceBestSale);
+            bestLimits.orderRow3.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow3.priceBestSale);
+            bestLimits.orderRow4.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow4.priceBestSale);
+            bestLimits.orderRow5.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow5.priceBestSale);
+            bestLimits.orderRow6.QtyOrderSell = (int)PercentProccessor(totalSells, bestLimits.orderRow6.priceBestSale);
+
+            return bestLimits;            
+        }
+        public double PercentProccessor(double a, double b)
+        {
+
+            return (a - b) / b * 100;
         }
 
 

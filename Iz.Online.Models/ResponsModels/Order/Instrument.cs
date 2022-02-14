@@ -16,8 +16,10 @@
         public int @class { get; set; }
         public Sector sector { get; set; }
         public SubSector subSector { get; set; }
-        public int priceMax { get; set; }
-        public int priceMin { get; set; }
+
+        public double priceMax { get; set; }
+        public double priceMin { get; set; }
+
         public int askMinQuantity { get; set; }
         public int bidMinQuantity { get; set; }
         public int askMaxQuantity { get; set; }

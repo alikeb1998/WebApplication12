@@ -25,8 +25,6 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
             
-
-
             if (result.statusCode != 200)
             {
                 return new ResultModel<AddOrderResult>(result);
