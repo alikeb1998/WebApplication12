@@ -237,6 +237,8 @@ namespace Iz.Online.Reopsitory.Repository
 
                             }).ToList()
                     }).FirstOrDefault();
+                if(wl==null)
+                    return new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد", -1);
 
                 return new ResultModel<WatchListDetails>(wl);
 
@@ -369,10 +371,10 @@ namespace Iz.Online.Reopsitory.Repository
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
 
-            var entity = _db.WathLists.Find(model.Id);
+            var entity = _db.WathLists.FirstOrDefault(x=>x.Id==model.Id);
+           
             entity.WatchListName = model.WatchListName;
-            entity.WatchListsInstruments.Clear();
-            _db.SaveChanges();
+            _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
 
             string query = $"INSERT  into WatchListsInstruments  values ";
             foreach (var id in model.InstrumentsId)
