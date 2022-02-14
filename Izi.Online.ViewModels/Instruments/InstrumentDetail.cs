@@ -31,8 +31,8 @@ namespace Izi.Online.ViewModels.Instruments
         public double AskPrice { get; set; }
         public float ChangePercent { get; set; }
         public long Tick { get; set; }
-        public long BuyCommissionRate = 0.003712;
-        public long SellCommissionRate = 0.0038;
+        public double BuyCommissionRate = 0.003712d;
+        public double SellCommissionRate = 0.0038d;
 
 
 
