@@ -27,7 +27,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
             var ins = _instrumentsRepository.GetInstrumentsList();
-            
+
             if (!ins.IsSuccess)
                 return new ResultModel<List<InstrumentList>>(null, false, "خطای پایگاه داده", -1);
 
@@ -53,23 +53,28 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
         {
-            var wl  = _instrumentsRepository.GetWatchListDetails(model);
-           
+            var wl = _instrumentsRepository.GetWatchListDetails(model);
+
 
             foreach (var ins in wl.Model.Instruments)
             {
-                
-                var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode=ins.Code});
-                var price = _externalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
 
-                ins.ClosePrice = price.Model.closingPrice;
+                var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = ins.Code });
+                var price = _externalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
+                
+                if (!(bestLimit.IsSuccess && price.IsSuccess))
+                    continue;
+               
+                ins.ClosePrice = price.Model.closingPrice.Value;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
                 var now = bestLimit.Model.orderRow1.priceBestBuy;
                 var last = price.Model.lastPrice;
-         
-                ins.ChangePercent = (float)((now - last) / last) * 100;
-                ins.LastPrice = price.Model.lastPrice;
+              
+                if (last > 0 && now > 0)
+                    ins.ChangePercent = (float)((now - last) / last) * 100;
+               
+                ins.LastPrice = price.Model.lastPrice.Value;
                 var name = ins.SymbolName;
                 ins.SymbolName = name.EndsWith("1") ? name.Substring(0, ins.SymbolName.Length - 1) : name;
             }
@@ -85,7 +90,9 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
         {
-            if (ValidateWatchList(model, out var resultModel)) 
+            model.WatchListName = model.WatchListName.Trim();
+
+            if (ValidateWatchList(model, out var resultModel))
                 return resultModel;
 
             return _instrumentsRepository.NewWatchList(model);
@@ -94,6 +101,14 @@ namespace Iz.Online.Services.Services
         private bool ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
             var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+
+            var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
+            if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
+                return true;
+            }
+
             if (model.InstrumentsId.Count() > maxLen)
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
@@ -131,6 +146,14 @@ namespace Iz.Online.Services.Services
         private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
             var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+
+            var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
+            if (oldWl.Model.Where(x => x.Id != model.Id).Select(x => x.WatchListName).Contains(model.WatchListName))
+            {
+                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
+                return true;
+            }
+
             if (model.InstrumentsId.Count() > maxLen)
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
@@ -186,7 +209,7 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
         {
-            
+
             return _instrumentsRepository.InstrumentWatchLists(model);
 
         }
@@ -194,31 +217,31 @@ namespace Iz.Online.Services.Services
         public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
         {
             var result = new InstrumentDetail();
-            
+
 
             var detail = _externalInstrumentsService.Details(model);
             var priceDetail = _externalInstrumentsService.Price(model);
-            
+
             var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
 
             if (priceDetail.IsSuccess && priceDetail.Model != null)
             {
-                result.closingPrice = priceDetail.Model.closingPrice;
-                result.firstPrice = priceDetail.Model.firstPrice;
-                result.lastPrice = priceDetail.Model.lastPrice;
-                result.instrumentId = priceDetail.Model.instrumentId;
+                result.closingPrice = priceDetail.Model.closingPrice.Value;
+                result.firstPrice = priceDetail.Model.firstPrice.Value;
+                result.lastPrice = priceDetail.Model.lastPrice.Value;
+                result.NscCode = priceDetail.Model.instrumentId;
                 result.lastTradeDate = priceDetail.Model.lastTradeDate;
-                result.valueOfTrades = priceDetail.Model.valueOfTrades;
-                result.numberOfTrades = priceDetail.Model.numberOfTrades;
-                result.volumeOfTrades = priceDetail.Model.volumeOfTrades;
-                result.yesterdayPrice = priceDetail.Model.yesterdayPrice;
-                result.highPrice = priceDetail.Model.maximumPrice;
-                result.lowPrice = priceDetail.Model.minimumPrice;
+                result.valueOfTrades = priceDetail.Model.valueOfTrades.Value;
+                result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
+                result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;
+                result.yesterdayPrice = priceDetail.Model.yesterdayPrice.Value;
+                result.highPrice = priceDetail.Model.maximumPrice.Value;
+                result.lowPrice = priceDetail.Model.minimumPrice.Value;
 
                 result.ChangePercent = 10.2f;
                 result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-                
+
             }
 
             if (detail.IsSuccess && detail.Model != null)
@@ -237,11 +260,18 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
+            model.WatchListName = model.WatchListName.Trim();
+
             if (ValidateWatchList(model, out var resultModel))
                 return resultModel;
 
             return _instrumentsRepository.UpdateWatchList(model);
 
+        }
+
+        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        {
+            return _instrumentsRepository.AddCommentToInstrument(model);
         }
     }
 

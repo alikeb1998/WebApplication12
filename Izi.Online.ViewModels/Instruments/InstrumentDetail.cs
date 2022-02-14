@@ -12,7 +12,7 @@ namespace Izi.Online.ViewModels.Instruments
         public int GroupState{get;set;}
         public long PriceMax { get; set; }
         public long PriceMin { get; set; }
-        public double instrumentId { get; set; }
+        public string NscCode { get; set; }
         public double yesterdayPrice { get; set; }
         public double closingPrice { get; set; }
         public double lastPrice { get; set; }
@@ -22,7 +22,7 @@ namespace Izi.Online.ViewModels.Instruments
         public int numberOfTrades { get; set; }
         public int volumeOfTrades { get; set; }
         public double valueOfTrades { get; set; }
-        public double lastTradeDate { get; set; }
+        public DateTime? lastTradeDate { get; set; }
 
          public double  BidPrice { get; set; }
         public double AskPrice { get; set; }

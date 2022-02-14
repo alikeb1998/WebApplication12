@@ -26,5 +26,6 @@ namespace Iz.Online.Reopsitory.IRepository
         AppConfigs GetAppConfigs(string key);
 
         ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
+        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
     }
 }
