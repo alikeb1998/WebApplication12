@@ -79,7 +79,7 @@ namespace Iz.Online.Services.Services
 
             _orderRepository.Add(dbEntity);
 
-            if (addOrderResult.StatusCode != 200)
+            if (addOrderResult.StatusCode != 1)
                 return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message, addOrderResult.StatusCode);
 
 
@@ -93,7 +93,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode != 200)
+            if (activeOrders.StatusCode != 1)
                 return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
@@ -109,7 +109,7 @@ namespace Iz.Online.Services.Services
                 CreatedAt = x.createdAt,
                 
                 State = x.state,
-                StateText = EnumHelper.OrderStates(x.state),
+               // StateText = EnumHelper.OrderStates(x.state),
 
                 NscCode = x.instrument.code,
                 InstrumentId = x.instrument.id,

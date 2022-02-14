@@ -8,11 +8,11 @@ namespace Iz.Online.Files
 {
     public static class EnumHelper
     {
-        public static string OrderStates(int key)
+        public static string OrderStates(string key)
         {
             switch (key)
             {
-                case 1:
+                case "1":
                     return "انجام شد"; 
                 
                 

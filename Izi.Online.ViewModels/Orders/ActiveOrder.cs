@@ -14,7 +14,7 @@ public class ActiveOrder
      public int ValidityType { get; set; }
      public ValidityInfo ValidityInfo { get; set; }
      public DateTime CreatedAt { get; set; }
-     public int State { get; set; }
+     public string State { get; set; }
      public string StateText { get; set; }
      public int ExecutePercent { get; set; }
      public int InstrumentId { get; set; }

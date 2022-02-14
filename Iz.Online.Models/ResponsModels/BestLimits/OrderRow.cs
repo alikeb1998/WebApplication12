@@ -14,5 +14,6 @@ namespace Iz.Online.OmsModels.ResponsModels.BestLimits
         public double priceBestSale { get; set; }
         public double countBestSale { get; set; }
         public double volumeBestSale { get; set; }
+       
     }
 }
