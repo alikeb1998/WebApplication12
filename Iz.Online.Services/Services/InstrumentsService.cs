@@ -271,8 +271,8 @@ namespace Iz.Online.Services.Services
                 result.StateText = EnumHelper.InstrumentStates(result.State.ToString());
                 result.GroupState = detail.Model.Group.State;
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
-                result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMin;
+                result.PriceMax = (long) priceDetail.Model.maximumPrice;
+                result.PriceMin = (long) priceDetail.Model.minimumPrice;
                 result.Tick = detail.Model.Tick;
             }
 
