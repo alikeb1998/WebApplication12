@@ -5,6 +5,7 @@ using Iz.Online.SignalR;
 //using Iz.Online.SignalR;
 using Izi.Online.ViewModels.Instruments;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace Iz.Online.ExternalServices.Push.KafkaPushServices
 
@@ -40,9 +41,9 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
                 while (true)
                 {
                     var consumeResult = consumer.Consume();
-                    var prices = consumeResult.Message.Value;
-                    var p = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits(); //TODO caet price to p ...
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { p, InstrumentId, " " });
+                    var prices =
+                        JsonConvert.DeserializeObject<OmsModels.ResponsModels.BestLimits.BestLimit>(consumeResult.Message.Value);
+                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
                 }
                 consumer.Close();
             }

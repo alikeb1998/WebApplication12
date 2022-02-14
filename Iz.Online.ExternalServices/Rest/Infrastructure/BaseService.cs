@@ -12,14 +12,14 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
 {
     public class BaseService
     {
-        public  string apiBaseAddress = "http://192.168.72.54:8080/";
-       
+        public string apiBaseAddress = "http://192.168.72.54:8080/";
+
         private readonly IBaseRepository _baseRepository;
-        
+
         public BaseService(IBaseRepository baseRepository)
         {
             _baseRepository = baseRepository;
-            
+
         }
 
         public string getToken()
@@ -29,21 +29,23 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             var token = JsonConvert.DeserializeObject<string>(response.Content);
-           
+
             return token;
         }
 
-        public T HttpGetRequest<T>(string RequestAddress )
+        public T HttpGetRequest<T>(string RequestAddress)
         {
             try
             {
-              
+
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("Authorization", getToken());
                 IRestResponse response = client.Execute(request);
-                return JsonConvert.DeserializeObject<T>(response.Content);
+
+                var setting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+                return JsonConvert.DeserializeObject<T>(response.Content, setting);
             }
             catch (Exception e)
             {
@@ -72,7 +74,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
                 return JsonConvert.DeserializeObject<T>(response.Content);
-                
+
             }
             catch (Exception e)
             {

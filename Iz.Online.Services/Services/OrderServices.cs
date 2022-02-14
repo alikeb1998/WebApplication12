@@ -42,6 +42,8 @@ namespace Iz.Online.Services.Services
             //09:00
             var dbEntity = new db.Orders()
             {
+                RegisterOrderDate = DateTime.Now,
+                Id=Guid.NewGuid().ToString(),
                 OrderSide = addOrderModel.OrderSide,
                 OrderType = addOrderModel.OrderType,
                 DisclosedQuantity = addOrderModel.DisclosedQuantity,
@@ -51,13 +53,12 @@ namespace Iz.Online.Services.Services
                 Quantity = addOrderModel.Quantity,
                 CreateOrderDate = DateTime.Now,
                 Price = addOrderModel.Price,
-
+                CustomerId = addOrderModel.CustomerId,
             };
 
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             dbEntity.OmsResponseDate = DateTime.Now;
-
             dbEntity.OrderId = addOrderResult.Model.order.id;
             dbEntity.Isr = addOrderResult.Model.order.isr;
             dbEntity.StatusCode = addOrderResult.Model.statusCode;
