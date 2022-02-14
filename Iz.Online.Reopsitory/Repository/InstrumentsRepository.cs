@@ -31,7 +31,7 @@ namespace Iz.Online.Reopsitory.Repository
                     Sector = x.Sector.Name,
                     SubSector = x.SubSector.Name,
                     InstrumentId = x.InstrumentId,
-
+                    
                 }).ToList();
                 return new ResultModel<List<Instruments>>(ins);
             }
