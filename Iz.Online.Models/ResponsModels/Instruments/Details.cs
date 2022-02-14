@@ -15,5 +15,6 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public long Tick { get; set; }
 
 
+
     }
 }
