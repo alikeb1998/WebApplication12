@@ -13,8 +13,8 @@
           public int orderSide { get; set; }
 
           // public int orderType { get; set; }
-          //public int price { get; set; }
-          public int quantity { get; set; }
+          public int price { get; set; }
+          public double quantity { get; set; }
 
           public int validityType { get; set; }
 
@@ -30,7 +30,7 @@
           //public int fee { get; set; }
           //public int tax { get; set; }
           public int remainedQ { get; set; }
-          public int executedQ { get; set; }
+          public double executedQ { get; set; }
 
           public int orderQtyWait { get; set; }
 

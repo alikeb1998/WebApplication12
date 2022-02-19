@@ -27,13 +27,13 @@ namespace Iz.Online.Services.Services
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
             
-            var allTrades = trades.Model.Trades.Where(t => t.TradedAt == DateTime.Today).Select(x => new Trade()
+            var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0,6) == DateTime.Today.ToString().Substring(0,6)).Select(x => new Trade()
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
                 State = Convert.ToInt32(x.Order.state),
                 OrderSide = x.Order.orderSide,
-                ExecutedQ = x.Order.executedQ,
+                ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt
                 ,InstrumentId= x.Order.instrument.id,
                 NscCode = x.Order.instrument.code

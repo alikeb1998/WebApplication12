@@ -99,8 +99,8 @@ namespace Iz.Online.Services.Services
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
-                Quantity = x.quantity,
-                ExecutedQ = x.executedQ,
+                Quantity = (long)x.quantity,
+                ExecutedQ = (long)x.executedQ,
                 InstrumentName = x.instrument.name,
                 OrderSide = x.orderSide,
                 OrderSideText = x.orderSide == 1 ? "فروش" : "خرید",
@@ -108,15 +108,15 @@ namespace Iz.Online.Services.Services
                 ValidityType = x.validityType,
                 OrderQtyWait = x.orderQtyWait,
                 CreatedAt = x.createdAt,
-                
+                Price = x.price,
                 State = x.state,
-               // StateText = EnumHelper.OrderStates(x.state),
+                // StateText = EnumHelper.OrderStates(x.state),
 
                 NscCode = x.instrument.code,
                 InstrumentId = x.instrument.id,
-                
+
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
-                ExecutePercent = x.executePercent
+                ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
 
             return new ResultModel<List<ActiveOrder>>(result);

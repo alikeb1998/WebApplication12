@@ -125,6 +125,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<string> GetComment([FromBody] GetInstrumentComment model)
         {
             var result = _instrumentsService.GetInstrumentComment(model);
+            var a = result.ToString();
             return result;
         }
 
