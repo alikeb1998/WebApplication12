@@ -31,6 +31,9 @@ namespace Iz.Online.Reopsitory.Repository
                     Sector = x.Sector.Name,
                     SubSector = x.SubSector.Name,
                     InstrumentId = x.InstrumentId,
+                    Tick = x.Tick,
+                    BuyCommisionRate = x.BuyCommisionRate,
+                    SellCommisionRate = x.SellCommisionRate,
 
                 }).ToList();
                 return new ResultModel<List<Instruments>>(ins);
@@ -137,7 +140,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId)
+        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
         {
             try
 

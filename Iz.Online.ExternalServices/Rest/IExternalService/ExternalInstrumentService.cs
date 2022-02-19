@@ -85,8 +85,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                         _instrumentsRepository.AddInstrument(instrument
                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
-                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id);
-
+                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
+                            , instrument.tick
+                            , 0.003712f
+                            , 0.0038f
+                            );
+                          
                     }
                     else
                     {
@@ -95,7 +99,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
-                            ,instrument.tick
+                            , instrument.tick
                             , 0.003712f
                             ,0.0038f
                             );

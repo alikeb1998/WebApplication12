@@ -14,7 +14,5 @@ namespace Iz.Online.OmsModels.ResponsModels.Instruments
         public long PriceMin { get; set; }
         public long Tick { get; set; }
 
-
-
     }
 }

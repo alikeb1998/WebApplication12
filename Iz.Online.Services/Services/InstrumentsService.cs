@@ -7,19 +7,21 @@ using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using DateHelper = Iz.Online.Files.DateHelper;
 using Iz.Online.Files;
-
 namespace Iz.Online.Services.Services
 {
     public class InstrumentsService : IInstrumentsService
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
         public IExternalInstrumentService _externalInstrumentsService { get; set; }
+        
 
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
+            
+
         }
 
         public ResultModel<List<Instruments>> Instruments()
@@ -42,8 +44,10 @@ namespace Iz.Online.Services.Services
                 Bourse = x.Bourse,
                 InstrumentId = x.InstrumentId,
                 Tick = x.Tick,
+                BuyCommissionRate = x.BuyCommisionRate,
+                SellCommissionRate = x.SellCommisionRate,
 
-            }).ToList());
+            }).ToList()) ;
 
         }
 
@@ -240,6 +244,7 @@ namespace Iz.Online.Services.Services
 
             var detail = _externalInstrumentsService.Details(model);
             var priceDetail = _externalInstrumentsService.Price(model);
+            
 
             var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
 
@@ -265,11 +270,12 @@ namespace Iz.Online.Services.Services
                 
                 result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+               
                 
                 
 
             }
-
+            
             if (detail.IsSuccess && detail.Model != null)
             {
                 result.State = detail.Model.State;
@@ -278,7 +284,6 @@ namespace Iz.Online.Services.Services
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
                 result.PriceMin = detail.Model.PriceMin;
-
 
                 result.Tick = detail.Model.Tick;
             }

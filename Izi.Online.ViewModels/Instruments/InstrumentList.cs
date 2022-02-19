@@ -15,6 +15,8 @@ namespace Izi.Online.ViewModels.Instruments
         public int Bourse { get; set; }
         public long InstrumentId { get; set; }
         public long Tick { get; set; }
+        public double BuyCommissionRate { get; set; }
+        public double SellCommissionRate { get; set; }
     
        
     }
