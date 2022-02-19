@@ -232,7 +232,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             var  proccessedResult = GetTotalvolume(result);
 
-
+            
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 

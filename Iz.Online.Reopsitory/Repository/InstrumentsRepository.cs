@@ -405,7 +405,7 @@ namespace Iz.Online.Reopsitory.Repository
 
                 if (entity != null)
                 {
-                    entity.CommentText = entity.CommentText + Environment.NewLine + model.Comment;
+                    entity.CommentText =  model.Comment;
                     _db.SaveChanges();
                     return new ResultModel<bool>(true);
                 }

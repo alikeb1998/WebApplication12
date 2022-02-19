@@ -113,5 +113,16 @@ namespace Iz.Online.Services.Services
             return res;
 
         }
+
+        public Captcha Captcha()
+        {
+            var res = _externalUserService.Captcha();
+            var captcha = new Captcha()
+            {
+                
+                Id = res.id
+            };
+            return captcha;
+        }
     }
 }

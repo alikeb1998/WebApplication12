@@ -34,6 +34,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 return new ResultModel<AssetsList>(result, false, result.clientMessage, result.statusCode);
             return new ResultModel<AssetsList>(result);
         }
+        public captcha Captcha()
+        {
+            var result = HttpGetRequest<captcha>("user/captcha");
+            return result;
+        }
 
     }
 }

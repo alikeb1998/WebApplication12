@@ -20,7 +20,6 @@ namespace Iz.Online.Services.IServices
         
         void SetToken(string token);
         string GetToken();
-
-
+        Captcha Captcha();
     }
 }

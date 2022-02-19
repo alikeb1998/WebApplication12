@@ -13,5 +13,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         ResultModel<Wallet> Wallet();
 
         ResultModel<AssetsList>  GetAllAssets();
+        captcha Captcha();
     }
 }

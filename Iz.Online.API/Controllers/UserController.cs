@@ -9,7 +9,7 @@ using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Users;
 using Izi.Online.ViewModels.ValidityType;
 using Microsoft.AspNetCore.Mvc;
-using model = Izi.Online.ViewModels.Trades;
+
 
 namespace Iz.Online.API.Controllers
 {
@@ -35,6 +35,13 @@ namespace Iz.Online.API.Controllers
         public ActionResult login()
         {
             return Ok(new ResultModel<List<AppConfigs>>(null));
+
+        }
+        [HttpGet("captcha")]
+        public Captcha Captcha()
+        {
+            var res = _userService.Captcha();
+            return res;
 
         }
 
