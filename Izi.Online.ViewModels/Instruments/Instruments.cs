@@ -27,6 +27,8 @@ namespace Izi.Online.ViewModels.Instruments
         public double LastPrice { get; set; }
         public double ClosePrice { get; set; }
         public float LastPriceChangePercent { get; set; }
-        
+        //public double AskQty => 852852;
+        //public double BidQty => 258258;
+
     }
 }

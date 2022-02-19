@@ -19,6 +19,7 @@ namespace Iz.Online.API.Infrastructure
 
         //    return token;
         //}
+     
         protected string JsonSucceed(object data)
         {
             return "";

@@ -5,7 +5,6 @@ namespace Iz.Online.DataAccess
 {
     public class OnlineBackendDbContext : DbContext
     {
-
         public OnlineBackendDbContext(DbContextOptions<OnlineBackendDbContext> options) : base(options)
         {
 
@@ -21,11 +20,8 @@ namespace Iz.Online.DataAccess
         public DbSet<InstrumentBourse> InstrumentBourses { get; set; }
         public DbSet<ExceptionsLog> Exceptions { get; set; }
         public DbSet<AppConfigs> AppConfigs { get; set; }
-
         public DbSet<TokenStore> Token { get; set; }
         public DbSet<InstrumentComment> InstrumentComments { get; set; }
-        
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

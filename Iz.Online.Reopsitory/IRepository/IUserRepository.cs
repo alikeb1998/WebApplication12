@@ -13,10 +13,7 @@ namespace Iz.Online.Reopsitory.IRepository
         List<string> GetUserHubs(string userId);
         void SetToken(TokenStore token);
         string GetToken();
-
         List<AppConfigs> GetAppConfigs();
-
-         AppConfigs GetAppConfigs(string key);
-
+        AppConfigs GetAppConfigs(string key);
     }
 }

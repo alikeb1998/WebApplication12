@@ -156,7 +156,10 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-
+        public string GetOmsToken(string token)
+        {
+           return _baseRepository.GetOmsToken(token);
+        }
 
     }
 }

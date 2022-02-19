@@ -20,6 +20,7 @@ namespace Iz.Online.Services.Services
     {
         public IUserRepository _userRepository { get; set; }
         public IExternalUserService _externalUserService { get; set; }
+        public string token { get; set; }
 
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService)
         {
@@ -63,6 +64,7 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<Wallet> Wallet()
         {
+            
             var respond = _externalUserService.Wallet();
 
             if (!respond.IsSuccess )
@@ -108,7 +110,7 @@ namespace Iz.Online.Services.Services
         }
         public string GetToken()
         {
-
+            var t = token;
             var res = _userRepository.GetToken();
             return res;
 

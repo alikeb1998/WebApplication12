@@ -12,6 +12,8 @@ namespace Iz.Online.Services.IServices
 {
     public interface IUserService
     {
+        string token { get; set; }
+
         List<string> UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<Wallet>  Wallet();

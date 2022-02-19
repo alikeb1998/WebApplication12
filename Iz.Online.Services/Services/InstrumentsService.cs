@@ -14,12 +14,14 @@ namespace Iz.Online.Services.Services
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
         public IExternalInstrumentService _externalInstrumentsService { get; set; }
+        public string token { get; set; }
 
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
+            
         }
 
         public ResultModel<List<Instruments>> Instruments()
@@ -71,8 +73,8 @@ namespace Iz.Online.Services.Services
                     continue;
 
                 ins.ClosePrice = price.Model.closingPrice.Value;
-                ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
-                ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+                ins.AskPrice = bestLimit.Model.orderRow1.priceBestSale;
+                ins.BidPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 var lastPrice = price.Model.lastPrice.Value;
                 var yesterdayPrice = price.Model.yesterdayPrice;
 
@@ -277,7 +279,7 @@ namespace Iz.Online.Services.Services
                 result.GroupState = detail.Model.Group.State;
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMax;
+                result.PriceMin = detail.Model.PriceMin;
 
 
                 result.Tick = detail.Model.Tick;

@@ -20,11 +20,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly IInstrumentsRepository _instrumentsRepository;
         private IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
+        public string token { get; set; }
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService, IExternalOrderService externalOrderService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _pushService = pushService;
+            
         }
 
         public bool UpdateInstrumentList()
@@ -33,7 +35,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
-
+            
 
             var instruments = HttpGetRequest<Instruments>("order/instruments");
 

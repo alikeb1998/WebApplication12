@@ -70,6 +70,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBaseRepository, BaseRepository>();
 builder.Services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
 builder.Services.AddScoped<IPushService, PushService>();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+//builder.Services.AddScoped<HttpContextAccessor, HttpContextAccessor>();
 
 #endregion
 

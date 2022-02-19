@@ -9,6 +9,7 @@ namespace Iz.Online.Services.IServices
 {
     public interface IInstrumentsService
     {
+        public string token { get; set; }
         ResultModel<List<Instruments>> Instruments();
         ResultModel<List<WatchList>> UserWatchLists(string customerId);
         ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model);

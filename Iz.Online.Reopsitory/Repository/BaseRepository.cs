@@ -44,5 +44,15 @@ namespace Iz.Online.Reopsitory.Repository
             };
             return result;
         }
+
+        public string GetOmsToken(string token)
+        {
+            var custmer = _db.Customer.FirstOrDefault(x => x.Token == token);
+
+            if (custmer == null)
+                return null;
+
+            return custmer.OmsToken;
+        }
     }
 }

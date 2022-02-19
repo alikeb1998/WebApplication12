@@ -14,11 +14,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalOrderService : BaseService, IExternalOrderService
     {
+        public string token { get; set; }
         public IBaseRepository _instrumentsRepository { get; set; }
         public ExternalOrderService(IBaseRepository baseRepository) : base(baseRepository)
         {
             _instrumentsRepository = baseRepository;
-            
         }
 
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)

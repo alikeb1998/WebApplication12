@@ -14,7 +14,7 @@ namespace Iz.Online.Reopsitory.Repository
         public InstrumentsRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
         }
-
+        
         public ResultModel<List<Instruments>> GetInstrumentsList()
         {
             try
@@ -33,6 +33,7 @@ namespace Iz.Online.Reopsitory.Repository
                     InstrumentId = x.InstrumentId,
 
                 }).ToList();
+                
                 return new ResultModel<List<Instruments>>(ins);
             }
             catch (Exception)
@@ -347,7 +348,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 var wl = _db.WathLists
-                    .Where(w => w.CustomerId == model.CustomerId).Distinct()
+                    .Where(w => w.CustomerId == model.CustomerId&&w.WatchListsInstruments.Select(x=>x.InstrumentId).Contains(model.InstrumentId))
                     .SelectMany(c => c.WatchListsInstruments, (c, w) =>
                          new WatchList
                          {

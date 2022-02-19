@@ -23,11 +23,11 @@ namespace Iz.Online.Reopsitory.Repository
 
         public List<AppConfigs> GetAppConfigs()
         {
-           return _db.AppConfigs.ToList();
+            return _db.AppConfigs.ToList();
         }
         public AppConfigs GetAppConfigs(string key)
         {
-           return _db.AppConfigs.FirstOrDefault(x=>x.Key==key);
+            return _db.AppConfigs.FirstOrDefault(x => x.Key == key);
         }
 
         public void SetToken(TokenStore token)
@@ -42,5 +42,7 @@ namespace Iz.Online.Reopsitory.Repository
         {
             return _db.Token.FirstOrDefault().Token;
         }
+
+        
     }
 }

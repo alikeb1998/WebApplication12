@@ -18,21 +18,19 @@ namespace Iz.Online.API.Controllers
     public class UserController : BaseApiController
     {
 
-
         #region ctor
-        private readonly IExternalUserService _externalUserService;
         private readonly IUserService _userService;
-
-        public UserController(IExternalUserService externalUserService, IUserService userService)
+        private readonly string token;
+        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
-            _externalUserService = externalUserService;
             _userService = userService;
+            _userService.token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
         }
 
         #endregion
 
-        [HttpGet("login")]
-        public ActionResult login()
+        [HttpPost("login")]
+        public ActionResult login(CustomerHub model)
         {
             return Ok(new ResultModel<List<AppConfigs>>(null));
 
@@ -86,6 +84,7 @@ namespace Iz.Online.API.Controllers
         [HttpGet("Wallet")]
         public ResultModel<Wallet> Wallet()
         {
+
             var result = _userService.Wallet();
             return result;
         }
@@ -128,6 +127,7 @@ namespace Iz.Online.API.Controllers
         public string Get()
         {
             var path = @"C:\jafarinejad\store\token.txt";
+            _userService.GetToken();
             if (System.IO.File.Exists(path))
             {
                 return System.IO.File.ReadAllText(path);

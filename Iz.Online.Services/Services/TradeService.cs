@@ -12,12 +12,14 @@ namespace Iz.Online.Services.Services
 {
     public  class TradeService : ITradeServices
     {
-      
+        public string token { get; set; }
+
         public IExternalTradeService _externalTradeService { get; set; }
 
         public TradeService(IExternalTradeService externalTradeService)
         {
             _externalTradeService = externalTradeService;
+            _externalTradeService.token = token;
         }
 
         public ResultModel<List<Trade>> Trades()

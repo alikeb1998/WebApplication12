@@ -33,8 +33,8 @@ namespace Izi.Online.ViewModels.Instruments
         
      
         public long Tick { get; set; }
-        public double BuyCommissionRate = 0.003712d;
-        public double SellCommissionRate = 0.0038d;
+        public double BuyCommissionRate  => 0.003712d;
+        public double SellCommissionRate => 0.0038d;
 
 
 

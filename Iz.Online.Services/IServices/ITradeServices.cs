@@ -10,6 +10,8 @@ namespace Iz.Online.Services.IServices
 {
     public interface ITradeServices
     {
+        public string token { get; set; }
+
         ResultModel<List<Trade>> Trades();
     }
 }

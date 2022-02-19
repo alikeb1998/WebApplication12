@@ -20,19 +20,21 @@ namespace Iz.Online.API.Controllers
 
         public IHubContext<CustomersHub> _hubContext;
 
-        public TradeController(ITradeServices tradeServices, IHubContext<CustomersHub> hubContext)
+        public TradeController(ITradeServices tradeServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor)
         {
             _tradeServices = tradeServices; //new OrderServices();
             _hubContext = hubContext;
+            _tradeServices.token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
+
         }
         #endregion
 
         // show a list of customer today trades.
-            [HttpGet("dailyTrades")]
-            public ResultModel<List<model.Trade>> Trades()
-            {
-                var result = _tradeServices.Trades();
-                return result;
-            }
+        [HttpGet("dailyTrades")]
+        public ResultModel<List<model.Trade>> Trades()
+        {
+            var result = _tradeServices.Trades();
+            return result;
+        }
     }
 }
