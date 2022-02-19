@@ -330,8 +330,8 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 _db.Database.ExecuteSqlRaw(
-                $"DELETE FROM WatchListsInstruments WHERE InstrumentId='{model.InstrumentsId}' AND WatchListId='{model.WatchListId}'");
-
+                $"DELETE FROM WatchListsInstruments WHERE InstrumentId={model.InstrumentsId} AND WatchListId='{model.WatchListId}'");
+                
                 return GetWatchListDetails(new SearchWatchList()
                 {
                     CustomerId = model.CustomerId,
@@ -349,14 +349,15 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
+
                 var wl = _db.WathLists
-                    .Where(w => w.CustomerId == model.CustomerId).Distinct()
-                    .SelectMany(c => c.WatchListsInstruments, (c, w) =>
-                         new WatchList
-                         {
-                             WatchListName = w.WatchList.WatchListName,
-                             Id = w.WatchList.Id
-                         }).Distinct().ToList();
+                     .Where(w => w.CustomerId == model.CustomerId && w.WatchListsInstruments.Select(x => x.InstrumentId).Contains(model.InstrumentId))
+                     .SelectMany(c => c.WatchListsInstruments, (c, w) =>
+                          new WatchList
+                          {
+                              WatchListName = w.WatchList.WatchListName,
+                              Id = w.WatchList.Id
+                          }).Distinct().ToList();
 
                 if (wl == null || wl.Count == 0)
                     return new ResultModel<List<WatchList>>(null, false, "دیده بان یافت نشد", -1);
