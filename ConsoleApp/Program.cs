@@ -21,6 +21,17 @@ namespace ConsoleApp
 
             Console.WriteLine(des);
 
+
+            t.id = 9;
+            t.name = "assss";
+            
+            ser = JsonConvert.SerializeObject(t);
+            Console.WriteLine(ser);
+
+            des = JsonConvert.DeserializeObject<MyClass>(ser);
+            Console.WriteLine(des);
+
+
             Console.ReadKey();
         }
     }

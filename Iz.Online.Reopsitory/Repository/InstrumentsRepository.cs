@@ -375,7 +375,7 @@ namespace Iz.Online.Reopsitory.Repository
            
             entity.WatchListName = model.WatchListName;
             _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
-
+            _db.SaveChanges();
             string query = $"INSERT  into WatchListsInstruments  values ";
             foreach (var id in model.InstrumentsId)
             {
