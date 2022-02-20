@@ -77,25 +77,43 @@ namespace Iz.Online.API.Controllers
                 new ValidityType(){
                     Key ="Day",
                     Type = "int",
-                    Value = "روز"
+                    Value = "روز",
+                    Code = 1
                 },
-                    new ValidityType()
-                    {
-                        Key ="FillAndKill",
-                        Type = "int",
-                        Value = "انجام و حذف"
-                    },
+                new ValidityType()
+                {
+                    Key ="FillAndKill",
+                    Type = "int",
+                    Value = "انجام و حذف",
+                    Code = 4
+                },
                 new ValidityType()
                 {
                     Key ="GoodTillCanceled",
                     Type = "int",
-                    Value = "معتبر تا لغو"
+                    Value = "معتبر تا لغو",
+                    Code = 3
                 },
                 new ValidityType()
                 {
                     Key ="GoodTillDate",
                     Type = "DateTime",
-                    Value ="معتبر تا تاریخ"
+                    Value ="معتبر تا تاریخ",
+                    Code = 2
+                },
+                new ValidityType()
+                {
+                    Key ="Session",
+                    Type = "",
+                    Value ="",
+                    Code = 5
+                },
+                new ValidityType()
+                {
+                    Key ="Sliding Validity",
+                    Type = "",
+                    Value ="",
+                    Code = 6
                 }
                 });
         }
