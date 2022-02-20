@@ -5,8 +5,9 @@ using Iz.Online.OmsModels.ResponsModels.Order;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.ShareModels;
+using Izi.Online.ViewModels.Users;
 using model = Iz.Online.OmsModels.ResponsModels.User;
-
+using Wallet = Iz.Online.OmsModels.ResponsModels.User.Wallet;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -34,9 +35,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 return new ResultModel<AssetsList>(result, false, result.clientMessage, result.statusCode);
             return new ResultModel<AssetsList>(result);
         }
-        public captcha Captcha()
+        public Login Captcha()
         {
-            var result = HttpGetRequest<captcha>("user/captcha");
+            var result = HttpGetRequest<Login>("user/captcha");
             return result;
         }
 

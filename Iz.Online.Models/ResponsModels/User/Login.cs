@@ -1,4 +1,4 @@
-﻿
+﻿using Iz.Online.OmsModels.ResponsModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.User
 {
-    public class Captcha:OmsResponseBaseModel
+    public class Login
     {
-        public string  Base64 { get; set; }
-        public string Id { get; set; }
+        public Captcha Captcha { get; set; }
     }
 }

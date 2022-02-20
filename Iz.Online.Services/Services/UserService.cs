@@ -119,8 +119,10 @@ namespace Iz.Online.Services.Services
             var res = _externalUserService.Captcha();
             var captcha = new Captcha()
             {
-                
-                Id = res.id
+
+                CaptchaImage = res.Captcha.Base64,
+                Id = res.Captcha.Id
+        
             };
             return captcha;
         }
