@@ -240,7 +240,7 @@ namespace Iz.Online.Reopsitory.Repository
 
                             }).ToList()
                     }).FirstOrDefault();
-                if(wl==null)
+                if (wl == null)
                     return new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد", -1);
 
                 return new ResultModel<WatchListDetails>(wl);
@@ -331,7 +331,7 @@ namespace Iz.Online.Reopsitory.Repository
             {
                 _db.Database.ExecuteSqlRaw(
                 $"DELETE FROM WatchListsInstruments WHERE InstrumentId={model.InstrumentsId} AND WatchListId='{model.WatchListId}'");
-                
+
                 return GetWatchListDetails(new SearchWatchList()
                 {
                     CustomerId = model.CustomerId,
@@ -375,8 +375,8 @@ namespace Iz.Online.Reopsitory.Repository
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
 
-            var entity = _db.WathLists.FirstOrDefault(x=>x.Id==model.Id);
-           
+            var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.Id);
+
             entity.WatchListName = model.WatchListName;
             _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
             _db.SaveChanges();
@@ -405,7 +405,7 @@ namespace Iz.Online.Reopsitory.Repository
 
                 if (entity != null)
                 {
-                    entity.CommentText =  model.Comment;
+                    entity.CommentText = model.Comment;
                     _db.SaveChanges();
                     return new ResultModel<bool>(true);
                 }
@@ -437,8 +437,13 @@ namespace Iz.Online.Reopsitory.Repository
 
             if (entity != null)
                 return new ResultModel<string>(entity.CommentText);
-            
+
             return new ResultModel<string>(null, false, "یادداشتی ثبت نشده است", -1);
+        }
+        public ResultModel<long> GetInstrumentId(string nscCode)
+        {
+            var entity = _db.Instruments.Where(x => x.Code == nscCode).Select(x => x.InstrumentId).FirstOrDefault();
+            return new ResultModel<long>(entity);
         }
     }
 }

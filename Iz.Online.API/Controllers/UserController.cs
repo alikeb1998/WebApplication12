@@ -100,20 +100,6 @@ namespace Iz.Online.API.Controllers
                     Type = "DateTime",
                     Value ="معتبر تا تاریخ",
                     Code = 2
-                },
-                new ValidityType()
-                {
-                    Key ="Session",
-                    Type = "",
-                    Value ="",
-                    Code = 5
-                },
-                new ValidityType()
-                {
-                    Key ="Sliding Validity",
-                    Type = "",
-                    Value ="",
-                    Code = 6
                 }
                 });
         }

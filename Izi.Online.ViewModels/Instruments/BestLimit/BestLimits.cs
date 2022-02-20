@@ -14,5 +14,7 @@ namespace Izi.Online.ViewModels.Instruments.BestLimit
         public OrderRow orderRow4 { get; set; }
         public OrderRow orderRow5 { get; set; }
         public OrderRow orderRow6 { get; set; }
+        public bool IsSellQueue { get; set; }
+        public bool IsBuyQueue { get; set; }
     }
 }

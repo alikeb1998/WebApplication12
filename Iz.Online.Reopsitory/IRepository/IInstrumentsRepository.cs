@@ -28,5 +28,6 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
+        ResultModel<long> GetInstrumentId(string nscCode);
     }
 }

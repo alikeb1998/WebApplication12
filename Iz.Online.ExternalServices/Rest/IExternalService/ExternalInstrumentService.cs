@@ -125,6 +125,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
 
+            var detail = Details(new SelectInstrumentDetails()
+            {
+                InstrumentId = (int)_instrumentsRepository.GetInstrumentId(model.NscCode).Model
+            }) ; 
+
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -213,7 +218,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             //var proccessedResult = new BestLimitsView();
             //if (a.Count > 0)
             //{
-                 var proccessedResult = GetTotalvolume(result);
+            var proccessedResult = ProccessVolume(result, detail.Model);
             //}
 
 
@@ -241,7 +246,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }
-        public BestLimitsView GetTotalvolume(BestLimitsView bestLimits)
+        public BestLimitsView ProccessVolume(BestLimitsView bestLimits, Details detail)
         {
             var totalBuys = bestLimits.orderRow1.volumeBestBuy +
                             bestLimits.orderRow2.volumeBestBuy +
@@ -271,12 +276,23 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             bestLimits.orderRow5.QtyOrderSell = bestLimits.orderRow5.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow5.volumeBestSale) : 0;
             bestLimits.orderRow6.QtyOrderSell = bestLimits.orderRow6.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow6.volumeBestSale) : 0;
 
+            if (bestLimits.orderRow1.priceBestBuy == detail.PriceMax)
+            {
+                bestLimits.IsBuyQueue = true;
+                bestLimits.IsSellQueue = false;
+            }
+            else if (bestLimits.orderRow1.priceBestSale == detail.PriceMin)
+            {
+                bestLimits.IsSellQueue = true;
+                bestLimits.IsBuyQueue = false;
+            }
+
             return bestLimits;
         }
         public double PercentProccessor(double a, double b)
         {
 
-             var res =(a - b) / a * 100;
+            var res = (a - b) / a * 100;
             return 100 - res;
         }
 
