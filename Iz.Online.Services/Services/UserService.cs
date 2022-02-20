@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.OmsModels.InputModels;
+using Iz.Online.OmsModels.InputModels.Users;
+using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels;
@@ -136,6 +138,16 @@ namespace Iz.Online.Services.Services
                 ExpireAt = result.ExpireAt
             };
             return OtpResult;
+        }
+        public CheckedOtp CheckOtp(Otp otp)
+        {
+            var result = _externalUserService.CheckOtp(otp);
+            var checkOtp= new CheckedOtp()
+            {
+              Token = result.Token,
+              Sockettoken = result.SocketToken
+            };
+            return checkOtp;
         }
     }
 }

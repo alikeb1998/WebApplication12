@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Iz.Online.OmsModels.InputModels
+namespace Iz.Online.OmsModels.Users.InputModels
 {
     public class Credentials
     {

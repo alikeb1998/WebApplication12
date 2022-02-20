@@ -2,6 +2,8 @@
 using Iz.Online.API.Infrastructure;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.OmsModels.InputModels;
+using Iz.Online.OmsModels.InputModels.Users;
+using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Orders;
@@ -45,10 +47,19 @@ namespace Iz.Online.API.Controllers
             return res;
 
         }
+
         [HttpPost("SendOtp")]
         public OtpResult SendOtp([FromBody] Credentials credentials)
         {
             var res = _userService.SendOtp(credentials);
+            return res;
+
+        }
+
+        [HttpPost("CheckOtp")]
+        public CheckedOtp CheckOtp([FromBody] Otp otp)
+        {
+            var res = _userService.CheckOtp(otp);
             return res;
 
         }

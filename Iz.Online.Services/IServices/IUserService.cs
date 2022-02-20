@@ -8,6 +8,8 @@ using  Izi.Online.ViewModels.Trades;
 using Asset = Izi.Online.ViewModels.Orders.Asset;
 using Izi.Online.ViewModels.Users;
 using Iz.Online.OmsModels.InputModels;
+using Iz.Online.OmsModels.Users.InputModels;
+using Iz.Online.OmsModels.InputModels.Users;
 
 namespace Iz.Online.Services.IServices
 {
@@ -23,5 +25,6 @@ namespace Iz.Online.Services.IServices
         string GetToken();
         Captcha Captcha();
         OtpResult SendOtp(Credentials credentials);
+        CheckedOtp CheckOtp(Otp otp);
     }
 }
