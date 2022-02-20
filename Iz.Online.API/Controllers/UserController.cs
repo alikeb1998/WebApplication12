@@ -37,10 +37,18 @@ namespace Iz.Online.API.Controllers
             return Ok(new ResultModel<List<AppConfigs>>(null));
 
         }
+
         [HttpGet("captcha")]
         public Captcha Captcha()
         {
             var res = _userService.Captcha();
+            return res;
+
+        }
+        [HttpPost("SendOtp")]
+        public OtpResult SendOtp([FromBody] Credentials credentials)
+        {
+            var res = _userService.SendOtp(credentials);
             return res;
 
         }

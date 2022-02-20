@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using  Izi.Online.ViewModels.Trades;
 using Asset = Izi.Online.ViewModels.Orders.Asset;
 using Izi.Online.ViewModels.Users;
+using Iz.Online.OmsModels.InputModels;
 
 namespace Iz.Online.Services.IServices
 {
@@ -21,5 +22,6 @@ namespace Iz.Online.Services.IServices
         void SetToken(string token);
         string GetToken();
         Captcha Captcha();
+        OtpResult SendOtp(Credentials credentials);
     }
 }

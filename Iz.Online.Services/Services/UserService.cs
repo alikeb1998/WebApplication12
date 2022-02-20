@@ -126,5 +126,16 @@ namespace Iz.Online.Services.Services
             };
             return captcha;
         }
+
+        public OtpResult SendOtp(Credentials credentials)
+        {
+            var result = _externalUserService.SendOtp(credentials);
+            var OtpResult = new OtpResult()
+            {
+                OtpId = result.OtpId,
+                ExpireAt = result.ExpireAt
+            };
+            return OtpResult;
+        }
     }
 }

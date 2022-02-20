@@ -14,5 +14,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 
         ResultModel<AssetsList>  GetAllAssets();
         Login Captcha();
+        OtpResult SendOtp(Credentials credentials);
     }
 }
