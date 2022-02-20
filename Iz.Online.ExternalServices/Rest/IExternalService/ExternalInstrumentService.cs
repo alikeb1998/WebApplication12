@@ -90,18 +90,18 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                             , 0.003712f
                             , 0.0038f
                             );
-                          
+
                     }
                     else
                     {
-                        
+
                         _instrumentsRepository.UpdateInstruments(instrument
                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
                             , instrument.tick
                             , 0.003712f
-                            ,0.0038f
+                            , 0.0038f
                             );
                     }
 
@@ -124,7 +124,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
-           
+
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -188,51 +188,35 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             };
             var activeOrders = _externalOrderService.GetAllActives();
 
-           
+
             foreach (var order in activeOrders.Model.Orders)
             {
-               
-                if (order.instrument.priceMax == result.orderRow1.priceBestBuy)
-                        result.orderRow1.HasOrderBuy = true;
 
-                 if(order.instrument.priceMax == result.orderRow2.priceBestBuy)
-                        result.orderRow2.HasOrderBuy = true;
+                if (model.NscCode == order.instrument.code)
+                {
+                    result.orderRow1.HasOrderBuy = order.instrument.priceMax == result.orderRow1.priceBestBuy ? true : false;
+                    result.orderRow2.HasOrderBuy = order.instrument.priceMax == result.orderRow2.priceBestBuy ? true : false;
+                    result.orderRow3.HasOrderBuy = order.instrument.priceMax == result.orderRow3.priceBestBuy ? true : false;
+                    result.orderRow4.HasOrderBuy = order.instrument.priceMax == result.orderRow4.priceBestBuy ? true : false;
+                    result.orderRow5.HasOrderBuy = order.instrument.priceMax == result.orderRow5.priceBestBuy ? true : false;
+                    result.orderRow6.HasOrderBuy = order.instrument.priceMax == result.orderRow6.priceBestBuy ? true : false;
 
-                 if (order.instrument.priceMax == result.orderRow3.priceBestBuy)
-                    result.orderRow3.HasOrderBuy = true;
-
-                 if (order.instrument.priceMax == result.orderRow4.priceBestBuy)
-                    result.orderRow4.HasOrderBuy = true;
-
-                 if (order.instrument.priceMax == result.orderRow5.priceBestBuy)
-                    result.orderRow5.HasOrderBuy = true;
-
-                 if (order.instrument.priceMax == result.orderRow6.priceBestBuy)
-                    result.orderRow6.HasOrderBuy = true;
-
-                if (order.instrument.priceMin == result.orderRow1.priceBestSale)
-                        result.orderRow1.HasOrderSell = true;
-
-                 if (order.instrument.priceMin == result.orderRow2.priceBestSale)
-                    result.orderRow2.HasOrderSell = true;
-
-                if(order.instrument.priceMin == result.orderRow3.priceBestSale)
-                    result.orderRow3.HasOrderSell = true;
-
-                 if (order.instrument.priceMin == result.orderRow4.priceBestSale)
-                    result.orderRow4.HasOrderSell = true;
-
-                if(order.instrument.priceMin == result.orderRow5.priceBestSale)
-                    result.orderRow5.HasOrderSell = true;
-
-                 if (order.instrument.priceMin == result.orderRow6.priceBestSale)
-                    result.orderRow6.HasOrderSell = true;
-                
+                    result.orderRow1.HasOrderSell = order.instrument.priceMin == result.orderRow1.priceBestSale ? true : false;
+                    result.orderRow2.HasOrderSell = order.instrument.priceMin == result.orderRow2.priceBestSale ? true : false;
+                    result.orderRow3.HasOrderSell = order.instrument.priceMin == result.orderRow3.priceBestSale ? true : false;
+                    result.orderRow4.HasOrderSell = order.instrument.priceMin == result.orderRow4.priceBestSale ? true : false;
+                    result.orderRow5.HasOrderSell = order.instrument.priceMin == result.orderRow5.priceBestSale ? true : false;
+                    result.orderRow6.HasOrderSell = order.instrument.priceMin == result.orderRow6.priceBestSale ? true : false;
+                }
             }
+            //var a = activeOrders.Model.Orders.Where(x => x.instrument.code == model.NscCode).ToList();
+            //var proccessedResult = new BestLimitsView();
+            //if (a.Count > 0)
+            //{
+                 var proccessedResult = GetTotalvolume(result);
+            //}
 
-            var  proccessedResult = GetTotalvolume(result);
 
-            
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 
@@ -260,11 +244,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public BestLimitsView GetTotalvolume(BestLimitsView bestLimits)
         {
             var totalBuys = bestLimits.orderRow1.volumeBestBuy +
-                      bestLimits.orderRow2.volumeBestBuy +
-                      bestLimits.orderRow3.volumeBestBuy +
-                      bestLimits.orderRow4.volumeBestBuy +
-                      bestLimits.orderRow5.volumeBestBuy +
-                      bestLimits.orderRow6.volumeBestBuy;
+                            bestLimits.orderRow2.volumeBestBuy +
+                            bestLimits.orderRow3.volumeBestBuy +
+                            bestLimits.orderRow4.volumeBestBuy +
+                            bestLimits.orderRow5.volumeBestBuy +
+                            bestLimits.orderRow6.volumeBestBuy;
 
             var totalSells = bestLimits.orderRow1.volumeBestSale +
                       bestLimits.orderRow2.volumeBestSale +
@@ -273,26 +257,27 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                       bestLimits.orderRow5.volumeBestSale +
                       bestLimits.orderRow6.volumeBestSale;
 
-            bestLimits.orderRow1.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow1.priceBestBuy) : 0;
-            bestLimits.orderRow2.QtyOrderBuy = bestLimits.orderRow2.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow2.priceBestBuy) : 0;
-            bestLimits.orderRow3.QtyOrderBuy = bestLimits.orderRow3.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow3.priceBestBuy) : 0;
-            bestLimits.orderRow4.QtyOrderBuy = bestLimits.orderRow4.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow4.priceBestBuy) : 0;
-            bestLimits.orderRow5.QtyOrderBuy = bestLimits.orderRow5.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow5.priceBestBuy) : 0;
-            bestLimits.orderRow6.QtyOrderBuy = bestLimits.orderRow6.priceBestBuy != 0 ? (int)PercentProccessor(totalBuys, bestLimits.orderRow6.priceBestBuy) : 0;
+            bestLimits.orderRow1.QtyOrderBuy = bestLimits.orderRow1.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow1.volumeBestBuy) : 0;
+            bestLimits.orderRow2.QtyOrderBuy = bestLimits.orderRow2.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow2.volumeBestBuy) : 0;
+            bestLimits.orderRow3.QtyOrderBuy = bestLimits.orderRow3.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow3.volumeBestBuy) : 0;
+            bestLimits.orderRow4.QtyOrderBuy = bestLimits.orderRow4.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow4.volumeBestBuy) : 0;
+            bestLimits.orderRow5.QtyOrderBuy = bestLimits.orderRow5.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow5.volumeBestBuy) : 0;
+            bestLimits.orderRow6.QtyOrderBuy = bestLimits.orderRow6.priceBestBuy != 0 ? PercentProccessor(totalBuys, bestLimits.orderRow6.volumeBestBuy) : 0;
 
-            bestLimits.orderRow1.QtyOrderSell = bestLimits.orderRow1.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow1.priceBestSale) : 0;
-            bestLimits.orderRow2.QtyOrderSell = bestLimits.orderRow2.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow2.priceBestSale) : 0;
-            bestLimits.orderRow3.QtyOrderSell = bestLimits.orderRow3.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow3.priceBestSale) : 0;
-            bestLimits.orderRow4.QtyOrderSell = bestLimits.orderRow4.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow4.priceBestSale) : 0;
-            bestLimits.orderRow5.QtyOrderSell = bestLimits.orderRow5.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow5.priceBestSale) : 0;
-            bestLimits.orderRow6.QtyOrderSell = bestLimits.orderRow6.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow6.priceBestSale) : 0;
+            bestLimits.orderRow1.QtyOrderSell = bestLimits.orderRow1.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow1.volumeBestSale) : 0;
+            bestLimits.orderRow2.QtyOrderSell = bestLimits.orderRow2.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow2.volumeBestSale) : 0;
+            bestLimits.orderRow3.QtyOrderSell = bestLimits.orderRow3.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow3.volumeBestSale) : 0;
+            bestLimits.orderRow4.QtyOrderSell = bestLimits.orderRow4.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow4.volumeBestSale) : 0;
+            bestLimits.orderRow5.QtyOrderSell = bestLimits.orderRow5.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow5.volumeBestSale) : 0;
+            bestLimits.orderRow6.QtyOrderSell = bestLimits.orderRow6.priceBestSale != 0 ? PercentProccessor(totalSells, bestLimits.orderRow6.volumeBestSale) : 0;
 
-            return bestLimits;            
+            return bestLimits;
         }
         public double PercentProccessor(double a, double b)
         {
 
-            return (a - b) / a * 100;
+             var res =(a - b) / a * 100;
+            return 100 - res;
         }
 
 

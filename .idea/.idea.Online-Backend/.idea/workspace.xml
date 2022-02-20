@@ -138,12 +138,14 @@
       <workItem from="1645341999973" duration="64000" />
       <workItem from="1645342177288" duration="80000" />
       <workItem from="1645342717692" duration="483000" />
+      <workItem from="1645344703162" duration="4000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
