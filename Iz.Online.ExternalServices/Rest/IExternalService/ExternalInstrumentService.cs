@@ -214,14 +214,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                     result.orderRow6.HasOrderSell = order.instrument.priceMin == result.orderRow6.priceBestSale ? true : false;
                 }
             }
-            //var a = activeOrders.Model.Orders.Where(x => x.instrument.code == model.NscCode).ToList();
-            //var proccessedResult = new BestLimitsView();
-            //if (a.Count > 0)
-            //{
+           
             var proccessedResult = ProccessVolume(result, detail.Model);
-            //}
-
-
+           
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 

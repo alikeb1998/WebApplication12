@@ -68,7 +68,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model));
             if (result.statusCode != 200)
             {
-                return new ResultModel<CanceledOrder>(result);
+                return new ResultModel<CanceledOrder>(result, false);
             }
             return new ResultModel<CanceledOrder>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
