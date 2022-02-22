@@ -16,7 +16,6 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalTradeService : BaseService, IExternalTradeService
     {
-        public string token { get; set; }
         public ExternalTradeService(IBaseRepository baseRepository) : base(baseRepository)
         {
         }

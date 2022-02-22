@@ -34,7 +34,6 @@ namespace Iz.Online.Services.Services
         private readonly IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
 
-        public string token { get; set; }
 
         #endregion
 

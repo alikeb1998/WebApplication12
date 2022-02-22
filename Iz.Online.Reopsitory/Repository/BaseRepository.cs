@@ -47,12 +47,18 @@ namespace Iz.Online.Reopsitory.Repository
 
         public string GetOmsToken(string token)
         {
-            var custmer = _db.Customer.FirstOrDefault(x => x.Token == token);
+            var custmer = _db.Customer.FirstOrDefault(x => x.LocalToken.Contains( token));
 
             if (custmer == null)
                 return null;
 
             return custmer.OmsToken;
+        }
+
+        public bool LocalTokenIsValid(string token)
+        {
+            return _db.Customer.Any(x => x.LocalToken == token && x.TokenExpireDate > DateTime.Now);
+            
         }
     }
 }

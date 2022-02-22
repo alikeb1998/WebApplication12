@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
 using Izi.Online.ViewModels.Users;
+using Microsoft.IdentityModel.Tokens;
 using db = Iz.Online.Entities;
 
 namespace Iz.Online.Services.Services
@@ -20,7 +22,7 @@ namespace Iz.Online.Services.Services
     {
         public IUserRepository _userRepository { get; set; }
         public IExternalUserService _externalUserService { get; set; }
-        public string token { get; set; }
+        public string _token { get; set; }
 
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService)
         {
@@ -28,12 +30,13 @@ namespace Iz.Online.Services.Services
             _externalUserService = externalUserService;
         }
 
-        public List<string> UserHubsList(string userId)
+        public UsersHubIds UserHubsList(string userId)
         {
 
-            return _userRepository.GetUserHubs(userId);
+            return  _userRepository.GetUserHubs(userId);
 
         }
+       
         public ResultModel<List<Asset>> AllAssets()
         {
             var assets = _externalUserService.GetAllAssets();
@@ -94,26 +97,30 @@ namespace Iz.Online.Services.Services
                 Value = x.Value
             }).ToList();
         }
-
-        public AppConfigs AppConfigs(string key)
+                     
+        public ResultModel<string> GetUserLocalToken(string token)
         {
-            throw new NotImplementedException();
+            var deserializedToken = CastJwtSecurityTokenHandler(token);
+            var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
+
+            string localToken = _userRepository.GetUserLocalToken(omsId,token);
+
+
+            return new ResultModel<string>(localToken);
+        }
+      
+        private SecurityToken CastJwtSecurityTokenHandler(string stream)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            var jsonToken = handler.ReadToken(stream);
+
+            return jsonToken;
         }
 
-        public void SetToken(string token)
+        public void SetUserHub(string UserId, string hubId)
         {
-            var dbEntity = new db.TokenStore();
-            dbEntity.Token = token;
-            _userRepository.SetToken(dbEntity);
-
-
-        }
-        public string GetToken()
-        {
-            var t = token;
-            var res = _userRepository.GetToken();
-            return res;
-
+           _userRepository.SetUserHub(UserId, hubId);
         }
     }
 }

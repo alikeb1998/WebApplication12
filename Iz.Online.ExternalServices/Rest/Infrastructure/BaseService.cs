@@ -16,14 +16,15 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
 
         private readonly IBaseRepository _baseRepository;
 
+
         public BaseService(IBaseRepository baseRepository)
         {
             _baseRepository = baseRepository;
-
         }
 
         public string getToken()
         {
+
             var client = new RestClient($@"http://192.168.72.112:5554/V1/User/token/get");
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
@@ -158,8 +159,11 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
 
         public string GetOmsToken(string token)
         {
-           return _baseRepository.GetOmsToken(token);
+            return _baseRepository.GetOmsToken(token);
         }
-
+        public bool LocalTokenIsValid(string token)
+        {
+            return _baseRepository.LocalTokenIsValid(token);
+        }
     }
 }

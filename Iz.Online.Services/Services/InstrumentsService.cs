@@ -14,14 +14,14 @@ namespace Iz.Online.Services.Services
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
         public IExternalInstrumentService _externalInstrumentsService { get; set; }
-        public string token { get; set; }
+        public string _token { get; set; }
 
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
-            
+            _externalInstrumentsService._token = _token;
         }
 
         public ResultModel<List<Instruments>> Instruments()

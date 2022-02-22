@@ -5,15 +5,13 @@ using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
-
-
-
+using Iz.Online.Services;
 
 namespace Iz.Online.API.Controllers
 {
     [Produces("application/json")]
     [Route("V1/[controller]")]
-
+    //[JwtCustomAuthorize(role: "normalCustomer") ]
 
     /// <summary>
     ///نام دیده بان
@@ -25,14 +23,13 @@ namespace Iz.Online.API.Controllers
 
         private readonly IInstrumentsService _instrumentsService;
         private readonly IExternalInstrumentService _externalInstrumentService;
-        private readonly IDistributedCache _redis;
 
-        public InstrumentsController(IInstrumentsService instrumentsService, IExternalInstrumentService externalInstrumentService, IDistributedCache redis, IHttpContextAccessor httpContextAccessor)
+
+        public InstrumentsController(IInstrumentsService instrumentsService, IExternalInstrumentService externalInstrumentService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
             _externalInstrumentService = externalInstrumentService;
-            _redis = redis;
-            _instrumentsService.token = _externalInstrumentService.token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
+            _externalInstrumentService._token =  _instrumentsService._token = _token_;
         }
 
         #endregion

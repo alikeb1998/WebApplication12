@@ -20,12 +20,11 @@ namespace Iz.Online.API.Controllers
 
         public IHubContext<CustomersHub> _hubContext;
 
-        public TradeController(ITradeServices tradeServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor)
+        public TradeController(ITradeServices tradeServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _tradeServices = tradeServices; //new OrderServices();
             _hubContext = hubContext;
-            _tradeServices.token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
-
+            
         }
         #endregion
 

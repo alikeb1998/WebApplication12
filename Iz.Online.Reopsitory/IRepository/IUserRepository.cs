@@ -5,15 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.Entities;
+using Izi.Online.ViewModels.Users;
 
 namespace Iz.Online.Reopsitory.IRepository
 {
     public interface IUserRepository : IBaseRepository
     {
-        List<string> GetUserHubs(string userId);
-        void SetToken(TokenStore token);
-        string GetToken();
+        UsersHubIds GetUserHubs(string userId);
+    
         List<AppConfigs> GetAppConfigs();
-        AppConfigs GetAppConfigs(string key);
+        string GetUserLocalToken(string omsId, string omsToken);
+        void SetUserHub(string UserId, string hubId);
     }
 }

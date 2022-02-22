@@ -20,13 +20,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly IInstrumentsRepository _instrumentsRepository;
         private IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
-        public string token { get; set; }
+        public string _token { get; set; }
+
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService, IExternalOrderService externalOrderService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _pushService = pushService;
-            
+
         }
 
         public bool UpdateInstrumentList()
@@ -35,7 +36,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
             var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
             var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
-            
+
 
             var instruments = HttpGetRequest<Instruments>("order/instruments");
 
@@ -92,14 +93,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                     }
                     else
                     {
-                        
+
                         _instrumentsRepository.UpdateInstruments(instrument
                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
-                            ,instrument.tick
+                            , instrument.tick
                             , 0.003712f
-                            ,0.0038f
+                            , 0.0038f
                             );
                     }
 
@@ -122,9 +123,12 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
-           
+
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
+
+
+            
 
             var result = new BestLimitsView()
             {
@@ -184,51 +188,52 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 },
 
             };
+            _externalOrderService._token = _token;
             var activeOrders = _externalOrderService.GetAllActives();
 
-           
+            activeOrders.Model.Orders.ToList().Skip(10).Take(15);
             foreach (var order in activeOrders.Model.Orders)
             {
-               
+
                 if (order.instrument.priceMax == result.orderRow1.priceBestBuy)
-                        result.orderRow1.HasOrderBuy = true;
+                    result.orderRow1.HasOrderBuy = true;
 
-                 if(order.instrument.priceMax == result.orderRow2.priceBestBuy)
-                        result.orderRow2.HasOrderBuy = true;
+                if (order.instrument.priceMax == result.orderRow2.priceBestBuy)
+                    result.orderRow2.HasOrderBuy = true;
 
-                 if (order.instrument.priceMax == result.orderRow3.priceBestBuy)
+                if (order.instrument.priceMax == result.orderRow3.priceBestBuy)
                     result.orderRow3.HasOrderBuy = true;
 
-                 if (order.instrument.priceMax == result.orderRow4.priceBestBuy)
+                if (order.instrument.priceMax == result.orderRow4.priceBestBuy)
                     result.orderRow4.HasOrderBuy = true;
 
-                 if (order.instrument.priceMax == result.orderRow5.priceBestBuy)
+                if (order.instrument.priceMax == result.orderRow5.priceBestBuy)
                     result.orderRow5.HasOrderBuy = true;
 
-                 if (order.instrument.priceMax == result.orderRow6.priceBestBuy)
+                if (order.instrument.priceMax == result.orderRow6.priceBestBuy)
                     result.orderRow6.HasOrderBuy = true;
 
                 if (order.instrument.priceMin == result.orderRow1.priceBestSale)
-                        result.orderRow1.HasOrderSell = true;
+                    result.orderRow1.HasOrderSell = true;
 
-                 if (order.instrument.priceMin == result.orderRow2.priceBestSale)
+                if (order.instrument.priceMin == result.orderRow2.priceBestSale)
                     result.orderRow2.HasOrderSell = true;
 
-                if(order.instrument.priceMin == result.orderRow3.priceBestSale)
+                if (order.instrument.priceMin == result.orderRow3.priceBestSale)
                     result.orderRow3.HasOrderSell = true;
 
-                 if (order.instrument.priceMin == result.orderRow4.priceBestSale)
+                if (order.instrument.priceMin == result.orderRow4.priceBestSale)
                     result.orderRow4.HasOrderSell = true;
 
-                if(order.instrument.priceMin == result.orderRow5.priceBestSale)
+                if (order.instrument.priceMin == result.orderRow5.priceBestSale)
                     result.orderRow5.HasOrderSell = true;
 
-                 if (order.instrument.priceMin == result.orderRow6.priceBestSale)
+                if (order.instrument.priceMin == result.orderRow6.priceBestSale)
                     result.orderRow6.HasOrderSell = true;
-                
+
             }
 
-            var  proccessedResult = GetTotalvolume(result);
+            var proccessedResult = GetTotalvolume(result);
 
 
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
@@ -285,7 +290,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             bestLimits.orderRow5.QtyOrderSell = bestLimits.orderRow5.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow5.priceBestSale) : 0;
             bestLimits.orderRow6.QtyOrderSell = bestLimits.orderRow6.QtyOrderSell != 0 ? (int)PercentProccessor(totalSells, bestLimits.orderRow6.priceBestSale) : 0;
 
-            return bestLimits;            
+            return bestLimits;
         }
         public double PercentProccessor(double a, double b)
         {

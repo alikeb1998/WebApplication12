@@ -8,7 +8,7 @@ namespace Iz.Online.API.Controllers
     [Produces("application/json")]
     [Route("V1/[controller]")]
     
-    public class AdministrationController : BaseApiController
+    public class AdministrationController //: BaseApiController
     {
         #region ctor
 

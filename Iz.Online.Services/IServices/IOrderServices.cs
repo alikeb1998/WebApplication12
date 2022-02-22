@@ -16,8 +16,6 @@ namespace Iz.Online.Services.IServices
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
         ResultModel<List<ActiveOrder>> AllActive( );
 
-        string token { get; set; }
-
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
         

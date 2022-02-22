@@ -12,17 +12,14 @@ namespace Iz.Online.Services.IServices
 {
     public interface IUserService
     {
-        string token { get; set; }
+        string _token { get; set; }
+        void SetUserHub(string UserId, string hubId);
 
-        List<string> UserHubsList(string UserId);
+        UsersHubIds UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
-        Izi.Online.ViewModels.AppConfigs AppConfigs(string key);
-        
-        void SetToken(string token);
-        string GetToken();
 
-
+        ResultModel<string> GetUserLocalToken(string  omsId);
     }
 }
