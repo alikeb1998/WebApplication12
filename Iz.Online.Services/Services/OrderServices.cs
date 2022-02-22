@@ -163,26 +163,34 @@ namespace Iz.Online.Services.Services
             var report = new Report<ActiveOrder>()
             {
                 Model = result.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
-                Type = filter.Type,
+                Type = filter.OrderBy,
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = result.Count,
                 OrderType = filter.OrderType,
             };
-            
-            if (filter.Type.orderTypes == OrderSortTypes.Symbol)
-                  report.Model.OrderBy(x => x.InstrumentName); 
 
-            if (filter.Type.orderTypes ==OrderSortTypes.Percentage)
+
+            string query = "";
+            query = $"select  * from users order by {filter.OrderBy.orderBy} {filter.OrderType}";
+
+
+            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.ASC)
+                  report.Model.OrderBy(x => x.InstrumentName); 
+            
+            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.DESC)
+                  report.Model.OrderByDescending(x => x.InstrumentName); 
+
+            if (filter.OrderBy.orderBy ==OrderSortColumn.Percentage)
                  report.Model.OrderBy(x => x.ExecutePercent);
 
-            if (filter.Type.orderTypes ==OrderSortTypes.Date)
+            if (filter.OrderBy.orderBy ==OrderSortColumn.Date)
                  report.Model.OrderBy(x => x.ExecutePercent);  
 
-            if (filter.Type.orderTypes ==OrderSortTypes.Side)
+            if (filter.OrderBy.orderBy ==OrderSortColumn.Side)
                  report.Model.OrderBy(x => x.ExecutePercent); 
 
-            if (filter.Type.orderTypes ==OrderSortTypes.Volume)
+            if (filter.OrderBy.orderBy ==OrderSortColumn.Volume)
                  report.Model.OrderBy(x => x.ExecutePercent);
             return new ResultModel<Report<ActiveOrder>>(report);
         }

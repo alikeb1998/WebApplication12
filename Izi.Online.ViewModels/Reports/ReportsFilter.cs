@@ -10,7 +10,7 @@ namespace Izi.Online.ViewModels.Reports
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
-        public Type Type { get; set; }
+        public Type OrderBy { get; set; }
         public OrderType OrderType { get; set; }
     }
 }

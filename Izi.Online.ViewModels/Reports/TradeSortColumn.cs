@@ -2,7 +2,7 @@
 
 namespace Izi.Online.ViewModels.Reports
 {
-    public enum TradeSortTypes
+    public enum TradeSortColumn
     {
         [Description("نماد")]
         Symbol,

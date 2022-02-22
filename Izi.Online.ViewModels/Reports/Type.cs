@@ -9,9 +9,9 @@ namespace Izi.Online.ViewModels.Reports
 {
     public class Type
     {
-        public OrderSortTypes orderTypes{ get; set; }
-        public TradeSortTypes TradeTypes{ get; set; }
-        public AssetsSortTypes AssetsTypes{ get; set; }
+        public OrderSortColumn orderBy{ get; set; }
+        public TradeSortColumn TradeBy{ get; set; }
+        public PortfolioSortColumn AssetsBy{ get; set; }
       
     }
 }

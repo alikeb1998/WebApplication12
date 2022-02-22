@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.Reports
 {
-    public enum OrderSortTypes
+    public enum OrderSortColumn
     {
         [Description("انجام شده")]
         Percentage,

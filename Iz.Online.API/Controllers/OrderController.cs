@@ -82,8 +82,8 @@ namespace Iz.Online.API.Controllers
         }
 
         //get a list of all active orders.
-        [HttpGet("all/activePaged")]
-        public ResultModel<Report<ActiveOrder>> AllActivePaged(ReportsFilter filter)
+        [HttpPost("all/activePaged")]
+        public ResultModel<Report<ActiveOrder>> AllActivePaged([FromBody]  ReportsFilter filter)
         {
             var result = _orderServices.AllActivePaged(filter);
             return result;
