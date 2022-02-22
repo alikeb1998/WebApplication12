@@ -1,6 +1,7 @@
 ﻿using Iz.Online.OmsModels.InputModels.Order;
 using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
@@ -15,6 +16,7 @@ namespace Iz.Online.Services.IServices
     {
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
         ResultModel<List<ActiveOrder>> AllActive( );
+        ResultModel<Report<ActiveOrder>> AllActivePaged(ReportsFilter filter);
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
         

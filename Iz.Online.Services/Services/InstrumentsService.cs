@@ -77,6 +77,8 @@ namespace Iz.Online.Services.Services
                 ins.ClosePrice = price.Model.closingPrice.Value;
                 ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
                 ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+                ins.BuyVolume = bestLimit.Model.orderRow1.volumeBestBuy;
+                ins.SellVolume = bestLimit.Model.orderRow1.volumeBestSale;
                 var lastPrice = price.Model.lastPrice.Value;
                 var yesterdayPrice = price.Model.yesterdayPrice;
 

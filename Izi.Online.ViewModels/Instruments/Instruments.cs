@@ -29,6 +29,8 @@ namespace Izi.Online.ViewModels.Instruments
         public float LastPriceChangePercent { get; set; }
         public float BuyCommisionRate { get; set; }
         public float SellCommisionRate { get; set; }
+        public double BuyVolume { get; set; }
+        public double SellVolume { get; set; }
         
     }
 }

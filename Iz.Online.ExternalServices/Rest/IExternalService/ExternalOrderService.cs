@@ -52,6 +52,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             }
             return new ResultModel<ActiveOrdersResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
+      
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
         {

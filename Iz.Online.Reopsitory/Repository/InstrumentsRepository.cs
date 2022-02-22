@@ -215,6 +215,7 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
+               
                 var wl = _db.WathLists
                     .Where(x => x.Id == model.WatchListId)
                     .Select(x => new WatchListDetails

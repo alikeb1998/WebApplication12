@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.API.Controllers
 {
@@ -75,6 +76,15 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var result = _orderServices.AllActive();
+            return result;
+
+        }
+
+        //get a list of all active orders.
+        [HttpGet("all/activePaged")]
+        public ResultModel<Report<ActiveOrder>> AllActivePaged(ReportsFilter filter)
+        {
+            var result = _orderServices.AllActivePaged(filter);
             return result;
 
         }

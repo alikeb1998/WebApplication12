@@ -15,6 +15,8 @@ using UpdatedOrder = Izi.Online.ViewModels.Orders.UpdatedOrder;
 using CanceledOrder = Izi.Online.ViewModels.Orders.CanceledOrder;
 using CancelOrderModel = Izi.Online.ViewModels.Orders.CancelOrder;
 using CancelOrder = Iz.Online.OmsModels.InputModels.Order.CancelOrder;
+using Report = Izi.Online.ViewModels.Reports;
+using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.Services.Services
 {
@@ -43,7 +45,7 @@ namespace Iz.Online.Services.Services
             var dbEntity = new db.Orders()
             {
                 RegisterOrderDate = DateTime.Now,
-                Id=Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 OrderSide = addOrderModel.OrderSide,
                 OrderType = addOrderModel.OrderType,
                 DisclosedQuantity = addOrderModel.DisclosedQuantity,
@@ -119,7 +121,69 @@ namespace Iz.Online.Services.Services
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
 
+
             return new ResultModel<List<ActiveOrder>>(result);
+        }
+        public ResultModel<Report<ActiveOrder>> AllActivePaged(ReportsFilter filter)
+        {
+            var activeOrders = _externalOrderService.GetAllActives();
+            //if (activeOrders.StatusCode != 1)
+            //    return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
+
+            var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
+            {
+                Quantity = (long)x.quantity,
+                ExecutedQ = (long)x.executedQ,
+                InstrumentName = x.instrument.name,
+                OrderSide = x.orderSide,
+                OrderSideText = x.orderSide == 1 ? "فروش" : "خرید",
+                RemainedQ = x.remainedQ,
+                ValidityType = x.validityType,
+                OrderQtyWait = x.orderQtyWait,
+                CreatedAt = x.createdAt,
+                Price = x.price,
+                State = x.state,
+                // StateText = EnumHelper.OrderStates(x.state),
+
+                NscCode = x.instrument.code,
+                InstrumentId = x.instrument.id,
+
+                ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
+                ExecutePercent = x.executedQ / x.quantity * 100
+            }).ToList();
+
+            for (int i = 50; i >0; i--)
+            {
+                var mock = new ActiveOrder() { InstrumentId = i, InstrumentName =$"نماد{i}" };
+                result.Add(mock);
+            }
+
+
+            var report = new Report<ActiveOrder>()
+            {
+                Model = result.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                Type = filter.Type,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = result.Count,
+                OrderType = filter.OrderType,
+            };
+            
+            if (filter.Type.orderTypes == OrderSortTypes.Symbol)
+                  report.Model.OrderBy(x => x.InstrumentName); 
+
+            if (filter.Type.orderTypes ==OrderSortTypes.Percentage)
+                 report.Model.OrderBy(x => x.ExecutePercent);
+
+            if (filter.Type.orderTypes ==OrderSortTypes.Date)
+                 report.Model.OrderBy(x => x.ExecutePercent);  
+
+            if (filter.Type.orderTypes ==OrderSortTypes.Side)
+                 report.Model.OrderBy(x => x.ExecutePercent); 
+
+            if (filter.Type.orderTypes ==OrderSortTypes.Volume)
+                 report.Model.OrderBy(x => x.ExecutePercent);
+            return new ResultModel<Report<ActiveOrder>>(report);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
