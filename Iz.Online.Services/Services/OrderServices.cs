@@ -17,6 +17,7 @@ using CancelOrderModel = Izi.Online.ViewModels.Orders.CancelOrder;
 using CancelOrder = Iz.Online.OmsModels.InputModels.Order.CancelOrder;
 using Report = Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.Reports;
+using System.Linq.Expressions;
 
 namespace Iz.Online.Services.Services
 {
@@ -61,13 +62,17 @@ namespace Iz.Online.Services.Services
 
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
+            if (!addOrderResult.IsSuccess)
+                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message);
+
             dbEntity.OmsResponseDate = DateTime.Now;
             dbEntity.OrderId = addOrderResult.Model.order.id;
             dbEntity.Isr = addOrderResult.Model.order.isr;
             dbEntity.StatusCode = addOrderResult.Model.statusCode;
 
             var allOrders = _externalOrderService.GetAll();
-
+            if (!allOrders.IsSuccess)
+                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message);
             //09:02
 
             var result =
@@ -153,46 +158,24 @@ namespace Iz.Online.Services.Services
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
 
-            for (int i = 50; i >0; i--)
+            for (int i = 50; i > 0; i--)
             {
-                var mock = new ActiveOrder() { InstrumentId = i, InstrumentName =$"نماد{i}" };
+                var mock = new ActiveOrder() { InstrumentId = i, InstrumentName = $"نماد{i}", CreatedAt = DateTime.Now.AddSeconds(1), ExecutePercent=i,Quantity = i };
                 result.Add(mock);
             }
+            var a = Filter(result, filter);
 
-
-            var report = new Report<ActiveOrder>()
-            {
-                Model = result.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
-                Type = filter.OrderBy,
+            var res = new Report<ActiveOrder>() 
+            { 
+                Model = a,
+                OrderType = filter.OrderType,
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = result.Count,
-                OrderType = filter.OrderType,
+                Type = filter.OrderBy
             };
 
-
-            string query = "";
-            query = $"select  * from users order by {filter.OrderBy.orderBy} {filter.OrderType}";
-
-
-            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.ASC)
-                  report.Model.OrderBy(x => x.InstrumentName); 
-            
-            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.DESC)
-                  report.Model.OrderByDescending(x => x.InstrumentName); 
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Percentage)
-                 report.Model.OrderBy(x => x.ExecutePercent);
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Date)
-                 report.Model.OrderBy(x => x.ExecutePercent);  
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Side)
-                 report.Model.OrderBy(x => x.ExecutePercent); 
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Volume)
-                 report.Model.OrderBy(x => x.ExecutePercent);
-            return new ResultModel<Report<ActiveOrder>>(report);
+            return new ResultModel<Report<ActiveOrder>>(res);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
@@ -207,9 +190,6 @@ namespace Iz.Online.Services.Services
                 ValidityDate = model.ValidityDate,
                 ValidityType = model.ValidityType,
             });
-
-            //  _orderRepository.Update(dbEntity);
-
             var result = new UpdatedOrder()
             {
 
@@ -242,6 +222,63 @@ namespace Iz.Online.Services.Services
             return new ResultModel<CanceledOrder>(result);
 
         }
+        public List<ActiveOrder> Filter(List<ActiveOrder> list, ReportsFilter filter)
+        {
+            var report = new Report<ActiveOrder>()
+            {
+                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                Type = filter.OrderBy,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = list.Count,
+                OrderType = filter.OrderType,
+            };
 
+            switch (filter.OrderType)
+            {
+                case OrderType.ASC:
+                    switch (filter.OrderBy.orderBy)
+                    {
+                        case OrderSortColumn.Symbol:
+                            return report.Model.OrderBy(x => x.InstrumentName).ToList();
+
+                        case OrderSortColumn.Percentage:
+                            return report.Model.OrderBy(x => x.ExecutePercent).ToList();
+
+                        case OrderSortColumn.Date:
+                            return report.Model.OrderBy(x => x.CreatedAt).ToList();
+
+                        case OrderSortColumn.Volume:
+                            return report.Model.OrderBy(x => x.Quantity).ToList();
+
+                    }
+                    break;
+
+                case OrderType.DESC:
+                    switch (filter.OrderBy.orderBy)
+                    {
+                        case OrderSortColumn.Symbol:
+                            return report.Model.OrderByDescending(x => x.InstrumentName).ToList();
+
+
+                        case OrderSortColumn.Percentage:
+                            return report.Model.OrderByDescending(x => x.ExecutePercent).ToList();
+
+
+                        case OrderSortColumn.Date:
+                            return report.Model.OrderByDescending(x => x.CreatedAt).ToList();
+
+
+                        case OrderSortColumn.Volume:
+                            return report.Model.OrderByDescending(x => x.Quantity).ToList();
+
+                    }
+                    break;
+
+                default:
+                    return report.Model.OrderBy(x => x.CreatedAt).ToList();
+            }
+            return report.Model.OrderBy(x => x.CreatedAt).ToList();
+        }
     }
 }

@@ -9,7 +9,8 @@ namespace Izi.Online.ViewModels.Reports
 {
     public class Report<T>
     {
- 
+
+        
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
