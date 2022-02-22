@@ -13,15 +13,12 @@ namespace Iz.Online.Services.Services
     {
         public IInstrumentsRepository _instrumentsRepository { get; set; }
         public IExternalInstrumentService _externalInstrumentsService { get; set; }
-        
 
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
-            
-
         }
 
         public ResultModel<List<Instruments>> Instruments()
@@ -246,7 +243,6 @@ namespace Iz.Online.Services.Services
 
             var detail = _externalInstrumentsService.Details(model);
             var priceDetail = _externalInstrumentsService.Price(model);
-            
 
             var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
 
@@ -285,7 +281,8 @@ namespace Iz.Online.Services.Services
                 result.GroupState = detail.Model.Group.State;
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMin;
+                result.PriceMin = detail.Model.PriceMax;
+
 
                 result.Tick = detail.Model.Tick;
             }

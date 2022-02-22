@@ -31,6 +31,10 @@ namespace Izi.Online.ViewModels.Instruments
         public double AskPrice { get; set; }
         public float LastPriceChangePercent { get; set; }
         public long Tick { get; set; }
+        public double BuyCommissionRate { get; set; }
+        public double SellCommissionRate { get; set; }
+
+
 
     }
 }

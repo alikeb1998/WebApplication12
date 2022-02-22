@@ -26,10 +26,11 @@ namespace Iz.Online.API.Controllers
 
         public IHubContext<CustomersHub> _hubContext;
 
-        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext)
+        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _orderServices = orderServices;
             _hubContext = hubContext;
+
         }
 
         #endregion

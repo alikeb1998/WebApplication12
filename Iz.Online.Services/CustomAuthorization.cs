@@ -1,10 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Iz.Online.DataAccess;
+using Iz.Online.Entities;
+using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.Reopsitory.IRepository;
+using Iz.Online.Reopsitory.Repository;
+using Iz.Online.Services.IServices;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
 namespace Iz.Online.Services
 {
-    public class CustomAuthorization: ActionFilterAttribute
+    public class CustomAuthorization : ActionFilterAttribute
     {
         public override object TypeId => base.TypeId;
 
@@ -38,7 +48,7 @@ namespace Iz.Online.Services
 
             //context.ActionArguments.ToList().First().Value;
             //((Izi.Online.ViewModels.ShareModels.ViewBaseModel) context.ActionArguments.ToList().First().Value).Token =
-              // context.HttpContext.Request.Headers["test1"].ToString();
+            // context.HttpContext.Request.Headers["test1"].ToString();
 
 
             base.OnActionExecuting(context);
@@ -67,6 +77,76 @@ namespace Iz.Online.Services
         public override string? ToString()
         {
             return base.ToString();
+        }
+    }
+
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class JwtCustomAuthorize : Attribute,  IAuthorizationFilter
+    {
+
+        string Role;
+        IUserService iuserService;
+        public JwtCustomAuthorize(string role  )
+        {
+            Role = role;
+
+        }
+
+        public void OnAuthorization(AuthorizationFilterContext context)
+        {
+            //context.Result = new JsonResult(new
+            //{ Message = "Token Validation Has Failed. Request Access Denied" }  )
+            //{ StatusCode = StatusCodes.Status401Unauthorized};
+            //return;
+
+            //var method = context.HttpContext.Request.RouteValues["Action"];
+            //var controler = context.HttpContext.Request.RouteValues["controller"];
+            var token = context.HttpContext.Request.Headers["Authorization"].ToString();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                context.Result = new JsonResult(new
+                { Message = "Token is null" })
+                { StatusCode = StatusCodes.Status401Unauthorized };
+                return;
+            }
+
+            var deserializedToken = TestJwtSecurityTokenHandler(token);
+            try
+            {
+                var hasAccess = ((JwtSecurityToken)deserializedToken).Claims.Any(x => x.Type == "Roles" && x.Value == Role);
+                if (!hasAccess)
+                {
+                    context.Result = new JsonResult(new
+                    { Message = "Token Validation Has Failed. Request Access Denied" })
+                    { StatusCode = StatusCodes.Status401Unauthorized };
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                context.Result = new JsonResult(new
+                { Message = "Token is not valid" })
+                { StatusCode = StatusCodes.Status401Unauthorized };
+                return;
+            }
+
+            //var isValidToken = baseService.LocalTokenIsValid(token);
+            //if (!isValidToken)
+            //{
+            //    context.Result = new JsonResult(new
+            //    { Message = "Token has expired. Request Access Denied" })
+            //    { StatusCode = StatusCodes.Status401Unauthorized };
+            //    return;
+            //}
+        }
+
+        public SecurityToken TestJwtSecurityTokenHandler(string stream)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            return jsonToken;
         }
     }
 }

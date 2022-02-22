@@ -12,7 +12,6 @@ namespace Iz.Online.Services.Services
 {
     public  class TradeService : ITradeServices
     {
-      
         public IExternalTradeService _externalTradeService { get; set; }
 
         public TradeService(IExternalTradeService externalTradeService)

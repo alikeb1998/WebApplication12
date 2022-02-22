@@ -15,7 +15,8 @@
                     policy.SetIsOriginAllowedToAllowWildcardSubdomains();
                     foreach (string item in corsOrigins)
                     {
-                        policy.WithOrigins(item).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                        //policy.WithOrigins(item).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                        policy.WithOrigins(item).AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(x => true);
                     }
                 });
             });

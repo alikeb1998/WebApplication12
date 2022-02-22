@@ -15,11 +15,13 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     {
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
         ResultModel<AllOrders> GetAll();
-        ResultModel <ActiveOrdersResult> GetAllActives();
+        ResultModel<ActiveOrdersResult> GetAllActives();
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
 
-       // AssetsList GetAllAssets(ViewBaseModel baseModel);
+        string _token { get; set; }
+
+        // AssetsList GetAllAssets(ViewBaseModel baseModel);
 
     }
 }

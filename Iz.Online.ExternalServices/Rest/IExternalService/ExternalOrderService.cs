@@ -15,10 +15,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     public class ExternalOrderService : BaseService, IExternalOrderService
     {
         public IBaseRepository _instrumentsRepository { get; set; }
+       public string _token { get; set; }
+
         public ExternalOrderService(IBaseRepository baseRepository) : base(baseRepository)
         {
             _instrumentsRepository = baseRepository;
-            
         }
 
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
@@ -48,7 +49,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
             if (result.statusCode != 200)
             {
-                return new ResultModel<ActiveOrdersResult>(result);
+                return new ResultModel<ActiveOrdersResult>(result,false);
             }
             return new ResultModel<ActiveOrdersResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }

@@ -15,14 +15,16 @@ namespace Iz.Online.Services.IServices
 {
     public interface IUserService
     {
-        List<string> UserHubsList(string UserId);
+        string _token { get; set; }
+        void SetUserHub(string UserId, string hubId);
+
+        UsersHubIds UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
-        Izi.Online.ViewModels.AppConfigs AppConfigs(string key);
+
+        ResultModel<string> GetUserLocalToken(string  omsId);
         
-        void SetToken(string token);
-        string GetToken();
         Captcha Captcha();
         OtpResult SendOtp(Credentials credentials);
         CheckedOtp CheckOtp(Otp otp);

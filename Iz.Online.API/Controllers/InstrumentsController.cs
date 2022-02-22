@@ -5,32 +5,31 @@ using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;
-
-
-
+using Iz.Online.Services;
 
 namespace Iz.Online.API.Controllers
 {
     [Produces("application/json")]
     [Route("V1/[controller]")]
-
+    //[JwtCustomAuthorize(role: "normalCustomer") ]
 
     /// <summary>
     ///نام دیده بان
     /// </summary>
+
     public class InstrumentsController : BaseApiController
     {
         #region ctor
 
         private readonly IInstrumentsService _instrumentsService;
         private readonly IExternalInstrumentService _externalInstrumentService;
-        private readonly IDistributedCache _redis;
 
-        public InstrumentsController(IInstrumentsService instrumentsService, IExternalInstrumentService externalInstrumentService, IDistributedCache redis)
+
+        public InstrumentsController(IInstrumentsService instrumentsService, IExternalInstrumentService externalInstrumentService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
             _externalInstrumentService = externalInstrumentService;
-            _redis = redis;
+            _externalInstrumentService._token =  _instrumentsService._token = _token_;
         }
 
         #endregion
@@ -39,7 +38,7 @@ namespace Iz.Online.API.Controllers
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
         {
-            
+
             var updateResult = _externalInstrumentService.UpdateInstrumentList();
             return new ResultModel<bool>(updateResult, updateResult);
         }
@@ -73,7 +72,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<WatchList>> DeleteWatchList([FromBody] SearchWatchList model)
         {
             var result = _instrumentsService.DeleteWatchList(model);
-            return  result;
+            return result;
         }
 
         //add new watchlist.
@@ -82,7 +81,7 @@ namespace Iz.Online.API.Controllers
         {
             var result = _instrumentsService.NewWatchList(model);
             return result;
-        } 
+        }
         //add new watchlist.
         [HttpPost("UpdateWatchList")]
         public ResultModel<WatchListDetails> UpdateWatchList([FromBody] EditWatchList model)
@@ -112,14 +111,14 @@ namespace Iz.Online.API.Controllers
             var result = _instrumentsService.InstrumentWatchLists(model);
             return result;
         }
-       
+
         // گذاشتن یادداشت برای  نماد
         [HttpPost("AddComment")]
         public ResultModel<bool> AddComment([FromBody] AddCommentForInstrument model)
         {
             var result = _instrumentsService.AddCommentToInstrument(model);
             return result;
-        }  
+        }
         // مشاهده یادداشت یک  نماد
         [HttpPost("GetComment")]
         public ResultModel<string> GetComment([FromBody] GetInstrumentComment model)

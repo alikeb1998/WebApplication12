@@ -20,11 +20,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly IInstrumentsRepository _instrumentsRepository;
         private IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
+        public string _token { get; set; }
+
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService, IExternalOrderService externalOrderService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _pushService = pushService;
+
         }
 
         public bool UpdateInstrumentList()
@@ -133,6 +136,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, bestLimit.clientMessage, bestLimit.statusCode);
 
+
+            
+
             var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
@@ -191,9 +197,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 },
 
             };
+            _externalOrderService._token = _token;
             var activeOrders = _externalOrderService.GetAllActives();
 
-
+           
             foreach (var order in activeOrders.Model.Orders)
             {
 
@@ -286,7 +293,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public double PercentProccessor(double a, double b)
         {
-
+            if (a == 0) return 0;
             var res = (a - b) / a * 100;
             return 100 - res;
         }

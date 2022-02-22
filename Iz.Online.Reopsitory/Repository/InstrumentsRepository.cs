@@ -14,7 +14,7 @@ namespace Iz.Online.Reopsitory.Repository
         public InstrumentsRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
         }
-
+        
         public ResultModel<List<Instruments>> GetInstrumentsList()
         {
             try
@@ -36,6 +36,7 @@ namespace Iz.Online.Reopsitory.Repository
                     SellCommisionRate = x.SellCommisionRate,
 
                 }).ToList();
+                
                 return new ResultModel<List<Instruments>>(ins);
             }
             catch (Exception)

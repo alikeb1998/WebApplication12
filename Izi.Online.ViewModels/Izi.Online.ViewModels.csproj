@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Iz.Online.Models\Iz.Online.OmsModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Login\" />
+  </ItemGroup>
+
 </Project>
