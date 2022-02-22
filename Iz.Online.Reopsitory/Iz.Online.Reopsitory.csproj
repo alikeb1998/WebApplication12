@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Iz.Online.DataAccess\Iz.Online.DataAccess.csproj" />
     <ProjectReference Include="..\Iz.Online.Models\Iz.Online.OmsModels.csproj" />
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
+   
   </ItemGroup>
 
 </Project>

@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using WatchList = Izi.Online.ViewModels.Instruments.WatchList;
 using System.Linq;
 
+
 namespace Iz.Online.Reopsitory.Repository
 {
     public class InstrumentsRepository : BaseRepository, IInstrumentsRepository
     {
+        
         public InstrumentsRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
         }
@@ -36,10 +38,12 @@ namespace Iz.Online.Reopsitory.Repository
                     SellCommisionRate = x.SellCommisionRate,
 
                 }).ToList();
+              //  var cache = RedisConnection.Connection.GetDatabase();
+                
                 
                 return new ResultModel<List<Instruments>>(ins);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return new ResultModel<List<Instruments>>(null, false, "خطای پایگاه داده", -1);
 
