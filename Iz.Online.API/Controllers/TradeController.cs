@@ -6,6 +6,7 @@ using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
 using model = Izi.Online.ViewModels.Trades;
+using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.API.Controllers
 {
@@ -33,6 +34,12 @@ namespace Iz.Online.API.Controllers
         public ResultModel<List<model.Trade>> Trades()
         {
             var result = _tradeServices.Trades();
+            return result;
+        }
+        [HttpGet("dailyTradesPaged")]
+        public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
+        {
+            var result = _tradeServices.TradesPaged(filter);
             return result;
         }
     }

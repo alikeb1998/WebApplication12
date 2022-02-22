@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 using StackExchange.Redis;
 using Iz.Online.API.Controllers;
+using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.API.Controllers
 {
@@ -105,6 +106,7 @@ namespace Iz.Online.API.Controllers
         {
             return new ResultModel<List<AppConfigs>>(_userService.AppConfigs());
         }
+
         [HttpGet("Validity")]
         public ResultModel<List<ValidityType>> Validity()
         {
@@ -165,6 +167,12 @@ namespace Iz.Online.API.Controllers
             return result;
         }
 
+        [HttpGet("portfolioPaged")]
+        public ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter)
+        {
+            var result = _userService.AllAssetsPaged(filter);
+            return result;
+        }
         //set a token in database.
         [HttpPost("token/set")]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]

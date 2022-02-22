@@ -12,11 +12,10 @@ using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
-using Izi.Online.ViewModels.Trades;
 using Izi.Online.ViewModels.Users;
 using Microsoft.IdentityModel.Tokens;
-using db = Iz.Online.Entities;
 
 namespace Iz.Online.Services.Services
 {
@@ -67,6 +66,36 @@ namespace Iz.Online.Services.Services
 
         }
 
+        public ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter)
+        {
+            var assets = _externalUserService.GetAllAssets();
+
+            if (!assets.IsSuccess)
+                return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
+
+            if (assets.Model.Assets == null)
+                return new ResultModel<List<Asset>>(null, false, "مدل خالی برگشته است", assets.StatusCode);
+
+            var result = assets.Model.Assets.Select(x => new Asset()
+            {
+                Name = x.Instrument.name,
+                LastPrice = x.LastPrice,
+                TradeableQuantity = x.TradeableQuantity,
+                Gav = x.Gav,
+                AvgPrice = x.AvgPrice,
+                FianlAmount = x.FinalAmount,
+                ProfitAmount = x.ProfitAmount,
+                ProfitPercent = x.ProfitPercent,
+                SellProfit = x.SellProfit,
+                InstrumentId = x.Instrument.id,
+                NscCode = x.Instrument.code
+            }).ToList();
+
+            var res = Filter(result, filter);
+
+            return new ResultModel<List<Asset>>(res);
+
+        }
         public ResultModel<Wallet> Wallet()
         {
             
@@ -157,6 +186,61 @@ namespace Iz.Online.Services.Services
               Sockettoken = result.SocketToken
             };
             return checkOtp;
+        }
+        public List<Asset> Filter(List<Asset> list, PortfoFilter filter)
+        {
+            var report = new PortfolioReport()
+            {
+                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                PortfolioSortColumn = filter.PortfolioSortColumn,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = list.Count,
+                OrderType = filter.OrderType,
+            };
+
+            switch (filter.OrderType)
+            {
+                case OrderType.ASC:
+                    switch (filter.PortfolioSortColumn)
+                    {
+                        case PortfolioSortColumn.Symbol:
+                            return report.Model.OrderBy(x => x.Name).ToList();
+
+                        case PortfolioSortColumn.Count:
+                            return report.Model.OrderBy(x => x.TradeableQuantity).ToList();
+
+                        case PortfolioSortColumn.ProfitOrLoss:
+                            return report.Model.OrderBy(x => x.ProfitPercent).ToList();
+
+                        case PortfolioSortColumn.Value:
+                            return report.Model.OrderBy(x => x.Gav).ToList();
+
+                    }
+                    break;
+
+                case OrderType.DESC:
+                    switch (filter.PortfolioSortColumn)
+                    {
+                        case PortfolioSortColumn.Symbol:
+                            return report.Model.OrderByDescending(x => x.Name).ToList();
+
+                        case PortfolioSortColumn.Count:
+                            return report.Model.OrderByDescending(x => x.TradeableQuantity).ToList();
+
+                        case PortfolioSortColumn.ProfitOrLoss:
+                            return report.Model.OrderByDescending(x => x.ProfitPercent).ToList();
+
+                        case PortfolioSortColumn.Value:
+                            return report.Model.OrderByDescending(x => x.Gav).ToList();
+
+                    }
+                    break;
+
+                default:
+                    return report.Model.OrderBy(x => x.TradeableQuantity).ToList();
+            }
+            return report.Model.OrderBy(x => x.TradeableQuantity).ToList();
         }
     }
 }

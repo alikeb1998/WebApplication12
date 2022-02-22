@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.Reports
 {
-    public class ReportsFilter
+    public class TradeFilter:ReportsFilter
     {
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-        public OrderType OrderType { get; set; }
+        public TradeSortColumn TradeSortColumn { get; set; }    
     }
 }

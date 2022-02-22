@@ -130,7 +130,7 @@ namespace Iz.Online.Services.Services
 
             return new ResultModel<List<ActiveOrder>>(result);
         }
-        public ResultModel<Report<ActiveOrder>> AllActivePaged(ReportsFilter filter)
+        public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
         {
             var activeOrders = _externalOrderService.GetAllActives();
             //if (activeOrders.StatusCode != 1)
@@ -150,32 +150,30 @@ namespace Iz.Online.Services.Services
                 Price = x.price,
                 State = x.state,
                 // StateText = EnumHelper.OrderStates(x.state),
-
                 NscCode = x.instrument.code,
                 InstrumentId = x.instrument.id,
-
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
 
             for (int i = 50; i > 0; i--)
             {
-                var mock = new ActiveOrder() { InstrumentId = i, InstrumentName = $"نماد{i}", CreatedAt = DateTime.Now.AddSeconds(1), ExecutePercent=i,Quantity = i };
+                var mock = new ActiveOrder() { InstrumentId = i, InstrumentName = $"نماد{i}", CreatedAt = DateTime.Now.AddSeconds(1), ExecutePercent = i, Quantity = i };
                 result.Add(mock);
             }
             var a = Filter(result, filter);
 
-            var res = new Report<ActiveOrder>() 
-            { 
+            var res = new OrderReport()
+            {
                 Model = a,
                 OrderType = filter.OrderType,
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = result.Count,
-                Type = filter.OrderBy
+                OrderSortColumn = filter.OrderSortColumn
             };
 
-            return new ResultModel<Report<ActiveOrder>>(res);
+            return new ResultModel<OrderReport>(res);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
@@ -222,12 +220,12 @@ namespace Iz.Online.Services.Services
             return new ResultModel<CanceledOrder>(result);
 
         }
-        public List<ActiveOrder> Filter(List<ActiveOrder> list, ReportsFilter filter)
+        public List<ActiveOrder> Filter(List<ActiveOrder> list, OrderFilter filter)
         {
-            var report = new Report<ActiveOrder>()
+            var report = new OrderReport()
             {
                 Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
-                Type = filter.OrderBy,
+                OrderSortColumn = filter.OrderSortColumn,
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = list.Count,
@@ -237,7 +235,7 @@ namespace Iz.Online.Services.Services
             switch (filter.OrderType)
             {
                 case OrderType.ASC:
-                    switch (filter.OrderBy.orderBy)
+                    switch (filter.OrderSortColumn)
                     {
                         case OrderSortColumn.Symbol:
                             return report.Model.OrderBy(x => x.InstrumentName).ToList();
@@ -255,7 +253,7 @@ namespace Iz.Online.Services.Services
                     break;
 
                 case OrderType.DESC:
-                    switch (filter.OrderBy.orderBy)
+                    switch (filter.OrderSortColumn)
                     {
                         case OrderSortColumn.Symbol:
                             return report.Model.OrderByDescending(x => x.InstrumentName).ToList();

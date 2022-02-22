@@ -10,6 +10,7 @@ using Izi.Online.ViewModels.Users;
 using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
+using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.Services.IServices
 {
@@ -20,6 +21,7 @@ namespace Iz.Online.Services.IServices
 
         UsersHubIds UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
+        ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter);
         ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
 
