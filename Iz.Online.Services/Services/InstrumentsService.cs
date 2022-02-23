@@ -11,8 +11,8 @@ namespace Iz.Online.Services.Services
 {
     public class InstrumentsService : IInstrumentsService
     {
-        public IInstrumentsRepository _instrumentsRepository { get; set; }
-        public IExternalInstrumentService _externalInstrumentsService { get; set; }
+        private readonly IInstrumentsRepository _instrumentsRepository;
+        private readonly IExternalInstrumentService _externalInstrumentsService;
 
 
         public string _token { get; set; }

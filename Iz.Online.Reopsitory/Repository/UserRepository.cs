@@ -15,7 +15,7 @@ namespace Iz.Online.Reopsitory.Repository
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        private OnlineBackendDbContext _db;
+        private readonly OnlineBackendDbContext _db;
         private readonly IDistributedCache _cache;
         private readonly IConnectionMultiplexer _redis;
         public UserRepository(OnlineBackendDbContext dataBase, IDistributedCache cache, IConnectionMultiplexer redis) : base(dataBase)

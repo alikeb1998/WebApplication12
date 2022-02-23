@@ -21,8 +21,8 @@ namespace Iz.Online.Services.Services
 {
     public class UserService : IUserService
     {
-        public IUserRepository _userRepository { get; set; }
-        public IExternalUserService _externalUserService { get; set; }
+        private readonly IUserRepository _userRepository;
+        private readonly IExternalUserService _externalUserService;
         public string _token { get; set; }
 
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService)

@@ -14,7 +14,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalOrderService : BaseService, IExternalOrderService
     {
-        public IBaseRepository _instrumentsRepository { get; set; }
+        private readonly IBaseRepository _instrumentsRepository;
        public string _token { get; set; }
 
         public ExternalOrderService(IBaseRepository baseRepository) : base(baseRepository)

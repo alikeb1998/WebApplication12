@@ -18,7 +18,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     public class ExternalInstrumentService : BaseService, IExternalInstrumentService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
-        private IExternalOrderService _externalOrderService;
+        private readonly IExternalOrderService _externalOrderService;
         private readonly IPushService _pushService;
         public string _token { get; set; }
 

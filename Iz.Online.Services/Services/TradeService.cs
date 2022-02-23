@@ -13,7 +13,7 @@ namespace Iz.Online.Services.Services
 {
     public  class TradeService : ITradeServices
     {
-        public IExternalTradeService _externalTradeService { get; set; }
+        private readonly IExternalTradeService _externalTradeService;
 
         public TradeService(IExternalTradeService externalTradeService)
         {
