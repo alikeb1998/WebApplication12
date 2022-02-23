@@ -12,13 +12,13 @@ namespace Izi.Online.ViewModels.Instruments
     {
         public EditWatchList()
         {
-            InstrumentsId = new List<long>();
+            Id = new List<long>();
         }
-        public string Id { get; set; }
+        public string WatchListId { get; set; }
 
         [Required(ErrorMessage = "اجباری")]
         public string WatchListName { get; set; }
 
-        public List<long> InstrumentsId { get; set; }
+        public List<long> Id { get; set; }
     }
 }

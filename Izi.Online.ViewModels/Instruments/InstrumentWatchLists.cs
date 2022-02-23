@@ -9,6 +9,6 @@ namespace Izi.Online.ViewModels.Instruments
 {
     public class InstrumentWatchLists :ViewBaseModel
     {
-        public  long InstrumentId { get; set; }
+        public  long Id { get; set; }
     }
 }

@@ -30,10 +30,12 @@ namespace Iz.Online.API.Infrastructure
             services.AddScoped<IExternalUserService, ExternalUserService>();
             services.AddScoped<IInstrumentsService, InstrumentsService>();
             services.AddScoped<IExternalInstrumentService, ExternalInstrumentService>();
+            services.AddScoped<IWatchListsService, WatchListsService>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBaseRepository, BaseRepository>();
             services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
+            services.AddScoped<IWatchListsRepository, WatchListsRepository>();
             services.AddScoped<IPushService, PushService>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
