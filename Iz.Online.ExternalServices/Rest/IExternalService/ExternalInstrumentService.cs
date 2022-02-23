@@ -206,19 +206,19 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
                 if (model.NscCode == order.instrument.code)
                 {
-                    result.orderRow1.HasOrderBuy = order.instrument.priceMax == result.orderRow1.priceBestBuy ? true : false;
-                    result.orderRow2.HasOrderBuy = order.instrument.priceMax == result.orderRow2.priceBestBuy ? true : false;
-                    result.orderRow3.HasOrderBuy = order.instrument.priceMax == result.orderRow3.priceBestBuy ? true : false;
-                    result.orderRow4.HasOrderBuy = order.instrument.priceMax == result.orderRow4.priceBestBuy ? true : false;
-                    result.orderRow5.HasOrderBuy = order.instrument.priceMax == result.orderRow5.priceBestBuy ? true : false;
-                    result.orderRow6.HasOrderBuy = order.instrument.priceMax == result.orderRow6.priceBestBuy ? true : false;
-
-                    result.orderRow1.HasOrderSell = order.instrument.priceMin == result.orderRow1.priceBestSale ? true : false;
-                    result.orderRow2.HasOrderSell = order.instrument.priceMin == result.orderRow2.priceBestSale ? true : false;
-                    result.orderRow3.HasOrderSell = order.instrument.priceMin == result.orderRow3.priceBestSale ? true : false;
-                    result.orderRow4.HasOrderSell = order.instrument.priceMin == result.orderRow4.priceBestSale ? true : false;
-                    result.orderRow5.HasOrderSell = order.instrument.priceMin == result.orderRow5.priceBestSale ? true : false;
-                    result.orderRow6.HasOrderSell = order.instrument.priceMin == result.orderRow6.priceBestSale ? true : false;
+                     result.orderRow1.HasOrderBuy = order.instrument.priceMax == result.orderRow1.priceBestBuy ;
+                     result.orderRow2.HasOrderBuy = order.instrument.priceMax == result.orderRow2.priceBestBuy ;
+                     result.orderRow3.HasOrderBuy = order.instrument.priceMax == result.orderRow3.priceBestBuy ;
+                     result.orderRow4.HasOrderBuy = order.instrument.priceMax == result.orderRow4.priceBestBuy ;
+                     result.orderRow5.HasOrderBuy = order.instrument.priceMax == result.orderRow5.priceBestBuy ;
+                     result.orderRow6.HasOrderBuy = order.instrument.priceMax == result.orderRow6.priceBestBuy ;
+                                                                                                               
+                    result.orderRow1.HasOrderSell = order.instrument.priceMin == result.orderRow1.priceBestSale;
+                    result.orderRow2.HasOrderSell = order.instrument.priceMin == result.orderRow2.priceBestSale;
+                    result.orderRow3.HasOrderSell = order.instrument.priceMin == result.orderRow3.priceBestSale;
+                    result.orderRow4.HasOrderSell = order.instrument.priceMin == result.orderRow4.priceBestSale;
+                    result.orderRow5.HasOrderSell = order.instrument.priceMin == result.orderRow5.priceBestSale;
+                    result.orderRow6.HasOrderSell = order.instrument.priceMin == result.orderRow6.priceBestSale;
                 }
             }
            

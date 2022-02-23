@@ -172,7 +172,7 @@ namespace Iz.Online.Services.Services
                 TotalCount = result.Count,
                 OrderSortColumn = filter.OrderSortColumn
             };
-
+            
             return new ResultModel<OrderReport>(res);
         }
 

@@ -16,5 +16,6 @@ namespace Iz.Online.Reopsitory.IRepository
         List<AppConfigs> GetAppConfigs();
         string GetUserLocalToken(string omsId, string omsToken);
         void SetUserHub(string UserId, string hubId);
+        void DeleteConnectionId(string userId, string connectionId);
     }
 }

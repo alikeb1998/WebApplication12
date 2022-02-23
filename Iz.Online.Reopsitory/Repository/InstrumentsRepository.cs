@@ -41,27 +41,7 @@ namespace Iz.Online.Reopsitory.Repository
                     SellCommisionRate = x.SellCommisionRate,
 
                 }).ToList();
-
-               
-                var serialized = JsonConvert.SerializeObject(ins.Select(x => new Instruments()
-                {
-                    Id = x.Id, 
-                    InstrumentId = x.InstrumentId,
-                    Code = x.Code,
-                    SymbolName = x.SymbolName,
-                    LastPriceChangePercent = x.LastPriceChangePercent,
-                    AskPrice = x.AskPrice,
-                    BidPrice = x.BidPrice,
-                    BuyCommisionRate = x.BuyCommisionRate,
-                    SellCommisionRate = x.SellCommisionRate,
-                    ClosePrice = x.ClosePrice,
-                    LastPrice = x.LastPrice,
-                    
-                }));
-
-                 var content = Encoding.UTF8.GetBytes(serialized);
-                _cache.Set("list", content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
-
+                
                 return new ResultModel<List<Instruments>>(ins);
             }
             catch (Exception e)
@@ -215,6 +195,7 @@ namespace Iz.Online.Reopsitory.Repository
      
         public ResultModel<long> GetInstrumentId(string nscCode)
         {
+            
             var entity = _db.Instruments.Where(x => x.Code == nscCode).Select(x => x.InstrumentId).FirstOrDefault();
             return new ResultModel<long>(entity);
         }

@@ -39,9 +39,9 @@ namespace Iz.Online.Services.Services
                 Id = x.Id,
                 Name = x.SymbolName.EndsWith("1") ? x.SymbolName.Substring(0, x.SymbolName.Length - 1) : x.SymbolName,
                 FullName = x.CompanyName,
-                NscCode = x.Code,
-                Bourse = x.Bourse,
-                InstrumentId = x.InstrumentId,
+                NscCode = x.Code,//
+                Bourse = x.Bourse,//
+                InstrumentId = x.InstrumentId,//
                 Tick = x.Tick,
                 BuyCommissionRate = x.BuyCommisionRate,
                 SellCommissionRate = x.SellCommisionRate,
@@ -49,6 +49,8 @@ namespace Iz.Online.Services.Services
             }).ToList()) ;
 
         }
+
+        
         public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
         {
             var result = new InstrumentDetail();

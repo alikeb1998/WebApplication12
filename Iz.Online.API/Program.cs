@@ -5,9 +5,9 @@ using Iz.Online.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
 using StackExchange.Redis;
+using Iz.Online.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 #region Corse=>
 
@@ -51,7 +51,7 @@ InjectionHandler.InjectServices(builder.Services);
 #endregion
 
 //var usermanager = builder.Services.BuildServiceProvider().GetService<IUserService>();
-//var t  = usermanager.AllAssets();
+//var t = usermanager.AllAssets();
 
 builder.Services.AddAuthentication()
     .AddCookie(options =>
@@ -64,7 +64,6 @@ builder.Services.AddAuthentication()
         options.Audience = "http://localhost:5001/";
         options.Authority = "http://localhost:5000/";
     });
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -85,8 +84,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMult
 
 builder.Services.AddSignalR();
 
-
-
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<FormOptions>(o =>  // currently all set to max, configure it to your needs!
 {
@@ -98,7 +95,6 @@ builder.Services.Configure<FormOptions>(o =>  // currently all set to max, confi
 });
 
 var app = builder.Build();
-
 
 //if (app.Environment.IsDevelopment())
 {

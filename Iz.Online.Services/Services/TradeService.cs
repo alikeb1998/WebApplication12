@@ -8,26 +8,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Iz.Online.ExternalServices.Rest.IExternalService;
 
 namespace Iz.Online.Services.Services
 {
-    public  class TradeService : ITradeServices
+    public class TradeService : ITradeServices
     {
-        private readonly IExternalTradeService _externalTradeService;
+        public IExternalTradeService _externalTradeService { get; }
+
 
         public TradeService(IExternalTradeService externalTradeService)
         {
-            _externalTradeService = externalTradeService;
+            this._externalTradeService = externalTradeService;
+
+
         }
+
+        public string Id { get; set; }
 
         public ResultModel<List<Trade>> Trades()
         {
+
             var trades = _externalTradeService.Trades();
 
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
-            
-            var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0,6) == DateTime.Today.ToString().Substring(0,6)).Select(x => new Trade()
+
+            var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0, 6) == DateTime.Today.ToString().Substring(0, 6)).Select(x => new Trade()
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
@@ -35,12 +42,15 @@ namespace Iz.Online.Services.Services
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt
-                ,InstrumentId= x.Order.instrument.id,
+                  ,
+                InstrumentId = x.Order.instrument.id,
                 NscCode = x.Order.instrument.code
             }).ToList();
 
             return new ResultModel<List<Trade>>(allTrades);
         }
+
+
 
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)
         {
