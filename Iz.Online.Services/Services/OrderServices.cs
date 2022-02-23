@@ -172,30 +172,8 @@ namespace Iz.Online.Services.Services
                 TotalCount = result.Count,
                 OrderSortColumn = filter.OrderSortColumn
             };
-
-
-            string query = "";
-            query = $"select  * from users order by {filter.OrderBy.orderBy} {filter.OrderType}";
-
-
-            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.ASC)
-                  report.Model.OrderBy(x => x.InstrumentName); 
             
-            if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.DESC)
-                  report.Model.OrderByDescending(x => x.InstrumentName); 
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Percentage)
-                 report.Model.OrderBy(x => x.ExecutePercent);
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Date)
-                 report.Model.OrderBy(x => x.ExecutePercent);  
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Side)
-                 report.Model.OrderBy(x => x.ExecutePercent); 
-
-            if (filter.OrderBy.orderBy ==OrderSortColumn.Volume)
-                 report.Model.OrderBy(x => x.ExecutePercent);
-            return new ResultModel<Report<ActiveOrder>>(report);
+            return new ResultModel<OrderReport>(res);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
