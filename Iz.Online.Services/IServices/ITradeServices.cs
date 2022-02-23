@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
@@ -16,7 +17,7 @@ namespace Iz.Online.Services.IServices
 
         ResultModel<List<Trade>> Trades();
 
-        IExternalTradeService externalTradeService { get;  }
+        IExternalTradeService _externalTradeService { get;  }
     }
 
 

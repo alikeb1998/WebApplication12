@@ -25,7 +25,7 @@ namespace Iz.Online.API.Controllers
         {
             _tradeServices = tradeServices; //new OrderServices();
             _hubContext = hubContext;
-            _tradeServices.Id = _tradeServices.externalTradeService.Id = _token_;
+            //_tradeServices.Id = _tradeServices.externalTradeService.Id = _token_;
 
         }
         #endregion
@@ -37,11 +37,11 @@ namespace Iz.Online.API.Controllers
             var result = _tradeServices.Trades();
             return result;
         }
-        [HttpGet("dailyTradesPaged")]
-        public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
-        {
-            var result = _tradeServices.TradesPaged(filter);
-            return result;
-        }
+        //[HttpGet("dailyTradesPaged")]
+        //public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
+        //{
+        //    var result = _tradeServices.TradesPaged(filter);
+        //    return result;
+        //}
     }
 }

@@ -14,11 +14,12 @@ namespace Iz.Online.Services.Services
 {
     public class TradeService : ITradeServices
     {
-        public IExternalTradeService _externalTradeService { get; set; }
+        public IExternalTradeService _externalTradeService { get; }
+
 
         public TradeService(IExternalTradeService externalTradeService)
         {
-            this.externalTradeService = externalTradeService;
+            this._externalTradeService = externalTradeService;
 
 
         }
@@ -28,7 +29,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<Trade>> Trades()
         {
 
-            var trades = externalTradeService.Trades();
+            var trades = _externalTradeService.Trades();
 
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
@@ -48,6 +49,8 @@ namespace Iz.Online.Services.Services
 
             return new ResultModel<List<Trade>>(allTrades);
         }
+
+
 
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)
         {
