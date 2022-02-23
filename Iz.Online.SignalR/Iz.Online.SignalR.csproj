@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
+    <ProjectReference Include="..\Iz.Online.HubHandler\Iz.Online.HubHandler.csproj" />
   </ItemGroup>
 
 </Project>

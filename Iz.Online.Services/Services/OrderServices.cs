@@ -171,8 +171,8 @@ namespace Iz.Online.Services.Services
             };
 
 
-            string query = "";
-            query = $"select  * from users order by {filter.OrderBy.orderBy} {filter.OrderType}";
+            //string query = "";
+            //query = $"select  * from users order by {filter.OrderBy.orderBy} {filter.OrderType}";
 
 
             if (filter.OrderBy.orderBy == OrderSortColumn.Symbol && filter.OrderType ==OrderType.ASC)

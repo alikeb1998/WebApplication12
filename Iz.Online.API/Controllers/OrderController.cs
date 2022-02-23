@@ -30,7 +30,6 @@ namespace Iz.Online.API.Controllers
         {
             _orderServices = orderServices;
             _hubContext = hubContext;
-
         }
 
         #endregion

@@ -39,9 +39,9 @@ namespace Iz.Online.Services.Services
                 Id = x.Id,
                 Name = x.SymbolName.EndsWith("1") ? x.SymbolName.Substring(0, x.SymbolName.Length - 1) : x.SymbolName,
                 FullName = x.CompanyName,
-                NscCode = x.Code,
-                Bourse = x.Bourse,
-                InstrumentId = x.InstrumentId,
+                NscCode = x.Code,//
+                Bourse = x.Bourse,//
+                InstrumentId = x.InstrumentId,//
                 Tick = x.Tick,
                 BuyCommissionRate = x.BuyCommisionRate,
                 SellCommissionRate = x.SellCommisionRate,
@@ -154,6 +154,7 @@ namespace Iz.Online.Services.Services
             resultModel = new ResultModel<WatchListDetails>(null);
             return false;
         }
+        
         private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
             var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);

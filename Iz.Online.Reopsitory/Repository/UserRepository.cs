@@ -29,6 +29,9 @@ namespace Iz.Online.Reopsitory.Repository
         {
 
             var content = _cache.Get(userId);
+            if (content == null)
+                return null;
+
             var serializedModel = System.Text.Encoding.Default.GetString(content);
             var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
             return deserializedObject;
@@ -128,9 +131,32 @@ namespace Iz.Online.Reopsitory.Repository
 
                 data.HubId.AddRange(des.HubId.ToList());
             }
-            var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = UserId , HubId= data.HubId.Distinct().ToList()});
+            var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = UserId, HubId = data.HubId.Distinct().ToList() });
             var content = Encoding.UTF8.GetBytes(serialized);
             _cache.Set(UserId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+        }
+
+        public void DeleteConnectionId(string userId, string connectionId)
+        {
+            var redisKeys = _redis.GetServer("localhost", 6379).Keys(pattern: userId)
+          .Select(p => p.ToString()).ToList();
+
+            var data = new UsersHubIds();
+
+            foreach (var redisKey in redisKeys)
+            {
+                var t = _cache.Get(redisKey);
+                var obj = Encoding.Default.GetString(t);
+                var des = JsonConvert.DeserializeObject<UsersHubIds>(obj);
+
+                des.HubId.Remove(connectionId);
+                data.HubId.AddRange(des.HubId.ToList());
+            }
+
+            var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = userId, HubId = data.HubId.Distinct().ToList() });
+            var content = Encoding.UTF8.GetBytes(serialized);
+
+            _cache.Set(userId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
         }
     }
 }

@@ -24,7 +24,8 @@ namespace Iz.Online.API.Controllers
         {
             _tradeServices = tradeServices; //new OrderServices();
             _hubContext = hubContext;
-            
+            _tradeServices.Id = _tradeServices.externalTradeService.Id = _token_;
+
         }
         #endregion
 
