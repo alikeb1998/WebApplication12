@@ -10,7 +10,7 @@ namespace Izi.Online.ViewModels.Instruments
     public class EditEathListItems:ViewBaseModel
     {
         public  string WatchListId { get; set; }
-        public  long InstrumentsId { get; set; }
+        public  long Id { get; set; }
         
     }
 }

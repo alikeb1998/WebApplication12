@@ -4,8 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
-using Iz.Online.ExternalServices.Rest.ExternalService;
-using Iz.Online.ExternalServices.Rest.IExternalService;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Trades;
 

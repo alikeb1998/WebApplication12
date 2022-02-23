@@ -1,64 +1,31 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
-using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
-using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
-using DateHelper = Iz.Online.Files.DateHelper;
-using Iz.Online.Files;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Iz.Online.Services.Services
 {
-    public class InstrumentsService : IInstrumentsService
+    public class WatchListsService :IWatchListsService
     {
-        private readonly IInstrumentsRepository _instrumentsRepository;
+        private readonly IWatchListsRepository _watchListsRepository;
         private readonly IExternalInstrumentService _externalInstrumentsService;
 
-
-        public string _token { get; set; }
-
-        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
+        public WatchListsService(IWatchListsRepository watchListsRepository, IExternalInstrumentService externalInstrumentsService)
         {
-            _instrumentsRepository = instrumentsRepository;
+            _watchListsRepository = watchListsRepository;
             _externalInstrumentsService = externalInstrumentsService;
-        }
-
-        public ResultModel<List<Instruments>> Instruments()
-        {
-            return _instrumentsRepository.GetInstrumentsList();
-        }
-        public ResultModel<List<InstrumentList>> InstrumentList()
-        {
-            var ins = _instrumentsRepository.GetInstrumentsList();
-
-            if (!ins.IsSuccess)
-                return new ResultModel<List<InstrumentList>>(null, false, "خطای پایگاه داده", -1);
-
-            return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
-            {
-                Id = x.Id,
-                Name = x.SymbolName.EndsWith("1") ? x.SymbolName.Substring(0, x.SymbolName.Length - 1) : x.SymbolName,
-                FullName = x.CompanyName,
-                NscCode = x.Code,//
-                Bourse = x.Bourse,//
-                InstrumentId = x.InstrumentId,//
-                Tick = x.Tick,
-                BuyCommissionRate = x.BuyCommisionRate,
-                SellCommissionRate = x.SellCommisionRate,
-
-            }).ToList()) ;
-
-        }
-
-        public ResultModel<List<WatchList>> UserWatchLists(string customerId)
-        {
-
-            return _instrumentsRepository.GetUserWatchLists(customerId);
         }
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
         {
-            var wl = _instrumentsRepository.GetWatchListDetails(model);
+            var wl = _watchListsRepository.GetWatchListDetails(model);
 
 
             foreach (var ins in wl.Model.Instruments)
@@ -95,7 +62,7 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model)
         {
-            return _instrumentsRepository.DeleteWatchList(model);
+            return _watchListsRepository.DeleteWatchList(model);
         }
 
         public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
@@ -105,14 +72,14 @@ namespace Iz.Online.Services.Services
             if (ValidateWatchList(model, out var resultModel))
                 return resultModel;
 
-            return _instrumentsRepository.NewWatchList(model);
+            return _watchListsRepository.NewWatchList(model);
         }
 
         private bool ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
-            var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxLenName").Value);
 
-            var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
+            var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
@@ -120,14 +87,14 @@ namespace Iz.Online.Services.Services
                     return true;
                 }
 
-            if (model.InstrumentsId.Count() > maxLen)
+            if (model.Id.Count() > maxLen)
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
                 return true;
             }
 
             if (model.WatchListName.Length >
-                Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+                Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
                 return true;
@@ -145,7 +112,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
-            if (model.InstrumentsId.Distinct().Count() != model.InstrumentsId.Count())
+            if (model.Id.Distinct().Count() != model.Id.Count())
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
                 return true;
@@ -156,20 +123,20 @@ namespace Iz.Online.Services.Services
         }
         private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
-            var maxLen = Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxLenName").Value);
 
-            var oldWl = _instrumentsRepository.GetUserWatchLists(model.CustomerId);
+            var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
             if (oldWl.IsSuccess)
-                if (oldWl.Model.Where(x => x.Id != model.Id).Select(x => x.WatchListName).Contains(model.WatchListName))
+                if (oldWl.Model.Where(x => x.Id != model.WatchListId).Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
                     resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
                     return true;
                 }
 
-            var entity = _instrumentsRepository.GetWatchListDetails(new SearchWatchList()
+            var entity = _watchListsRepository.GetWatchListDetails(new SearchWatchList()
             {
                 CustomerId = model.CustomerId,
-                WatchListId = model.Id
+                WatchListId = model.WatchListId
 
             });
 
@@ -178,14 +145,14 @@ namespace Iz.Online.Services.Services
                 resultModel = new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد");
                 return true;
             }
-            if (model.InstrumentsId.Count() > maxLen)
+            if (model.Id.Count() > maxLen)
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
                 return true;
             }
 
             if (model.WatchListName.Length >
-                Convert.ToInt32(_instrumentsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+                Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
                 return true;
@@ -203,7 +170,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
-            if (model.InstrumentsId.Distinct().Count() != model.InstrumentsId.Count())
+            if (model.Id.Distinct().Count() != model.Id.Count())
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
                 return true;
@@ -212,64 +179,55 @@ namespace Iz.Online.Services.Services
             resultModel = new ResultModel<WatchListDetails>(null);
             return false;
         }
-        public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
+
+        public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
         {
-            var result = new InstrumentDetail();
+            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value);
 
+            var old = _watchListsRepository.GetWatchListDetails(new SearchWatchList() { WatchListId = model.WatchListId });
+            if (old.Model.Instruments.Count() >= maxLen)
+                return new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
 
-            var detail = _externalInstrumentsService.Details(model);
-            var priceDetail = _externalInstrumentsService.Price(model);
+            return _watchListsRepository.AddInstrumentToWatchList(model);
 
-            var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
-
-            if (priceDetail.IsSuccess && priceDetail.Model != null)
-            {
-                result.closingPrice = priceDetail.Model.closingPrice.Value;
-                result.firstPrice =  priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
-                result.lastPrice = priceDetail.Model.lastPrice.Value;
-                result.NscCode = priceDetail.Model.instrumentId;
-                result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
-                result.valueOfTrades = priceDetail.Model.valueOfTrades.Value;
-                result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
-                result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;
-                result.yesterdayPrice = priceDetail.Model.yesterdayPrice.Value;
-                result.highPrice = (long)priceDetail.Model.maximumPrice;
-                result.lowPrice = (long)priceDetail.Model.minimumPrice;
-
-                var lastPrice = priceDetail.Model.lastPrice.Value;
-                var yesterdayPrice = priceDetail.Model.yesterdayPrice;
-
-                if (yesterdayPrice > 0 && lastPrice > 0)
-                    result.LastPriceChangePercent = (float)((lastPrice - yesterdayPrice) / yesterdayPrice) * 100;
-                
-                result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
-                result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-               
-                
-                
-
-            }
-            
-            if (detail.IsSuccess && detail.Model != null)
-            {
-                result.State = detail.Model.State;
-                result.StateText = EnumHelper.InstrumentStates(result.State.ToString());
-                result.GroupState = detail.Model.Group.State;
-                result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
-                result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMax;
-
-
-                result.Tick = detail.Model.Tick;
-            }
-
-            if (!(priceDetail.IsSuccess && detail.IsSuccess))
-                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
-
-            return new ResultModel<InstrumentDetail>(result);
         }
 
-      
-    }
+        public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model)
+        {
+            return _watchListsRepository.RemoveInstrumentFromWatchList(model);
 
+        }
+
+        public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
+        {
+
+            return _watchListsRepository.InstrumentWatchLists(model);
+
+        }
+        public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
+        {
+            model.WatchListName = model.WatchListName.Trim();
+
+            if (ValidateWatchList(model, out var resultModel))
+                return resultModel;
+
+            return _watchListsRepository.UpdateWatchList(model);
+
+        }
+
+        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        {
+            return _watchListsRepository.AddCommentToInstrument(model);
+        }
+
+        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        {
+            return _watchListsRepository.GetInstrumentComment(model);
+        }
+
+        public ResultModel<List<WatchList>> UserWatchLists(string customerId)
+        {
+            return _watchListsRepository.GetUserWatchLists(customerId);
+        }
+    }
 }

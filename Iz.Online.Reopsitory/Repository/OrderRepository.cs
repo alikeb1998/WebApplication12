@@ -8,7 +8,7 @@ namespace Iz.Online.Reopsitory.Repository
 {
     public class OrderRepository : BaseRepository, IOrderRepository
     {
-        private OnlineBackendDbContext _db;
+        private readonly OnlineBackendDbContext _db;
         public OrderRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
             _db = dataBase;

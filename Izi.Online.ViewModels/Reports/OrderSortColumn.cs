@@ -28,7 +28,6 @@ namespace Izi.Online.ViewModels.Reports
         CreditDate,
         [Description("وضعیت")]
         State,
-        [Description("عملیات")]
-        Proccess
+        
     }
 }

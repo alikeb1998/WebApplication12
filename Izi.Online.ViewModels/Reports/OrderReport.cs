@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Izi.Online.ViewModels.Orders;
 
 namespace Izi.Online.ViewModels.Reports
 {
-    public class ReportsFilter
+    public class OrderReport : Report<ActiveOrder>
     {
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-        public OrderType OrderType { get; set; }
+        public OrderSortColumn OrderSortColumn { get; set; }
     }
 }

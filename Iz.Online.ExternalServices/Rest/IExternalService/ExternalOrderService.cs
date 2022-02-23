@@ -14,7 +14,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalOrderService : BaseService, IExternalOrderService
     {
-        public IBaseRepository _instrumentsRepository { get; set; }
+        private readonly IBaseRepository _instrumentsRepository;
        public string _token { get; set; }
 
         public ExternalOrderService(IBaseRepository baseRepository) : base(baseRepository)
@@ -25,10 +25,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
         {
             var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
-            
+
             if (result.statusCode != 200)
             {
-                return new ResultModel<AddOrderResult>(result);
+                return new ResultModel<AddOrderResult>(result, false, result.message.ToString());
             }
             return new ResultModel<AddOrderResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
