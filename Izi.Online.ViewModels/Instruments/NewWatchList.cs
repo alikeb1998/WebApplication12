@@ -15,7 +15,6 @@ namespace Izi.Online.ViewModels.Instruments
 
         [Required(ErrorMessage = "اجباری")]
         public string WatchListName { get; set; }
-
         public List<long> Id { get; set; }
     }
 }
