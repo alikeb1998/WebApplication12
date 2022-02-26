@@ -2,11 +2,11 @@
 
 //var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5224/CustomersHub").build();
+//var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5224/CustomersHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("http://192.168.72.112:5554/CustomersHub").build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
-
 connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
