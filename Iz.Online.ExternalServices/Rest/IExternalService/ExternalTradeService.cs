@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
-    public class ExternalTradeService : BaseService2, IExternalTradeService
+    public class ExternalTradeService : BaseService, IExternalTradeService
     {
         public ExternalTradeService(IBaseRepository baseRepository) : base(baseRepository)
         {
-           _Id =  Id;
+           
         }
         public string Id { get; set; }
 

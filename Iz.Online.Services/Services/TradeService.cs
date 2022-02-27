@@ -33,6 +33,9 @@ namespace Iz.Online.Services.Services
 
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
+           
+            if (trades.Model.Trades == null)
+                return new ResultModel<List<Trade>>(null, true, trades.Message, trades.StatusCode);
 
             var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0, 6) == DateTime.Today.ToString().Substring(0, 6)).Select(x => new Trade()
             {
@@ -58,6 +61,9 @@ namespace Iz.Online.Services.Services
 
             if (!trades.IsSuccess)
                 return new ResultModel<List<Trade>>(null, false, trades.Message, trades.StatusCode);
+            
+            if (trades.Model.Trades == null)
+                return new ResultModel<List<Trade>>(null, true, trades.Message, trades.StatusCode);
 
             var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0, 6) == DateTime.Today.ToString().Substring(0, 6)).Select(x => new Trade()
             {
@@ -76,7 +82,7 @@ namespace Iz.Online.Services.Services
 
             return new ResultModel<List<Trade>>(res);
         }
-        public List<Trade> Filter(List<Trade> list, TradeFilter filter)
+        private List<Trade> Filter(List<Trade> list, TradeFilter filter)
         {
             var report = new TradeReport()
             {
