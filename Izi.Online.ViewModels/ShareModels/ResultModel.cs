@@ -13,7 +13,7 @@ namespace Izi.Online.ViewModels.ShareModels
             if (isSuccess)
             {
                 Message = "با موفقیت انجام شد";
-                StatusCode = 1;
+                StatusCode = 200;
 
             }
             else

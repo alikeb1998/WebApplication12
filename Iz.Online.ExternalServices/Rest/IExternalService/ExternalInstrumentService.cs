@@ -138,9 +138,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             if (detail.Model == null || detail.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, false, detail.Message, detail.StatusCode);
 
-
-
-
+            
             var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
@@ -233,7 +231,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}");
 
-            if (result.statusCode == -1)
+            if (result.statusCode == 200)
                 return new ResultModel<InstrumentPriceDetails>(result.price);
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
