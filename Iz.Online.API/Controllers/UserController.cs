@@ -31,6 +31,7 @@ namespace Iz.Online.API.Controllers
 
         #region ctor
         private readonly IUserService _userService;
+        private readonly IExternalUserService _externalUserService;
         //private readonly IDistributedCache _cache;
         //private readonly IConnectionMultiplexer _redis;
         public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor/*, IDistributedCache cache, IConnectionMultiplexer redis*/) : base(httpContextAccessor)
@@ -74,6 +75,13 @@ namespace Iz.Online.API.Controllers
         public ActionResult login(CustomerHub model)
         {
             return Ok(new ResultModel<List<AppConfigs>>(null));
+
+        }
+
+        [HttpPost("logOut")]
+        public ResultModel<bool> logOut()
+        {
+            return _userService.LogOut();
 
         }
 

@@ -30,5 +30,7 @@ namespace Iz.Online.Services.IServices
         Captcha Captcha();
         OtpResult SendOtp(Credentials credentials);
         CheckedOtp CheckOtp(Otp otp);
+        ResultModel<bool> LogOut();
+
     }
 }

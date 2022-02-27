@@ -53,5 +53,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var result = HttpPostRequest<CheckOtp>("user/login/check-otp", JsonConvert.SerializeObject(otp));
             return result;
         }
+        public ResultModel<LogOut> LogOut()
+        {
+            var result = HttpDeleteRequest<LogOut>("user/logout",null);
+
+            return new ResultModel<LogOut>(result);
+        }
     }
 }
