@@ -34,19 +34,19 @@ namespace Iz.Online.Services.Services
         public UsersHubIds UserHubsList(string userId)
         {
 
-            return  _userRepository.GetUserHubs(userId);
+            return _userRepository.GetUserHubs(userId);
 
         }
-       
+
         public ResultModel<List<Asset>> AllAssets()
         {
             var assets = _externalUserService.GetAllAssets();
 
             if (!assets.IsSuccess)
                 return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
-            
-            if (assets.Model.Assets==null)
-                return new ResultModel<List<Asset>>(null, false,"مدل خالی برگشته است", assets.StatusCode);
+
+            if (assets.Model.Assets == null)
+                return new ResultModel<List<Asset>>(null, false, "مدل خالی برگشته است", assets.StatusCode);
 
             var result = assets.Model.Assets.Select(x => new Asset()
             {
@@ -59,7 +59,7 @@ namespace Iz.Online.Services.Services
                 ProfitAmount = x.ProfitAmount,
                 ProfitPercent = x.ProfitPercent,
                 SellProfit = x.SellProfit,
-                InstrumentId =x.Instrument.id,
+                InstrumentId = x.Instrument.id,
                 NscCode = x.Instrument.code
             }).ToList();
             return new ResultModel<List<Asset>>(result);
@@ -70,9 +70,9 @@ namespace Iz.Online.Services.Services
         {
             var assets = _externalUserService.GetAllAssets();
 
-            if (!assets.IsSuccess|| assets.Model.Assets == null)
-                return new ResultModel<List<Asset>>(null, assets.StatusCode==200, assets.Message, assets.StatusCode);
-            
+            if (!assets.IsSuccess || assets.Model.Assets == null)
+                return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
+
             var result = assets.Model.Assets.Select(x => new Asset()
             {
                 Name = x.Instrument.name,
@@ -95,11 +95,11 @@ namespace Iz.Online.Services.Services
         }
         public ResultModel<Wallet> Wallet()
         {
-            
+
             var respond = _externalUserService.Wallet();
 
             if (!respond.IsSuccess || respond.Model.wallet == null)
-                return new ResultModel<Wallet>(null, respond.StatusCode==200, respond.Message, respond.StatusCode);
+                return new ResultModel<Wallet>(null, respond.StatusCode == 200, respond.Message, respond.StatusCode);
 
             var result = new Wallet()
             {
@@ -122,18 +122,18 @@ namespace Iz.Online.Services.Services
                 Value = x.Value
             }).ToList();
         }
-                     
+
         public ResultModel<string> GetUserLocalToken(string token)
         {
             var deserializedToken = CastJwtSecurityTokenHandler(token);
             var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
 
-            string localToken = _userRepository.GetUserLocalToken(omsId,token);
+            string localToken = _userRepository.GetUserLocalToken(omsId, token);
 
 
             return new ResultModel<string>(localToken);
         }
-      
+
         private SecurityToken CastJwtSecurityTokenHandler(string stream)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -145,7 +145,7 @@ namespace Iz.Online.Services.Services
 
         public void SetUserHub(string UserId, string hubId)
         {
-           _userRepository.SetUserHub(UserId, hubId);
+            _userRepository.SetUserHub(UserId, hubId);
         }
 
         public Captcha Captcha()
@@ -156,7 +156,7 @@ namespace Iz.Online.Services.Services
 
                 CaptchaImage = res.Captcha.Base64,
                 Id = res.Captcha.Id
-        
+
             };
             return captcha;
         }
@@ -174,10 +174,10 @@ namespace Iz.Online.Services.Services
         public CheckedOtp CheckOtp(Otp otp)
         {
             var result = _externalUserService.CheckOtp(otp);
-            var checkOtp= new CheckedOtp()
+            var checkOtp = new CheckedOtp()
             {
-              Token = result.Token,
-              Sockettoken = result.SocketToken
+                Token = result.Token,
+                Sockettoken = result.SocketToken
             };
             return checkOtp;
         }
