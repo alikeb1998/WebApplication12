@@ -25,10 +25,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<TradesList> Trades()
         {
             var list = HttpGetRequest<TradesList>("trade/all");
-            if (list.statusCode != 200)
-                return new ResultModel<TradesList>(null, false, list.clientMessage, list.statusCode);
-
-            return new ResultModel<TradesList>(list);
+          
+                return new ResultModel<TradesList>(list, list.statusCode == 200, list.clientMessage, list.statusCode);
+            
         }
     }
 }

@@ -102,8 +102,11 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode == 200)
+            if (activeOrders.StatusCode != 200)
                 return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
+
+            if (activeOrders.Model.Orders.Count == 0)
+                return new ResultModel<List<ActiveOrder>>(null, true, activeOrders.Message, activeOrders.StatusCode);
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
@@ -172,7 +175,7 @@ namespace Iz.Online.Services.Services
                 TotalCount = result.Count,
                 OrderSortColumn = filter.OrderSortColumn
             };
-            
+
             return new ResultModel<OrderReport>(res);
         }
 

@@ -230,9 +230,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
         {
             var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}");
-
-            if (result.statusCode == 200)
-                return new ResultModel<InstrumentPriceDetails>(result.price);
+            
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
@@ -240,10 +238,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<Details> Details(SelectInstrumentDetails model)
         {
             var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}");
-
-
-            if (result.statusCode == 200)
-                return new ResultModel<Details>(result.Instrument);
+            
 
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 

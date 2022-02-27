@@ -26,20 +26,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
 
-            if (result.statusCode != 200)
-            {
-                return new ResultModel<AddOrderResult>(result, false, result.message.ToString());
-            }
+          
             return new ResultModel<AddOrderResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
         
         public ResultModel<AllOrders> GetAll()
         {
             var result = HttpGetRequest<AllOrders>("order/all");
-            if (result.statusCode != 200)
-            {
-                return new ResultModel<AllOrders>(result);
-            }
+       
             return new ResultModel<AllOrders>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
@@ -47,10 +41,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<ActiveOrdersResult> GetAllActives()
         {
             var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
-            if (result.statusCode != 200)
-            {
-                return new ResultModel<ActiveOrdersResult>(result,false);
-            }
+       
             return new ResultModel<ActiveOrdersResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
       
@@ -58,20 +49,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
         {
             var result = HttpPutRequest<UpdatedOrder>($"order/update/{model.InstrumentId}", JsonConvert.SerializeObject(model));
-            if (result.statusCode != 200)
-            {
-                return new ResultModel<UpdatedOrder>(result);
-            }
+          
             return new ResultModel<UpdatedOrder>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
         public ResultModel<CanceledOrder> Cancel(CancelOrder model)
         {
             var result = HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model));
-            if (result.statusCode != 200)
-            {
-                return new ResultModel<CanceledOrder>(result, false);
-            }
+       
             return new ResultModel<CanceledOrder>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
