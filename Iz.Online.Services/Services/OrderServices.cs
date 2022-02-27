@@ -102,12 +102,10 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode != 200)
-                return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
+            if (activeOrders.StatusCode != 200|| activeOrders.Model.Orders.Count == 0)
+                return new ResultModel<List<ActiveOrder>>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
-            if (activeOrders.Model.Orders.Count == 0)
-                return new ResultModel<List<ActiveOrder>>(null, true, activeOrders.Message, activeOrders.StatusCode);
-
+           
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = (long)x.quantity,
@@ -138,6 +136,8 @@ namespace Iz.Online.Services.Services
             var activeOrders = _externalOrderService.GetAllActives();
             //if (activeOrders.StatusCode != 1)
             //    return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
+            if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
+                return new ResultModel<OrderReport>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
@@ -191,14 +191,11 @@ namespace Iz.Online.Services.Services
                 ValidityDate = model.ValidityDate,
                 ValidityType = model.ValidityType,
             });
-            var result = new UpdatedOrder()
-            {
 
-            };
-
-            if (respond.StatusCode != 200)
-                return new ResultModel<UpdatedOrder>(null, false, respond.Message, respond.StatusCode);
-
+            var result = new UpdatedOrder();
+            if (respond.StatusCode != 200 || respond.Model== null)
+                return new ResultModel<UpdatedOrder>(null, respond.StatusCode == 200, respond.Message, respond.StatusCode);
+            
             return new ResultModel<UpdatedOrder>(result);
         }
 
@@ -211,19 +208,15 @@ namespace Iz.Online.Services.Services
                 InstrumentId = model.InstrumentId
 
             });
+            if (respond.StatusCode != 200 || respond.Model == null)
+                return new ResultModel<CanceledOrder>(null, respond.StatusCode == 200, respond.Message, respond.StatusCode);
 
-            var result = new CanceledOrder()
-            {
-
-            };
-
-            if (respond.StatusCode != 200)
-                return new ResultModel<CanceledOrder>(null, false, respond.Message, respond.StatusCode);
+            var result = new CanceledOrder();
 
             return new ResultModel<CanceledOrder>(result);
 
         }
-        public List<ActiveOrder> Filter(List<ActiveOrder> list, OrderFilter filter)
+        private List<ActiveOrder> Filter(List<ActiveOrder> list, OrderFilter filter)
         {
             var report = new OrderReport()
             {

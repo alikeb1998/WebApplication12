@@ -29,10 +29,11 @@ namespace Iz.Online.Services.Services
         }
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
+            
             var ins = _instrumentsRepository.GetInstrumentsList();
 
-            if (!ins.IsSuccess)
-                return new ResultModel<List<InstrumentList>>(null, false, "خطای پایگاه داده", -1);
+            if (ins.StatusCode !=200 || ins.Model==null)
+                return new ResultModel<List<InstrumentList>>(null, ins.StatusCode == 200, ins.Message, ins.StatusCode);
 
             return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
             {

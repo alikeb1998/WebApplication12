@@ -70,12 +70,9 @@ namespace Iz.Online.Services.Services
         {
             var assets = _externalUserService.GetAllAssets();
 
-            if (!assets.IsSuccess)
-                return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
-
-            if (assets.Model.Assets == null)
-                return new ResultModel<List<Asset>>(null, false, "مدل خالی برگشته است", assets.StatusCode);
-
+            if (!assets.IsSuccess|| assets.Model.Assets == null)
+                return new ResultModel<List<Asset>>(null, assets.StatusCode==200, assets.Message, assets.StatusCode);
+            
             var result = assets.Model.Assets.Select(x => new Asset()
             {
                 Name = x.Instrument.name,
@@ -101,11 +98,8 @@ namespace Iz.Online.Services.Services
             
             var respond = _externalUserService.Wallet();
 
-            if (!respond.IsSuccess )
-                return new ResultModel<Wallet>(null, false, respond.Message, respond.StatusCode);
-
-            if (respond.Model.wallet == null)
-                return new ResultModel<Wallet>(null, false, "مدل خالی برگشته است", respond.StatusCode);
+            if (!respond.IsSuccess || respond.Model.wallet == null)
+                return new ResultModel<Wallet>(null, respond.StatusCode==200, respond.Message, respond.StatusCode);
 
             var result = new Wallet()
             {
@@ -187,7 +181,7 @@ namespace Iz.Online.Services.Services
             };
             return checkOtp;
         }
-        public List<Asset> Filter(List<Asset> list, PortfoFilter filter)
+        private List<Asset> Filter(List<Asset> list, PortfoFilter filter)
         {
             var report = new PortfolioReport()
             {
