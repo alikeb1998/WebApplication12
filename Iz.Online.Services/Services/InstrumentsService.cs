@@ -46,49 +46,53 @@ namespace Iz.Online.Services.Services
                 BuyCommissionRate = x.BuyCommisionRate,
                 SellCommissionRate = x.SellCommisionRate,
 
-            }).ToList()) ;
+            }).ToList());
 
         }
 
-        
+
         public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
         {
             var result = new InstrumentDetail();
 
 
             var detail = _externalInstrumentsService.Details(model);
+            if (!detail.IsSuccess || detail.Model == null)
+                return new ResultModel<InstrumentDetail>(null, false, detail.Message, detail.StatusCode);
+           
             var priceDetail = _externalInstrumentsService.Price(model);
+            if (!priceDetail.IsSuccess || priceDetail.Model == null)
+                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
 
             var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
+            if (!bestLimit.IsSuccess || bestLimit.Model == null)
+                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
 
-            if (priceDetail.IsSuccess && priceDetail.Model != null)
-            {
-                result.closingPrice = priceDetail.Model.closingPrice.Value;
-                result.firstPrice =  priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
-                result.lastPrice = priceDetail.Model.lastPrice.Value;
-                result.NscCode = priceDetail.Model.instrumentId;
-                result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
-                result.valueOfTrades = priceDetail.Model.valueOfTrades.Value;
-                result.numberOfTrades = priceDetail.Model.numberOfTrades.Value;
-                result.volumeOfTrades = priceDetail.Model.volumeOfTrades.Value;
-                result.yesterdayPrice = priceDetail.Model.yesterdayPrice.Value;
-                result.highPrice = (long)priceDetail.Model.maximumPrice;
-                result.lowPrice = (long)priceDetail.Model.minimumPrice;
+            result.closingPrice = priceDetail.Model.closingPrice.Value;
+            result.firstPrice = priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
+            result.lastPrice = priceDetail.Model.lastPrice.Value;
+            result.NscCode = priceDetail.Model.instrumentId;
+            result.lastTradeDate = DateHelper.GetTimeFromString(priceDetail.Model.lastTradeDate);
+            result.valueOfTrades = priceDetail.Model.valueOfTrades == null ? 0 : priceDetail.Model.valueOfTrades.Value;
+            result.numberOfTrades = priceDetail.Model.numberOfTrades == null ? 0 : priceDetail.Model.numberOfTrades.Value;
+            result.volumeOfTrades = priceDetail.Model.volumeOfTrades == null ? 0 : priceDetail.Model.volumeOfTrades.Value;
+            result.yesterdayPrice = priceDetail.Model.yesterdayPrice == null ? 0 : priceDetail.Model.yesterdayPrice.Value;
+            result.highPrice = priceDetail.Model.maximumPrice == null ? 0 : (long)priceDetail.Model.maximumPrice;
+            result.lowPrice = priceDetail.Model.minimumPrice == null ? 0 : (long)priceDetail.Model.minimumPrice;
 
-                var lastPrice = priceDetail.Model.lastPrice.Value;
-                var yesterdayPrice = priceDetail.Model.yesterdayPrice;
+            var lastPrice = result.lastPrice;
+            var yesterdayPrice = result.yesterdayPrice;
 
-                if (yesterdayPrice > 0 && lastPrice > 0)
-                    result.LastPriceChangePercent = (float)((lastPrice - yesterdayPrice) / yesterdayPrice) * 100;
-                
-                result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
-                result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-               
-                
-                
+            if (yesterdayPrice > 0 && lastPrice > 0)
+                result.LastPriceChangePercent = (float)((lastPrice - yesterdayPrice) / yesterdayPrice) * 100;
 
-            }
-            
+            result.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
+            result.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
+
+
+
+
+
             if (detail.IsSuccess && detail.Model != null)
             {
                 result.State = detail.Model.State;
@@ -108,7 +112,15 @@ namespace Iz.Online.Services.Services
             return new ResultModel<InstrumentDetail>(result);
         }
 
-      
+        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        {
+            return _instrumentsRepository.AddCommentToInstrument(model);
+        }
+
+        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        {
+            return _instrumentsRepository.GetInstrumentComment(model);
+        }
     }
 
 }

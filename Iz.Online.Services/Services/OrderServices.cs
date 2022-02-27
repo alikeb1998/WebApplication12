@@ -102,7 +102,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode != 1)
+            if (activeOrders.StatusCode == 200)
                 return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
 
             var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()

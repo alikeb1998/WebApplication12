@@ -41,7 +41,7 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
                 {
                     Thread.Sleep(2000);
                     Random rnd = new Random();
-                   
+
 
                     OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
                     {
@@ -119,7 +119,9 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
                     var hubs = _hubUserService.UserHubsList("user1");
                     if (hubs != null)
 
-                        _hubContext.Clients.Clients(hubs.HubId).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}'", " " });
+                        _hubContext.Clients.Clients(hubs.HubId).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+
+                    //_hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}22'", " " });
                 }
                 catch (Exception e)
                 {
@@ -160,6 +162,43 @@ namespace Iz.Online.ExternalServices.Push.KafkaPushServices
         {
             //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
             _hubContext.Clients.All.SendCoreAsync("OnRefreshOrders", new object[] { model });
+
+        }
+
+        public Task PushOrderState()
+        {
+
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                consumer.Subscribe($"OrderTrade");
+                while (true)
+                {
+
+                    var consumeResult = consumer.Consume();
+                    var t  = consumeResult.Message.Value;
+                    
+                }
+                consumer.Close();
+            }
+
+        }
+
+        public Task PushTradeState()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                consumer.Subscribe($"OrderChange");
+                while (true)
+                {
+
+                    var consumeResult = consumer.Consume();
+                    var t = consumeResult.Message.Value;
+
+                }
+                consumer.Close();
+            }
 
         }
     }

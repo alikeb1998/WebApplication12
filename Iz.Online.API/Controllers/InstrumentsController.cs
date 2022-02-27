@@ -69,6 +69,20 @@ namespace Iz.Online.API.Controllers
             var result = _instrumentsService.Detail(model);
             return result;
         }
-
+        // گذاشتن یادداشت برای  نماد
+        [HttpPost("AddComment")]
+        public ResultModel<bool> AddComment([FromBody] AddCommentForInstrument model)
+        {
+            var result = _instrumentsService.AddCommentToInstrument(model);
+            return result;
+        }
+        // مشاهده یادداشت یک  نماد
+        [HttpPost("GetComment")]
+        public ResultModel<string> GetComment([FromBody] GetInstrumentComment model)
+        {
+            var result = _instrumentsService.GetInstrumentComment(model);
+            var a = result.ToString();
+            return result;
+        }
     }
 }

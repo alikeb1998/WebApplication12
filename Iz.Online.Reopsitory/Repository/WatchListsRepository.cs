@@ -229,50 +229,6 @@ namespace Iz.Online.Reopsitory.Repository
             });
         }
 
-        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
-        {
-            try
-            {
-                var entity = _db.InstrumentComments.FirstOrDefault(x =>
-                    x.CustomerId == model.CustomerId && x.InstrumentId == model.Id);
-
-                if (entity != null)
-                {
-                    entity.CommentText = model.Comment;
-                    _db.SaveChanges();
-                    return new ResultModel<bool>(true);
-                }
-                else
-                {
-                    _db.InstrumentComments.Add(new InstrumentComment()
-                    {
-                        InstrumentId = model.Id,
-                        CommentText = model.Comment,
-                        Id = Guid.NewGuid().ToString(),
-                        CustomerId = model.CustomerId
-                    });
-                    _db.SaveChanges();
-                }
-
-                return new ResultModel<bool>(true);
-            }
-            catch (Exception e)
-            {
-                return new ResultModel<bool>(false, false, "خطای پایگاه داده", -1);
-
-            }
-        }
-
-        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
-        {
-            var entity = _db.InstrumentComments.FirstOrDefault(x =>
-                x.CustomerId == model.CustomerId && x.InstrumentId == model.Id);
-
-            if (entity != null)
-                return new ResultModel<string>(entity.CommentText);
-
-            return new ResultModel<string>(null, false, "یادداشتی ثبت نشده است", -1);
-        }
         public ResultModel<long> GetInstrumentId(string nscCode)
         {
             var entity = _db.Instruments.Where(x => x.Code == nscCode).Select(x => x.InstrumentId).FirstOrDefault();
