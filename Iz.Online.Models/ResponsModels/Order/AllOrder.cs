@@ -14,6 +14,9 @@ namespace Iz.Online.OmsModels.ResponsModels.Order
         public int id { get; set; }
         public long quantity { get; set; }
         public long price  { get; set; }
-
+        public DateTime CreatedAt { get; set; }
+        public long ExecutedQ { get; set; }
+        public int ValidityType { get; set; }
+        public Instrument Instrument { get; set; }
     }
 }

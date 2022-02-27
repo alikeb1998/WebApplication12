@@ -164,7 +164,7 @@ namespace Iz.Online.Services.Services
                 var mock = new ActiveOrder() { InstrumentId = i, InstrumentName = $"نماد{i}", CreatedAt = DateTime.Now.AddSeconds(1), ExecutePercent = i, Quantity = i };
                 result.Add(mock);
             }
-            var a = Filter(result, filter);
+            var a = ActiveOrdersFilter(result, filter);
 
             var res = new OrderReport()
             {
@@ -177,6 +177,36 @@ namespace Iz.Online.Services.Services
             };
 
             return new ResultModel<OrderReport>(res);
+        }
+
+        public ResultModel<AllOrderReport> AllSortedOrder(AllOrderCustomFilter filter)
+        {
+            var allOrders = _externalOrderService.GetAll();
+            var result = allOrders.Model.orders.Select(x => new AllOrder()
+            { 
+                CreatedAt = x.CreatedAt, 
+                ExecutedQ = x.ExecutedQ,
+                Id = x.id,
+                price = x.price,
+                Quantity = x.quantity,
+                State = x.state,
+                ValidityType = x.ValidityType,
+                InstrumentName = x.Instrument.name,
+                ValueOfExeCutedQ = x.ExecutedQ * x.price,
+                ValidityTypeText = "",
+                InstrumentId = x.Instrument.id
+            }).ToList();
+
+            var a = AllOrdersFilter(result, filter);
+            var res = new AllOrderReport()
+            {
+                Model = a,
+                OrderType = filter.OrderType,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = result.Count,
+            };
+            return new ResultModel<AllOrderReport>(res);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
@@ -216,7 +246,7 @@ namespace Iz.Online.Services.Services
             return new ResultModel<CanceledOrder>(result);
 
         }
-        private List<ActiveOrder> Filter(List<ActiveOrder> list, OrderFilter filter)
+        private List<ActiveOrder> ActiveOrdersFilter(List<ActiveOrder> list, OrderFilter filter)
         {
             var report = new OrderReport()
             {
@@ -272,6 +302,71 @@ namespace Iz.Online.Services.Services
                 default:
                     return report.Model.OrderBy(x => x.CreatedAt).ToList();
             }
+            return report.Model.OrderBy(x => x.CreatedAt).ToList();
+        }
+        private List<AllOrder> AllOrdersFilter(List<AllOrder> list, AllOrderCustomFilter filter)
+        {
+           
+
+            if (filter.From == DateTime.MinValue)
+            {
+                var a = list.OrderBy(e => e.CreatedAt).ToList();
+                filter.From = a[0].CreatedAt;
+            }
+            if (filter.To == DateTime.MinValue)
+            {
+                var a = list.OrderByDescending(e => e.CreatedAt).ToList();
+                filter.To = a[0].CreatedAt;
+            }
+
+
+            list= list.Where
+            (x => x.CreatedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.CreatedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
+            .OrderByDescending(x=>x.CreatedAt).ToList();
+
+            if (filter.InstrumentId != 0)
+            {
+                list = list.Where(x=>x.InstrumentId==filter.InstrumentId).ToList();
+            }
+
+            if (filter.OrderSide!=0)
+            {
+                switch (filter.OrderSide)
+                {
+                    case 1:
+                        list = list.Where(x => x.OrderSide == 1).ToList();
+                        break;
+
+                    case 2:
+                        list = list.Where(x => x.OrderSide == 2).ToList();
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(filter.State))
+            {             
+                switch (filter.State)
+                {
+                    case "انجام شده":
+                        list = list.Where(x => x.State == "انجام شده").ToList();
+                        break;
+
+                    case "منقضی شده":
+                        list = list.Where(x => x.State == "منقضی شده").ToList();
+                        break;
+                    case "درحال انتظار":
+                        list = list.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                }
+            }
+            var report = new AllOrderReport()
+            {
+                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = list.Count,
+                OrderType = filter.OrderType,
+            };
             return report.Model.OrderBy(x => x.CreatedAt).ToList();
         }
     }
