@@ -18,5 +18,7 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
         ResultModel<long> GetInstrumentId(string nscCode);
 
+        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
+        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
     }
 }

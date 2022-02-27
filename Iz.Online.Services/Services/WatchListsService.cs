@@ -215,15 +215,7 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
-        {
-            return _watchListsRepository.AddCommentToInstrument(model);
-        }
-
-        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
-        {
-            return _watchListsRepository.GetInstrumentComment(model);
-        }
+        
 
         public ResultModel<List<WatchList>> UserWatchLists(string customerId)
         {

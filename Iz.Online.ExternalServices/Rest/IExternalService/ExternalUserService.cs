@@ -26,18 +26,15 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpGetRequest<Wallet>("user/wallet");
 
-            if (result.statusCode != 200)
-                return new ResultModel<Wallet>(result, false, result.clientMessage, result.statusCode);
-            return new ResultModel<Wallet>(result);
+            return new ResultModel<Wallet>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
         public ResultModel<AssetsList> GetAllAssets()
         {
             var result = HttpGetRequest<AssetsList>("order/asset/all");
-         
-            if (result.statusCode != 200)
-                return new ResultModel<AssetsList>(result, false, result.clientMessage, result.statusCode);
-            return new ResultModel<AssetsList>(result);
+
+            return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
+
         }
         public Login Captcha()
         {

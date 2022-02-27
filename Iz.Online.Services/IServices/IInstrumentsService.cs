@@ -13,6 +13,9 @@ namespace Iz.Online.Services.IServices
         ResultModel<List<Instruments>> Instruments();
         ResultModel<List<InstrumentList>> InstrumentList();
         ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
-      
+        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
+        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
+        
+        
     }
 }

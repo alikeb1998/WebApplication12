@@ -18,7 +18,6 @@ namespace Iz.Online.Services.IServices
         ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
         ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
         ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
-        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
-        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
+  
     }
 }
