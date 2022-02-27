@@ -25,17 +25,16 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<Wallet> Wallet()
         {
             var result = HttpGetRequest<Wallet>("user/wallet");
-            
-                return new ResultModel<Wallet>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
-         
+
+            return new ResultModel<Wallet>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
         public ResultModel<AssetsList> GetAllAssets()
         {
             var result = HttpGetRequest<AssetsList>("order/asset/all");
-         
-                return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
-      
+
+            return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
+
         }
         public Login Captcha()
         {
