@@ -32,10 +32,8 @@ namespace Iz.Online.API.Controllers
 
         #region ctor
         private readonly IUserService _userService;
-        private readonly IHubUserService _hubUserService;
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor, IHubUserService hubUserService) : base(httpContextAccessor)
+        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
-            _hubUserService = hubUserService;
             _userService = userService;
             _userService._token = _token_;
         }
@@ -46,8 +44,6 @@ namespace Iz.Online.API.Controllers
         [HttpGet("token/get")]
         public string Get()
         {
-            Task.Run(async () => _hubUserService.CreateAllConsumers());
-
               var path = @"C:\jafarinejad\store\token.txt";
 
             if (System.IO.File.Exists(path))
