@@ -1,6 +1,9 @@
-﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
+﻿
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.HubConnectionHandler.IServices;
+using Iz.Online.HubHandler.IServices;
+//using Iz.Online.HubHandler.IServices;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Instruments;
@@ -19,15 +22,16 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
         private readonly IExternalOrderService _externalOrderService;
-        private readonly IPushService _pushService;
+        //private readonly IPushService _pushService;
+        private IHubUserService _hubUserService;
         public string _token { get; set; }
 
-        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IPushService pushService, IExternalOrderService externalOrderService) : base(instrumentsRepository)
+        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService  
+            , IHubUserService hubUserService) : base(instrumentsRepository)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
-            _pushService = pushService;
-
+            _hubUserService = hubUserService;
         }
 
         public bool UpdateInstrumentList()
@@ -124,7 +128,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(async () => _pushService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
+            Task.Run(async () => _hubUserService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
@@ -245,7 +249,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }
-        public BestLimitsView ProccessVolume(BestLimitsView bestLimits, Details detail)
+        private BestLimitsView ProccessVolume(BestLimitsView bestLimits, Details detail)
         {
             var totalBuys = bestLimits.orderRow1.volumeBestBuy +
                             bestLimits.orderRow2.volumeBestBuy +
@@ -288,7 +292,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             return bestLimits;
         }
-        public double PercentProccessor(double a, double b)
+        private double PercentProccessor(double a, double b)
         {
             if (a == 0) return 0;
             var res = (a - b) / a * 100;

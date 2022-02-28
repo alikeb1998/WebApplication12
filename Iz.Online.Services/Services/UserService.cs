@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.HubHandler.IServices;
 using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
 using Iz.Online.OmsModels.Users.InputModels;
@@ -22,16 +23,18 @@ namespace Iz.Online.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IHubUserService _hubUserService;
         private readonly IExternalUserService _externalUserService;
         public string _token { get; set; }
 
-        public UserService(IUserRepository userRepository, IExternalUserService externalUserService)
+        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService)
         {
             _userRepository = userRepository;
             _externalUserService = externalUserService;
+            _hubUserService = hubUserService;
         }
 
-        public UsersHubIds UserHubsList(string userId)
+        public List<UsersHubIds> UserHubsList(string userId)
         {
 
             return _userRepository.GetUserHubs(userId);
@@ -43,10 +46,10 @@ namespace Iz.Online.Services.Services
             var assets = _externalUserService.GetAllAssets();
 
             if (!assets.IsSuccess)
-                return new ResultModel<List<Asset>>(null, false, assets.Message, assets.StatusCode);
+                return new ResultModel<List<Asset>>(null, assets.StatusCode==200, assets.Message, assets.StatusCode);
 
             if (assets.Model.Assets == null)
-                return new ResultModel<List<Asset>>(null, false, "مدل خالی برگشته است", assets.StatusCode);
+                return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
 
             var result = assets.Model.Assets.Select(x => new Asset()
             {
@@ -143,9 +146,13 @@ namespace Iz.Online.Services.Services
             return jsonToken;
         }
 
-        public void SetUserHub(string UserId, string hubId)
+        public void SetUserHub(string token, string hubId)
         {
-            _userRepository.SetUserHub(UserId, hubId);
+            var deserializedToken = CastJwtSecurityTokenHandler(token);
+            var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
+            var session = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Session").Value;
+
+            _userRepository.SetUserHub(omsId, hubId,session);
         }
 
         public Captcha Captcha()
@@ -173,6 +180,8 @@ namespace Iz.Online.Services.Services
         }
         public CheckedOtp CheckOtp(Otp otp)
         {
+            Task.Run(async () => _hubUserService.PushOrderState());
+
             var result = _externalUserService.CheckOtp(otp);
             var checkOtp = new CheckedOtp()
             {

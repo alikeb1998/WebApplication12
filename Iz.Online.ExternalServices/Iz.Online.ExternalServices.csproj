@@ -19,9 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
+    <ProjectReference Include="..\Iz.Online.HubHandler\Iz.Online.HubHandler.csproj" />
     <ProjectReference Include="..\Iz.Online.Models\Iz.Online.OmsModels.csproj" />
     <ProjectReference Include="..\Iz.Online.Reopsitory\Iz.Online.Reopsitory.csproj" />
-    <ProjectReference Include="..\Iz.Online.SignalR\Iz.Online.SignalR.csproj" />
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>
 

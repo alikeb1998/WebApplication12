@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Globals">
     <SccProjectName>SAK</SccProjectName>
@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
-    <ProjectReference Include="..\Iz.Online.HubHandler\Iz.Online.HubHandler.csproj" />
+    <ProjectReference Include="..\Iz.Online.HubConnectionHandler\Iz.Online.HubConnectionHandler.csproj" />
   </ItemGroup>
 
 </Project>
