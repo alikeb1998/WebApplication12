@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using StackExchange.Redis.Extensions.Core.Abstractions;
 using StackExchange.Redis;
 using Iz.Online.API.Controllers;
+using Iz.Online.HubHandler.IServices;
 using Izi.Online.ViewModels.Reports;
 
 namespace Iz.Online.API.Controllers
@@ -31,15 +32,10 @@ namespace Iz.Online.API.Controllers
 
         #region ctor
         private readonly IUserService _userService;
-        private readonly IExternalUserService _externalUserService;
-        //private readonly IDistributedCache _cache;
-        //private readonly IConnectionMultiplexer _redis;
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor/*, IDistributedCache cache, IConnectionMultiplexer redis*/) : base(httpContextAccessor)
+        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userService = userService;
             _userService._token = _token_;
-            //_cache = cache;
-            //_redis = redis;
         }
 
         #endregion
@@ -48,19 +44,7 @@ namespace Iz.Online.API.Controllers
         [HttpGet("token/get")]
         public string Get()
         {
-            _userService.SetUserHub("new", "h1");
-            var t = _userService.UserHubsList("new");
-            _userService.SetUserHub("new", "h2");
-             t = _userService.UserHubsList("new");
-            _userService.SetUserHub("new", "h3");
-            t = _userService.UserHubsList("new");
-            _userService.SetUserHub("new", "h1");
-            t = _userService.UserHubsList("new");
-            _userService.SetUserHub("new", "h1");
-            t = _userService.UserHubsList("new");
-            var r = t;
-
-            var path = @"C:\jafarinejad\store\token.txt";
+              var path = @"C:\jafarinejad\store\token.txt";
 
             if (System.IO.File.Exists(path))
             {
@@ -154,7 +138,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("SetHubId")]
         public ResultModel<bool> SetHubId([FromBody] CustomerHub model)
         {
-
+            _userService.SetUserHub(_token_,"");
             return new ResultModel<bool>(true);
 
         }

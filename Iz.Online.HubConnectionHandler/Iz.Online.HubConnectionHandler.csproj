@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Reopsitory\Iz.Online.Reopsitory.csproj" />
-    <ProjectReference Include="..\Iz.Online.SignalR\Iz.Online.SignalR.csproj" />
-    <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

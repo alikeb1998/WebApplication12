@@ -32,7 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.DataAccess\Iz.Online.DataAccess.csproj" />
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
-    <ProjectReference Include="..\Iz.Online.Models\Iz.Online.OmsModels.csproj" />
     <ProjectReference Include="..\Iz.Online.Services\Iz.Online.Services.csproj" />
     <ProjectReference Include="..\Iz.Online.SignalR\Iz.Online.SignalR.csproj" />
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />

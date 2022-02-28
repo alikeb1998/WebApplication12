@@ -3,13 +3,17 @@ using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Reopsitory.Repository;
 using Iz.Online.Services.IServices;
 using Iz.Online.Services.Services;
-using Iz.Online.ExternalServices.Push.IKafkaPushServices;
-using Iz.Online.ExternalServices.Push.KafkaPushServices;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
-using Iz.Online.HubHandler.Services;
+using Iz.Online.HubConnectionHandler.IServices;
+using Iz.Online.HubConnectionHandler.Services;
 using Iz.Online.HubHandler.IServices;
+using Iz.Online.HubHandler.Services;
+using Microsoft.Extensions.Caching.Distributed;
+
+//using Iz.Online.HubHandler.Services;
+//using Iz.Online.HubHandler.IServices;
 
 namespace Iz.Online.API.Infrastructure
 {
@@ -38,10 +42,11 @@ namespace Iz.Online.API.Infrastructure
             services.AddScoped<IBaseRepository, BaseRepository>();
             services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
             services.AddScoped<IWatchListsRepository, WatchListsRepository>();
-            services.AddScoped<IPushService, PushService>();
-
+            services.AddScoped<IHubConnationService, HubConnationService>();
+        
+   
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IHubUserService, HubUserService>();
+            //services.AddTransient<IDistributedCache, DistributedCache>();
 
 
             return services;

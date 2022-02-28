@@ -1,4 +1,4 @@
-﻿using Iz.Online.ExternalServices.Push.IKafkaPushServices;
+﻿
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.Files;
 using Iz.Online.OmsModels.InputModels;
@@ -25,17 +25,17 @@ namespace Iz.Online.Services.Services
     {
 
         #region ctor
-        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, IPushService pushService)
+        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
-            _pushService = pushService;
+            //_pushService = pushService;
         }
 
 
         private readonly IOrderRepository _orderRepository;
         private readonly IExternalOrderService _externalOrderService;
-        private readonly IPushService _pushService;
+        //private readonly IPushService _pushService;
 
 
         #endregion
@@ -63,7 +63,7 @@ namespace Iz.Online.Services.Services
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)
-                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message);
+                return new ResultModel<AddOrderResult>(null, addOrderResult.StatusCode==200, addOrderResult.Message, addOrderResult.StatusCode );
 
             dbEntity.OmsResponseDate = DateTime.Now;
             dbEntity.OrderId = addOrderResult.Model.order.id;
@@ -72,7 +72,7 @@ namespace Iz.Online.Services.Services
 
             var allOrders = _externalOrderService.GetAll();
             if (!allOrders.IsSuccess)
-                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message);
+                return new ResultModel<AddOrderResult>(null, allOrders.StatusCode==200, allOrders.Message, allOrders.StatusCode);
             //09:02
 
             var result =
@@ -83,14 +83,12 @@ namespace Iz.Online.Services.Services
             dbEntity.OmsQty = result.quantity;
             dbEntity.OmsPrice = result.price;
 
-            Task.Run(async () => _pushService
-                .PushOrderAdded(new List<string>() { "as", "as" }, new ActiveOrder()));//TODO
+            //Task.Run(async () => _pushService
+            //    .PushOrderAdded(new List<string>() { "as", "as" }, new ActiveOrder()));//TODO
 
             _orderRepository.Add(dbEntity);
 
-            if (addOrderResult.StatusCode != 1)
-                return new ResultModel<AddOrderResult>(null, false, addOrderResult.Message, addOrderResult.StatusCode);
-
+         
 
             return new ResultModel<AddOrderResult>(new AddOrderResult()
             {

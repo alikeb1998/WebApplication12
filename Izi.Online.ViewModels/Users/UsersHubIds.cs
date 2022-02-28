@@ -8,11 +8,8 @@ namespace Izi.Online.ViewModels.Users
 {
     public class UsersHubIds
     {
-        public UsersHubIds()
-        {
-            HubId = new List<string>();
-        }
         public string  CustomerId { get; set; }
-        public List<string> HubId { get; set; }
+        public string HubId { get; set; }
+        public string SessionId { get; set; }
     }
 }

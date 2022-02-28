@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Iz.Online.Reopsitory\Iz.Online.Reopsitory.csproj" />
+    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Iz.Online.SignalR\Iz.Online.SignalR.csproj" />
-    <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
