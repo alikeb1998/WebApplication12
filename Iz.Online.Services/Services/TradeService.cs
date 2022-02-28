@@ -38,7 +38,7 @@ namespace Iz.Online.Services.Services
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
-                State = Convert.ToInt32(x.Order.state),
+                State = x.Order.state,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt
@@ -50,8 +50,6 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<Trade>>(allTrades);
         }
 
-
-
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)
         {
             var trades = _externalTradeService.Trades();
@@ -62,7 +60,7 @@ namespace Iz.Online.Services.Services
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
-                State = Convert.ToInt32(x.Order.state),
+                State = x.Order.state,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt
@@ -74,6 +72,36 @@ namespace Iz.Online.Services.Services
             var res = Filter(allTrades, filter);
 
             return new ResultModel<List<Trade>>(res);
+        }
+
+        public ResultModel<TradeHistoryReport> History(TradeHistoryFilter filter)
+        {
+            var list = _externalTradeService.Trades();
+            var result = list.Model.Trades.Select(x => new Trade()
+            {
+               Price = x.Price,
+               TradedAt = x.TradedAt,
+               Name = x.Order.instrument.name,
+               OrderSide = x.Order.orderSide,
+               Quantity = x.Order.quantity,
+               TradeValue = x.Order.executedQ * x.Order.price,
+               TradeId = x.Order.id, 
+               State = x.Order.state
+            }).ToList();
+
+            var a = TradeHistoryFilter(result, filter);
+
+            var res = new TradeHistoryReport()
+            {
+                Model = a,
+                OrderType = filter.OrderType,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = result.Count,
+            };
+            return new ResultModel<TradeHistoryReport>(res);
+           
+
         }
         private List<Trade> Filter(List<Trade> list, TradeFilter filter)
         {
@@ -129,6 +157,71 @@ namespace Iz.Online.Services.Services
                     return report.Model.OrderByDescending(x => x.TradedAt).ToList();
             }
             return report.Model.OrderByDescending(x => x.TradedAt).ToList();
+        }
+        private List<Trade> TradeHistoryFilter(List<Trade> list, TradeHistoryFilter filter)
+        {
+
+
+            if (filter.From == DateTime.MinValue)
+            {
+                var a = list.OrderBy(e => e.TradedAt).ToList();
+                filter.From = a[0].TradedAt;
+            }
+            if (filter.To == DateTime.MinValue)
+            {
+                var a = list.OrderByDescending(e => e.TradedAt).ToList();
+                filter.To = a[0].TradedAt;
+            }
+
+
+            list = list.Where
+            (x => x.TradedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.TradedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
+            .OrderByDescending(x => x.TradedAt).ToList();
+
+            if (filter.InstrumentId != 0)
+            {
+                list = list.Where(x => x.InstrumentId == filter.InstrumentId).ToList();
+            }
+
+            if (filter.OrderSide != 0)
+            {
+                switch (filter.OrderSide)
+                {
+                    case 1:
+                        list = list.Where(x => x.OrderSide == 1).ToList();
+                        break;
+
+                    case 2:
+                        list = list.Where(x => x.OrderSide == 2).ToList();
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(filter.State))
+            {
+                switch (filter.State)
+                {
+                    case "انجام شده":
+                        list = list.Where(x => x.State == "انجام شده").ToList();
+                        break;
+
+                    case "منقضی شده":
+                        list = list.Where(x => x.State == "منقضی شده").ToList();
+                        break;
+                    case "درحال انتظار":
+                        list = list.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                }
+            }
+            var report = new TradeHistoryReport()
+            {
+                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = list.Count,
+                OrderType = filter.OrderType,
+            };
+            return report.Model.OrderBy(x => x.TradedAt).ToList();
         }
     }
 }

@@ -12,9 +12,12 @@ namespace Izi.Online.ViewModels.Trades
         public int OrderSide { get; set; }
         public long ExecutedQ { get; set; }
         public long Price { get; set; }
-        public int State { get; set; }
+        public string State { get; set; }
         public DateTime TradedAt { get; set; }
         public string NscCode { get; set; }
         public int InstrumentId { get; set; }
+        public double Quantity { get; set; }
+        public double TradeValue { get; set; }
+        public long TradeId { get; set; }
     }
 }

@@ -16,6 +16,8 @@ namespace Iz.Online.Services.IServices
         string Id { get; set; }
 
         ResultModel<List<Trade>> Trades();
+        ResultModel<List<Trade>> TradesPaged(TradeFilter filter);
+        ResultModel<TradeHistoryReport> History(TradeHistoryFilter filter);
 
         IExternalTradeService _externalTradeService { get;  }
     }

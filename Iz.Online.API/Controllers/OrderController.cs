@@ -106,7 +106,7 @@ namespace Iz.Online.API.Controllers
             return result;
 
         }
-        //get a list of all active orders.
+        //get history of all orders.
         [HttpPost("History")]
         public ResultModel<AllOrderReport> AllSortedOrder([FromBody] AllOrderCustomFilter filter)
         {
