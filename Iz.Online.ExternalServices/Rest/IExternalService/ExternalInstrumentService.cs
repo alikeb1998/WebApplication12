@@ -24,7 +24,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly IExternalOrderService _externalOrderService;
         //private readonly IPushService _pushService;
         private IHubUserService _hubUserService;
-        public string _token { get; set; }
+        
 
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService  
             , IHubUserService hubUserService) : base(instrumentsRepository)
@@ -32,6 +32,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _hubUserService = hubUserService;
+            
         }
 
         public bool UpdateInstrumentList()

@@ -12,6 +12,7 @@ namespace Iz.Online.API.Controllers
     {
         #region ctor
         public IWatchListsService _watchListsServices { get; set; }
+        
 
         public WatchListController(IWatchListsService watchListsServices, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {

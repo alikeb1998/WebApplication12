@@ -15,7 +15,6 @@ namespace Iz.Online.Services.Services
         private readonly IExternalInstrumentService _externalInstrumentsService;
 
 
-        public string _token { get; set; }
 
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {

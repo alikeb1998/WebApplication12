@@ -28,7 +28,7 @@ namespace Iz.Online.API.Controllers
         {
             _instrumentsService = instrumentsService;
             _externalInstrumentService = externalInstrumentService;
-            _externalInstrumentService._token =  _instrumentsService._token = _token_;
+            
         }
 
         #endregion

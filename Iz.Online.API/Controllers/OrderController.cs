@@ -10,6 +10,7 @@ using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
 using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.Reports;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 
 namespace Iz.Online.API.Controllers
 {
@@ -22,7 +23,7 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         public IOrderServices _orderServices { get; set; }
-
+        private readonly IExternalOrderService _externalOrderService;
 
         public IHubContext<CustomersHub> _hubContext;
 
@@ -30,6 +31,7 @@ namespace Iz.Online.API.Controllers
         {
             _orderServices = orderServices;
             _hubContext = hubContext;
+         
         }
 
         #endregion

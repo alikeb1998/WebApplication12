@@ -25,17 +25,19 @@ namespace Iz.Online.Services.Services
     {
 
         #region ctor
+      
+
+        private readonly IOrderRepository _orderRepository;
+        private readonly IExternalOrderService _externalOrderService;
+
+
+        //private readonly IPushService _pushService;
         public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
             //_pushService = pushService;
         }
-
-
-        private readonly IOrderRepository _orderRepository;
-        private readonly IExternalOrderService _externalOrderService;
-        //private readonly IPushService _pushService;
 
 
         #endregion

@@ -15,16 +15,15 @@ namespace Iz.Online.Services.Services
     public class TradeService : ITradeServices
     {
         public IExternalTradeService _externalTradeService { get; }
-
+        
 
         public TradeService(IExternalTradeService externalTradeService)
         {
-            this._externalTradeService = externalTradeService;
-
+            _externalTradeService = externalTradeService;
 
         }
 
-        public string Id { get; set; }
+        
 
         public ResultModel<List<Trade>> Trades()
         {
