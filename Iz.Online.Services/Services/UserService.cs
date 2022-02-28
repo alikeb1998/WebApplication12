@@ -188,7 +188,14 @@ namespace Iz.Online.Services.Services
                 Token = result.Token,
                 Sockettoken = result.SocketToken
             };
+            
             return checkOtp;
+        }
+        public ResultModel<bool> LogOut()
+        {
+            var res =  _externalUserService.LogOut().StatusCode == 200;
+            return new ResultModel<bool>(res);
+            
         }
         private List<Asset> Filter(List<Asset> list, PortfoFilter filter)
         {

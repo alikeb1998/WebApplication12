@@ -101,7 +101,7 @@ namespace Iz.Online.Services.Services
                 result.GroupState = detail.Model.Group.State;
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
-                result.PriceMin = detail.Model.PriceMax;
+                result.PriceMin = detail.Model.PriceMin;
 
 
                 result.Tick = detail.Model.Tick;

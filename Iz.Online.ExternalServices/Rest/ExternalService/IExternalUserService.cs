@@ -18,5 +18,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         Login Captcha();
         OtpResult SendOtp(Credentials credentials);
         CheckOtp CheckOtp(Otp otp);
+        ResultModel<LogOut> LogOut();
     }
 }

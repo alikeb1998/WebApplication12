@@ -37,11 +37,20 @@ namespace Iz.Online.API.Controllers
             var result = _tradeServices.Trades();
             return result;
         }
-        //[HttpGet("dailyTradesPaged")]
-        //public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
-        //{
-        //    var result = _tradeServices.TradesPaged(filter);
-        //    return result;
-        //}
+        [HttpGet("dailyTradesPaged")]
+        public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
+        {
+            var result = _tradeServices.TradesPaged(filter);
+            return result;
+        }
+
+        //get history of all trades.
+        [HttpPost("History")]
+        public ResultModel<TradeHistoryReport> History([FromBody] TradeHistoryFilter filter)
+        {
+            var result = _tradeServices.History(filter);
+            return result;
+
+        }
     }
 }
