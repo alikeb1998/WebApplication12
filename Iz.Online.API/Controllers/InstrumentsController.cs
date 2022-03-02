@@ -55,10 +55,9 @@ namespace Iz.Online.API.Controllers
         [HttpPost("BestLimits")]
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
         {
-            return null;
             //model.InstrumentId = "IRO1FOLD0001";
-            //var result = _externalInstrumentService.BestLimits(model);
-            //return result;
+            var result = _instrumentsService.BestLimits(model);
+            return result;
         }
 
         //get instrument details as prices or states and so on.

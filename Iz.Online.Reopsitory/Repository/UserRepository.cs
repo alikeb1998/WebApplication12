@@ -24,13 +24,12 @@ namespace Iz.Online.Reopsitory.Repository
             _cache = cache;
             _redis = redis;
         }
-
-
-
+        
         public List<AppConfigs> GetAppConfigs()
         {
             return _db.AppConfigs.ToList();
         }
+    
         public AppConfigs GetAppConfigs(string key)
         {
             return _db.AppConfigs.FirstOrDefault(x => x.Key == key);
@@ -104,40 +103,62 @@ namespace Iz.Online.Reopsitory.Repository
 
         public void SetUserHub(string UserId, string hubId, string sessionId)
         {
-            var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = UserId, HubId = hubId,SessionId = sessionId});
-            var content = Encoding.UTF8.GetBytes(serialized);
-            _cache.Set(hubId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+            try
+            {
+                var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = UserId, HubId = hubId, SessionId = sessionId });
+                var content = Encoding.UTF8.GetBytes(serialized);
+                _cache.Set(hubId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
 
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
+    
         public void DeleteConnectionId(string connectionId)
         {
-          //  var redisKeys = _redis.GetServer("localhost", 6379).Keys(pattern: connectionId)
-          //.Select(p => p.ToString()).FirstOrDefault();
-            _cache.Remove(connectionId);
+            try
+            {
+                //  var redisKeys = _redis.GetServer("localhost", 6379).Keys(pattern: connectionId)
+                //.Select(p => p.ToString()).FirstOrDefault();
+                _cache.Remove(connectionId);
 
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         public List<UsersHubIds> GetUserHubs(string userId)
         {
 
-            var allKeys = _redis.GetServer("localhost", 6379).Keys().ToList();
-
-            if (allKeys == null)
-                return null;
-
-            var result = new List<UsersHubIds>();
-            foreach (var key in allKeys)
+            try
             {
-                var content = _cache.Get(key);
-                var serializedModel = System.Text.Encoding.Default.GetString(content);
-                var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
+                var allKeys = _redis.GetServer("localhost", 6379).Keys().ToList();
 
-                if (deserializedObject.CustomerId == userId)
-                    result.Add(deserializedObject);
+                if (allKeys == null)
+                    return null;
+
+                var result = new List<UsersHubIds>();
+                foreach (var key in allKeys)
+                {
+                    var content = _cache.Get(key);
+                    var serializedModel = System.Text.Encoding.Default.GetString(content);
+                    var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
+
+                    if (deserializedObject.CustomerId == userId)
+                        result.Add(deserializedObject);
+                }
+
+                return result;
+
             }
-
-            return result;
-
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }
