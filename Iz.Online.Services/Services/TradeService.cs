@@ -84,7 +84,8 @@ namespace Iz.Online.Services.Services
                 Quantity = x.Order.quantity,
                 TradeValue = x.Order.executedQ * x.Order.price,
                 TradeId = x.Order.id,
-                State = x.Order.state
+                State = x.Order.state,
+                InstrumentId = x.Order.instrument.id
             }).ToList();
 
             var a = TradeHistoryFilter(result, filter);

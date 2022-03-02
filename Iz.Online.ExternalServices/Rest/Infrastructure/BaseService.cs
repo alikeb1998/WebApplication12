@@ -105,7 +105,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PUT);
-                request.AddHeader("Authorization", ShareValue.Token);
+                request.AddHeader("Authorization", Token);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
@@ -137,7 +137,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.DELETE);
-                request.AddHeader("Authorization", ShareValue.Token);
+                request.AddHeader("Authorization", Token);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);

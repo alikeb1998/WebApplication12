@@ -60,15 +60,15 @@ namespace Iz.Online.Services.Services
 
             var detail = _externalInstrumentsService.Details(model);
             if (!detail.IsSuccess || detail.Model == null)
-                return new ResultModel<InstrumentDetail>(null, false, detail.Message, detail.StatusCode);
+                return new ResultModel<InstrumentDetail>(null, detail.StatusCode==200, detail.Message, detail.StatusCode);
 
             var priceDetail = _externalInstrumentsService.Price(model);
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
-                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
+                return new ResultModel<InstrumentDetail>(null, priceDetail.StatusCode==200, priceDetail.Message, priceDetail.StatusCode);
 
             var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
             if (!bestLimit.IsSuccess || bestLimit.Model == null)
-                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
+                return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode==200, bestLimit.Message, bestLimit.StatusCode);
 
             result.closingPrice = priceDetail.Model.closingPrice.Value;
             result.firstPrice = priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
