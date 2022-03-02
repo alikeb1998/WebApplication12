@@ -34,6 +34,7 @@ namespace Iz.Online.HubHandler.Services
             var c = 0;
             while (c < 50)
             {
+                //Task.Run(async () => CreateAllConsumers());
                 c++;
                 try
                 {
@@ -117,9 +118,10 @@ namespace Iz.Online.HubHandler.Services
                     var hubs = _hubConnationService.UserHubsList("user1");
                     if (hubs != null)
 
-                        _hubContext.Clients.Clients(hubs.Select(x => x.HubId)).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+                        _hubContext.Clients.Clients(hubs.Select(x => x.HubId)).SendCoreAsync("OnRefreshInstrumentBestLimit", 
+                            new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
 
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}22'", " " });
+                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}2599999'", " " });
                 }
                 catch (Exception e)
                 {
@@ -190,7 +192,7 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
-        public Task PushTradeState()
+        public async Task PushTradeState()
         {
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
@@ -201,10 +203,102 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
+
+
+
+                        while (true)
+                        {
+                            try
+                            {
+                                Random rnd = new Random();
+                                Thread.Sleep(2000);
+
+                                OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
+                                {
+                                    changeRow1 = rnd.Next(20, 30) > 25,
+                                    changeRow2 = rnd.Next(20, 30) > 25,
+                                    changeRow3 = rnd.Next(20, 30) > 25,
+                                    changeRow4 = rnd.Next(20, 30) > 25,
+                                    changeRow5 = rnd.Next(20, 30) > 25,
+                                    changeRow6 = rnd.Next(20, 30) > 25,
+                                    orderRow1 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    },
+                                    orderRow2 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    },
+                                    orderRow3 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    },
+                                    orderRow4 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    },
+                                    orderRow5 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    },
+                                    orderRow6 = new OrderRow()
+                                    {
+                                        countBestBuy = rnd.Next(20, 50),
+                                        priceBestBuy = rnd.Next(3000, 50000),
+                                        volumeBestBuy = rnd.Next(100000, 1000000),
+                                        countBestSale = rnd.Next(20, 50),
+                                        priceBestSale = rnd.Next(3000, 50000),
+                                        volumeBestSale = rnd.Next(100000, 1000000),
+
+                                    }
+
+                                };
+
+                                var prices = JsonConvert.SerializeObject(model);
+
+                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, $"InstrumentId : 255555555'" });
+
+
+
+                                _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, "2666666666666", "ttt" });
+                            }
+                            catch (Exception e)
+                            {
+                                
+                            }
+                        }
                         var consumeResult = consumer.Consume();
                         var t = consumeResult.Message.Value;
-                        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value });
-
                     }
                     catch (Exception e)
                     {

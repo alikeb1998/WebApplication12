@@ -79,7 +79,7 @@ builder.Services.Configure<FormOptions>(o =>  // currently all set to max, confi
 
 
 var hubService = builder.Services.BuildServiceProvider().GetService<IHubUserService>();
-Task.Run(async () => hubService.CreateAllConsumers());
+hubService.CreateAllConsumers();
 
 var app = builder.Build();
 
