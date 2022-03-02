@@ -176,21 +176,29 @@ namespace Iz.Online.Services.Services
             (x => x.TradedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.TradedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
             .OrderByDescending(x => x.TradedAt).ToList();
 
-            if (filter.InstrumentId != 0)
+            var tradeList = new List<Trade>();
+            foreach (var f in filter.InstrumentId)
             {
-                list = list.Where(x => x.InstrumentId == filter.InstrumentId).ToList();
+                var a = list.Where(x => x.InstrumentId == f).ToList();
+
+                tradeList.AddRange(a);
+
             }
+            //if (filter.InstrumentId != 0)
+            //{
+            //    list = list.Where(x => x.InstrumentId == filter.InstrumentId).ToList();
+            //}
 
             if (filter.OrderSide != 0)
             {
                 switch (filter.OrderSide)
                 {
                     case 1:
-                        list = list.Where(x => x.OrderSide == 1).ToList();
+                        tradeList = tradeList.Where(x => x.OrderSide == 1).ToList();
                         break;
 
                     case 2:
-                        list = list.Where(x => x.OrderSide == 2).ToList();
+                        tradeList = tradeList.Where(x => x.OrderSide == 2).ToList();
                         break;
                 }
             }
@@ -200,20 +208,20 @@ namespace Iz.Online.Services.Services
                 switch (filter.State)
                 {
                     case "انجام شده":
-                        list = list.Where(x => x.State == "انجام شده").ToList();
+                        tradeList = tradeList.Where(x => x.State == "انجام شده").ToList();
                         break;
 
                     case "منقضی شده":
-                        list = list.Where(x => x.State == "منقضی شده").ToList();
+                        tradeList = tradeList.Where(x => x.State == "منقضی شده").ToList();
                         break;
                     case "درحال انتظار":
-                        list = list.Where(x => x.State == "درحال انتظار").ToList();
+                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
                         break;
                 }
             }
             var report = new TradeHistoryReport()
             {
-                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                Model = tradeList.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = list.Count,
