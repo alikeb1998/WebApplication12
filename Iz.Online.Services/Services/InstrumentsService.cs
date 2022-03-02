@@ -1,4 +1,5 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
+using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
@@ -12,15 +13,14 @@ namespace Iz.Online.Services.Services
     public class InstrumentsService : IInstrumentsService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
-        private readonly IExternalInstrumentService _externalInstrumentsService;
-
-
-
+        public IExternalInstrumentService _externalInstrumentsService { get; }
         public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
         }
+
+
 
         public ResultModel<List<Instruments>> Instruments()
         {
@@ -28,10 +28,10 @@ namespace Iz.Online.Services.Services
         }
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
-            
+
             var ins = _instrumentsRepository.GetInstrumentsList();
 
-            if (ins.StatusCode !=200 || ins.Model==null)
+            if (ins.StatusCode != 200 || ins.Model == null)
                 return new ResultModel<List<InstrumentList>>(null, ins.StatusCode == 200, ins.Message, ins.StatusCode);
 
             return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
@@ -59,7 +59,7 @@ namespace Iz.Online.Services.Services
             var detail = _externalInstrumentsService.Details(model);
             if (!detail.IsSuccess || detail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, false, detail.Message, detail.StatusCode);
-           
+
             var priceDetail = _externalInstrumentsService.Price(model);
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);

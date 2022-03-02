@@ -180,8 +180,6 @@ namespace Iz.Online.Services.Services
         }
         public CheckedOtp CheckOtp(Otp otp)
         {
-            Task.Run(async () => _hubUserService.PushOrderState());
-
             var result = _externalUserService.CheckOtp(otp);
             var checkOtp = new CheckedOtp()
             {

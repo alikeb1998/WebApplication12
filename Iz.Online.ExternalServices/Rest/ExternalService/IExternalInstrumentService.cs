@@ -7,8 +7,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalInstrumentService
     {
-        
-        bool UpdateInstrumentList();
+         string Token { get; set; }
+
+         bool UpdateInstrumentList();
         ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model);
         ResultModel<InstrumentPriceDetails>   Price(SelectInstrumentDetails model);
         ResultModel<Details> Details(SelectInstrumentDetails model);
