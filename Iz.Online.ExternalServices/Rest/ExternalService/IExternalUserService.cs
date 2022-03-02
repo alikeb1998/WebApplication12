@@ -15,9 +15,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         string Token { get; set; }
         ResultModel<Wallet> Wallet();
         ResultModel<AssetsList>  GetAllAssets();
-        Login Captcha();
-        OtpResult SendOtp(Credentials credentials);
-        CheckOtp CheckOtp(Otp otp);
+        ResultModel<Login> Captcha();
+        ResultModel<OtpResult> SendOtp(Credentials credentials);
+        ResultModel<CheckOtp> CheckOtp(Otp otp);
         ResultModel<LogOut> LogOut();
     }
 }

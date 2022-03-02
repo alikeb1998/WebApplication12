@@ -156,39 +156,40 @@ namespace Iz.Online.Services.Services
             _userRepository.SetUserHub(omsId, hubId,session);
         }
 
-        public Captcha Captcha()
+        public ResultModel<Captcha> Captcha()
         {
             var res = _externalUserService.Captcha();
             var captcha = new Captcha()
             {
 
-                CaptchaImage = res.Captcha.Base64,
-                Id = res.Captcha.Id
+                CaptchaImage = res.Model.Captcha.Base64,
+                Id = res.Model.Captcha.Id
 
             };
-            return captcha;
+            return new ResultModel<Captcha>(captcha);
         }
 
-        public OtpResult SendOtp(Credentials credentials)
+        public ResultModel<OtpResult> SendOtp(Credentials credentials)
         {
             var result = _externalUserService.SendOtp(credentials);
             var OtpResult = new OtpResult()
             {
-                OtpId = result.OtpId,
-                ExpireAt = result.ExpireAt
+                OtpId = result.Model.OtpId,
+                ExpireAt = result.Model.ExpireAt
             };
-            return OtpResult;
+           
+            return new ResultModel<OtpResult>(OtpResult,result.IsSuccess, result.Message, result.StatusCode);
         }
-        public CheckedOtp CheckOtp(Otp otp)
+        public ResultModel<CheckedOtp> CheckOtp(Otp otp)
         {
             var result = _externalUserService.CheckOtp(otp);
             var checkOtp = new CheckedOtp()
             {
-                Token = result.Token,
-                Sockettoken = result.SocketToken
+                Token = result.Model.Token,
+                Sockettoken = result.Model.SocketToken
             };
             
-            return checkOtp;
+            return new ResultModel<CheckedOtp>(checkOtp, result.IsSuccess, result.Message, result.StatusCode);
         }
         public ResultModel<bool> LogOut()
         {

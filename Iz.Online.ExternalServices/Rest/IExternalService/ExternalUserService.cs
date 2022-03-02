@@ -36,22 +36,22 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }
-        public Login Captcha()
+        public ResultModel<Login> Captcha()
         {
             var result = HttpGetRequest<Login>("user/captcha");
-            return result;
+            return new ResultModel<Login>(result);
         }
 
-        public OtpResult SendOtp(Credentials credentials)
+        public ResultModel<OtpResult> SendOtp(Credentials credentials)
         {
             var result = HttpPostRequest<OtpResult>("user/login/send-otp", JsonConvert.SerializeObject(credentials));
-            return result;
+            return new ResultModel<OtpResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public CheckOtp CheckOtp(Otp otp)
+        public ResultModel<CheckOtp> CheckOtp(Otp otp)
         {
             var result = HttpPostRequest<CheckOtp>("user/login/check-otp", JsonConvert.SerializeObject(otp));
-            return result;
+            return new ResultModel<CheckOtp>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
         public ResultModel<LogOut> LogOut()
         {
@@ -59,5 +59,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             return new ResultModel<LogOut>(result);
         }
+
+       
     }
 }

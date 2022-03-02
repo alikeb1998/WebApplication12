@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.User
 {
-    public class CheckOtp
+    public class CheckOtp : OmsResponseBaseModel
     {
         public string Token { get; set; }
         public string SocketToken { get; set; }
