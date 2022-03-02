@@ -14,5 +14,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         ResultModel<InstrumentPriceDetails>   Price(SelectInstrumentDetails model);
         ResultModel<Details> Details(SelectInstrumentDetails model);
        // InstrumentStates States(Instrument model);
+       void StartConsume();
     }
 }

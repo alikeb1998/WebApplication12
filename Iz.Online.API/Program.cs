@@ -1,6 +1,7 @@
 
 using Iz.Online.API.Infrastructure;
 using Iz.Online.DataAccess;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.HubHandler.IServices;
 using Iz.Online.HubHandler.Services;
 using Iz.Online.SignalR;
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<OnlineBackendDbContext>(options =>
 });
 
 #region inject
+builder.Services.AddSignalRCore();// <IHubUserService, HubUserService>();
 
 InjectionHandler.InjectServices(builder.Services);
 builder.Services.AddScoped<IHubUserService, HubUserService>();
@@ -93,6 +95,7 @@ app.UseCors("CustomCors");
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<CustomersHub>("/CustomersHub");
+
 
 app.Run();
 //CacheData.

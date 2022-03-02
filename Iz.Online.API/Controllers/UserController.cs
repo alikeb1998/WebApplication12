@@ -32,15 +32,17 @@ namespace Iz.Online.API.Controllers
 
         #region ctor
         private readonly IUserService _userService;
-        private readonly IExternalUserService _externalUserService;
-        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        private readonly IHubUserService _hubUserService;
+        public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor, IHubUserService hubUserService) : base(httpContextAccessor)
         {
             _userService = userService;
             _userService._externalUserService.Token = _token_;
+            _hubUserService = hubUserService;
         }
 
         #endregion
 
+      
         //get a token from database.
         [HttpGet("token/get")]
         public string Get()

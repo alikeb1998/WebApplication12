@@ -21,17 +21,26 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         private readonly IInstrumentsService _instrumentsService;
+        private readonly IExternalInstrumentService _externalInstrumentService;
 
 
-        public InstrumentsController(IInstrumentsService instrumentsService , IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor, IExternalInstrumentService externalInstrumentService) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
             _instrumentsService._externalInstrumentsService.Token = _token_;
+            _externalInstrumentService = externalInstrumentService;
+            //_externalInstrumentService.StartConsume();
 
         }
 
         #endregion
 
+        [HttpGet]
+        public void StartConsume()
+        {
+            _externalInstrumentService.StartConsume();
+
+        }
         //update instruments list.
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
@@ -50,7 +59,7 @@ namespace Iz.Online.API.Controllers
             return instruments;
         }
 
-      
+
 
         [HttpPost("BestLimits")]
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
