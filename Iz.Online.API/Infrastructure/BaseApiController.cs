@@ -9,17 +9,17 @@ namespace Iz.Online.API.Infrastructure
 {
     [CustomAuthorization]
     //
-   // [EnableCors("CustomCors")]
-   
+    // [EnableCors("CustomCors")]
+
     public class BaseApiController : ControllerBase
     {
         //private readonly IHttpContextAccessor httpContextAccessor;
-        protected string _token_;
+        public static string _token_;
         public BaseApiController(IHttpContextAccessor httpContextAccessor)
         {
           _token_ = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
           _token_ = "mytoken";
         }
-      
+
     }
 }

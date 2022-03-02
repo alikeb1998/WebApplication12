@@ -32,10 +32,11 @@ namespace Iz.Online.API.Controllers
 
         #region ctor
         private readonly IUserService _userService;
+        private readonly IExternalUserService _externalUserService;
         public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userService = userService;
-            _userService._token = _token_;
+           
         }
 
         #endregion

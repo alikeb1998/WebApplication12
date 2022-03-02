@@ -17,23 +17,25 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         public string apiBaseAddress = "http://192.168.72.54:8080/";
 
         private readonly IBaseRepository _baseRepository;
+        
 
         public BaseService(IBaseRepository baseRepository)
         {
             _baseRepository = baseRepository;
+           
         }
 
-        public string getToken()
-        {
+        //public string getToken()
+        //{
 
-            var client = new RestClient($@"http://192.168.72.112:5554/V1/User/token/get");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            var token = JsonConvert.DeserializeObject<string>(response.Content);
-
-            return token;
-        }
+        //    //var client = new RestClient($@"http://192.168.72.112:5554/V1/User/token/get");
+        //    //client.Timeout = -1;
+        //    //var request = new RestRequest(Method.GET);
+        //    //IRestResponse response = client.Execute(request);
+        //    //var token = JsonConvert.DeserializeObject<string>(response.Content);
+        //    var res = Iz.Online.Files.ShareValue.Token;
+        //    return res;
+        //}
 
         public T HttpGetRequest<T>(string RequestAddress)
         {
@@ -71,7 +73,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
-                request.AddHeader("Authorization", getToken());
+                request.AddHeader("Authorization", ShareValue.Token);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
@@ -103,7 +105,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PUT);
-                request.AddHeader("Authorization", getToken());
+                request.AddHeader("Authorization", ShareValue.Token);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
@@ -135,7 +137,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.DELETE);
-                request.AddHeader("Authorization", getToken());
+                request.AddHeader("Authorization", ShareValue.Token);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);

@@ -19,10 +19,13 @@ namespace Iz.Online.Services.Services
 
         public TradeService(IExternalTradeService externalTradeService)
         {
-            this._externalTradeService = externalTradeService;
-
+            _externalTradeService = externalTradeService;
 
         }
+
+        }
+
+        public string Id { get; set; }
 
         public ResultModel<List<Trade>> Trades()
         {

@@ -16,6 +16,8 @@ namespace Iz.Online.Services.Services
     {
         private readonly IWatchListsRepository _watchListsRepository;
         private readonly IExternalInstrumentService _externalInstrumentsService;
+        
+     
 
         public WatchListsService(IWatchListsRepository watchListsRepository, IExternalInstrumentService externalInstrumentsService)
         {

@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.DataAccess\Iz.Online.DataAccess.csproj" />
+    <ProjectReference Include="..\Iz.Online.ExternalServices\Iz.Online.ExternalServices.csproj" />
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
     <ProjectReference Include="..\Iz.Online.Services\Iz.Online.Services.csproj" />
     <ProjectReference Include="..\Iz.Online.SignalR\Iz.Online.SignalR.csproj" />

@@ -16,7 +16,6 @@ namespace Iz.Online.Services.IServices
 {
     public interface IUserService
     {
-        string _token { get; set; }
         void SetUserHub(string token, string hubId);
 
         List<UsersHubIds> UserHubsList(string UserId);

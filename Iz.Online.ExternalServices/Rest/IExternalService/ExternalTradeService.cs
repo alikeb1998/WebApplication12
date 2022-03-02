@@ -16,10 +16,14 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalTradeService : BaseService, IExternalTradeService
     {
+        
+
+
         public ExternalTradeService(IBaseRepository baseRepository) : base(baseRepository)
         {
            
         }
+        
 
         public ResultModel<TradesList> Trades()
         {

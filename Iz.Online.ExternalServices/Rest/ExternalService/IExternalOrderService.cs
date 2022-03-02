@@ -19,9 +19,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         ResultModel<UpdatedOrder> Update(UpdateOrder model);
         ResultModel<CanceledOrder> Cancel(CancelOrder model);
 
-        string _token { get; set; }
-
         // AssetsList GetAllAssets(ViewBaseModel baseModel);
-
     }
 }

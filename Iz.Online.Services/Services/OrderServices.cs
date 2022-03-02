@@ -25,17 +25,19 @@ namespace Iz.Online.Services.Services
     {
 
         #region ctor
+      
+
+        private readonly IOrderRepository _orderRepository;
+        private readonly IExternalOrderService _externalOrderService;
+
+
+        //private readonly IPushService _pushService;
         public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
             //_pushService = pushService;
         }
-
-
-        private readonly IOrderRepository _orderRepository;
-        private readonly IExternalOrderService _externalOrderService;
-        //private readonly IPushService _pushService;
 
 
         #endregion
@@ -322,21 +324,29 @@ namespace Iz.Online.Services.Services
             (x => x.CreatedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.CreatedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
             .OrderByDescending(x=>x.CreatedAt).ToList();
 
-            if (filter.InstrumentId != 0)
+            var instrumentList = new List<AllOrder>();
+            foreach (var f in filter.InstrumentId)
             {
-                list = list.Where(x=>x.InstrumentId==filter.InstrumentId).ToList();
+                var a = list.Where(x => x.InstrumentId == f).ToList();
+                
+                instrumentList.AddRange(a);
+                    
             }
+            //if (filter.InstrumentId != 0)
+            //{
+            //    list = list.Where(x=>x.InstrumentId==filter.InstrumentId).ToList();
+            //}
 
             if (filter.OrderSide!=0)
             {
                 switch (filter.OrderSide)
                 {
                     case 1:
-                        list = list.Where(x => x.OrderSide == 1).ToList();
+                        instrumentList = instrumentList.Where(x => x.OrderSide == 1).ToList();
                         break;
 
                     case 2:
-                        list = list.Where(x => x.OrderSide == 2).ToList();
+                        instrumentList = instrumentList.Where(x => x.OrderSide == 2).ToList();
                         break;
                 }
             }
@@ -346,20 +356,20 @@ namespace Iz.Online.Services.Services
                 switch (filter.State)
                 {
                     case "انجام شده":
-                        list = list.Where(x => x.State == "انجام شده").ToList();
+                        instrumentList = instrumentList.Where(x => x.State == "انجام شده").ToList();
                         break;
 
                     case "منقضی شده":
-                        list = list.Where(x => x.State == "منقضی شده").ToList();
+                        instrumentList = instrumentList.Where(x => x.State == "منقضی شده").ToList();
                         break;
                     case "درحال انتظار":
-                        list = list.Where(x => x.State == "درحال انتظار").ToList();
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
                         break;
                 }
             }
             var report = new AllOrderReport()
             {
-                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                Model = instrumentList.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = list.Count,

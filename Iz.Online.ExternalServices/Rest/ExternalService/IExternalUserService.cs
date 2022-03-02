@@ -13,7 +13,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalUserService
     {
         ResultModel<Wallet> Wallet();
-
         ResultModel<AssetsList>  GetAllAssets();
         Login Captcha();
         OtpResult SendOtp(Credentials credentials);

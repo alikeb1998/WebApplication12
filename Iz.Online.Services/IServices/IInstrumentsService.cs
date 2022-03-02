@@ -9,7 +9,7 @@ namespace Iz.Online.Services.IServices
 {
     public interface IInstrumentsService
     {
-        public string _token { get; set; }
+        
         ResultModel<List<Instruments>> Instruments();
         ResultModel<List<InstrumentList>> InstrumentList();
         ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
