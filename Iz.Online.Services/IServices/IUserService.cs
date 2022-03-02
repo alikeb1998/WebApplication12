@@ -27,10 +27,10 @@ namespace Iz.Online.Services.IServices
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
 
         ResultModel<string> GetUserLocalToken(string  omsId);
-        
-        Captcha Captcha();
-        OtpResult SendOtp(Credentials credentials);
-        CheckedOtp CheckOtp(Otp otp);
+
+        ResultModel<Captcha> Captcha();
+        ResultModel<OtpResult> SendOtp(Credentials credentials);
+        ResultModel<CheckedOtp> CheckOtp(Otp otp);
         ResultModel<bool> LogOut();
 
     }

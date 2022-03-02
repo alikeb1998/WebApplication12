@@ -71,7 +71,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpGet("captcha")]
-        public Captcha Captcha()
+        public ResultModel<Captcha> Captcha()
         {
             var res = _userService.Captcha();
             return res;
@@ -79,7 +79,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("SendOtp")]
-        public OtpResult SendOtp([FromBody] Credentials credentials)
+        public ResultModel<OtpResult> SendOtp([FromBody] Credentials credentials)
         {
             var res = _userService.SendOtp(credentials);
             return res;
@@ -87,10 +87,10 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("CheckOtp")]
-        public CheckedOtp CheckOtp([FromBody] Otp otp)
+        public ResultModel<CheckedOtp> CheckOtp([FromBody] Otp otp)
         {
             var res = _userService.CheckOtp(otp);
-            SetToken(res.Token);
+            SetToken(res.Model.Token);
             return res;
 
         }
