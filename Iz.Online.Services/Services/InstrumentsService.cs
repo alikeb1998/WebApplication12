@@ -8,6 +8,8 @@ using InstrumentDetail = Izi.Online.ViewModels.Instruments.InstrumentDetail;
 using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using DateHelper = Iz.Online.Files.DateHelper;
 using Iz.Online.Files;
+using Izi.Online.ViewModels.Instruments.BestLimit;
+
 namespace Iz.Online.Services.Services
 {
     public class InstrumentsService : IInstrumentsService
@@ -120,6 +122,11 @@ namespace Iz.Online.Services.Services
         public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
         {
             return _instrumentsRepository.GetInstrumentComment(model);
+        }
+
+        public ResultModel<BestLimits> BestLimits(SelectedInstrument model)
+        {
+           return _externalInstrumentsService.BestLimits(model);
         }
     }
 
