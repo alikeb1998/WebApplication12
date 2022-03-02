@@ -36,7 +36,7 @@ namespace Iz.Online.API.Controllers
         public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userService = userService;
-           
+            _userService._externalUserService.Token = _token_;
         }
 
         #endregion

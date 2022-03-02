@@ -11,11 +11,13 @@ using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
 using Izi.Online.ViewModels.Reports;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 
 namespace Iz.Online.Services.IServices
 {
     public interface IUserService
     {
+        IExternalUserService _externalUserService { get; }
         void SetUserHub(string token, string hubId);
 
         List<UsersHubIds> UserHubsList(string UserId);

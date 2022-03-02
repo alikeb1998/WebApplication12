@@ -22,15 +22,17 @@ namespace Iz.Online.API.Controllers
     {
         #region ctor
 
-        public IOrderServices _orderServices { get; set; }
+        private readonly IOrderServices _orderService;
         private readonly IExternalOrderService _externalOrderService;
 
         public IHubContext<CustomersHub> _hubContext;
 
         public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
-            _orderServices = orderServices;
+            _orderService = orderServices;
             _hubContext = hubContext;
+            _orderService._externalOrderService.Token = _token_;
+
          
         }
 
@@ -69,7 +71,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("add")]
         public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
         {
-            var result = _orderServices.Add(addOrderModel);
+            var result = _orderService.Add(addOrderModel);
             return result;
         }
 
@@ -77,7 +79,7 @@ namespace Iz.Online.API.Controllers
         [HttpGet("all/active")]       
         public ResultModel<List<ActiveOrder>> AllActive()
         {
-            var result = _orderServices.AllActive();
+            var result = _orderService.AllActive();
             return result;
 
         }
@@ -86,7 +88,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("all/activePaged")]
         public ResultModel<OrderReport> AllActivePaged([FromBody]  OrderFilter filter)
         {
-            var result = _orderServices.AllActivePaged(filter);
+            var result = _orderService.AllActivePaged(filter);
             return result;
 
         }
@@ -95,7 +97,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("update")]
         public ResultModel<UpdatedOrder> Update([FromBody] UpdateOrder model)
         {
-            var result = _orderServices.Update(model);
+            var result = _orderService.Update(model);
             return result;
 
         }
@@ -104,7 +106,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("cancel")]
         public ResultModel<CanceledOrder> Cancel([FromBody] CancelOrder model)
         {
-            var result = _orderServices.Cancel(model);
+            var result = _orderService.Cancel(model);
             return result;
 
         }
@@ -112,7 +114,7 @@ namespace Iz.Online.API.Controllers
         [HttpPost("History")]
         public ResultModel<AllOrderReport> AllSortedOrder([FromBody] AllOrderCustomFilter filter)
         {
-            var result = _orderServices.AllSortedOrder(filter);
+            var result = _orderService.AllSortedOrder(filter);
             return result;
 
         }

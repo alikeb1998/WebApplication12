@@ -12,6 +12,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalUserService
     {
+        string Token { get; set; }
         ResultModel<Wallet> Wallet();
         ResultModel<AssetsList>  GetAllAssets();
         Login Captcha();

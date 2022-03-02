@@ -13,6 +13,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalOrderService
     {
+        string Token { get; set; }
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
         ResultModel<AllOrders> GetAll();
         ResultModel<ActiveOrdersResult> GetAllActives();

@@ -24,8 +24,9 @@ namespace Iz.Online.Services.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IHubUserService _hubUserService;
-        private readonly IExternalUserService _externalUserService;
+        public IExternalUserService _externalUserService { get; }
 
+        
 
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService)
         {

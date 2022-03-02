@@ -16,7 +16,7 @@ namespace Izi.Online.ViewModels.Instruments.BestLimit
         public double volumeBestSale { get; set; }
         public bool HasOrderBuy { get; set; }
         public bool HasOrderSell { get; set; }
-        public double QtyOrderBuy { get; set; }
-        public double QtyOrderSell { get; set; }
+        public double BuyWeight { get; set; }
+        public double SellWeight { get; set; }
     }
 }
