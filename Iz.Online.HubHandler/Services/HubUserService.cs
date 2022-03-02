@@ -42,15 +42,20 @@ namespace Iz.Online.HubHandler.Services
                     Random rnd = new Random();
 
 
-                    OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
+                    Izi.Online.ViewModels.Instruments.BestLimit.BestLimits model = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
                     {
-                        changeRow1 = rnd.Next(20, 30) > 25,
-                        changeRow2 = rnd.Next(20, 30) > 25,
-                        changeRow3 = rnd.Next(20, 30) > 25,
-                        changeRow4 = rnd.Next(20, 30) > 25,
-                        changeRow5 = rnd.Next(20, 30) > 25,
-                        changeRow6 = rnd.Next(20, 30) > 25,
-                        orderRow1 = new OrderRow()
+                       
+                        orderRow1 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                        {
+                            countBestBuy = rnd.Next(20, 50),
+                            priceBestBuy = rnd.Next(3000, 50000),
+                            volumeBestBuy = rnd.Next(100000, 1000000),
+                            countBestSale = rnd.Next(20, 50),
+                            priceBestSale = rnd.Next(3000, 50000),
+                            volumeBestSale = rnd.Next(100000, 1000000),
+                            
+                        },
+                        orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
                             priceBestBuy = rnd.Next(3000, 50000),
@@ -60,7 +65,7 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        orderRow2 = new OrderRow()
+                        orderRow3 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
                             priceBestBuy = rnd.Next(3000, 50000),
@@ -70,7 +75,7 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        orderRow3 = new OrderRow()
+                        orderRow4 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
                             priceBestBuy = rnd.Next(3000, 50000),
@@ -80,7 +85,7 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        orderRow4 = new OrderRow()
+                        orderRow5 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
                             priceBestBuy = rnd.Next(3000, 50000),
@@ -90,7 +95,7 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        orderRow5 = new OrderRow()
+                        orderRow6 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
                             priceBestBuy = rnd.Next(3000, 50000),
@@ -100,16 +105,7 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        orderRow6 = new OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        }
+                        
 
                     };
 
@@ -118,10 +114,10 @@ namespace Iz.Online.HubHandler.Services
                     var hubs = _hubConnationService.UserHubsList("user1");
                     if (hubs != null)
 
-                        _hubContext.Clients.Clients(hubs.Select(x => x.HubId)).SendCoreAsync("OnRefreshInstrumentBestLimit", 
+                        _hubContext.Clients.Clients(hubs.Select(x => x.HubId)).SendCoreAsync("OnRefreshInstrumentBestLimit",
                             new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
 
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}2599999'", " " });
+                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}'", " " });
                 }
                 catch (Exception e)
                 {
@@ -197,7 +193,7 @@ namespace Iz.Online.HubHandler.Services
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
-
+                var c = 0;
                 consumer.Subscribe($"OrderChange");
                 while (true)
                 {
@@ -206,8 +202,9 @@ namespace Iz.Online.HubHandler.Services
 
 
 
-                        while (true)
+                        while (c < 50)
                         {
+                            c++;
                             try
                             {
                                 Random rnd = new Random();
@@ -285,16 +282,13 @@ namespace Iz.Online.HubHandler.Services
                                 };
 
                                 var prices = JsonConvert.SerializeObject(model);
-
-                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, $"InstrumentId : 255555555'" });
-
-
-
-                                _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, "2666666666666", "ttt" });
+                                
+                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades",
+                                    new object[] { prices, c, "ttt" });
                             }
                             catch (Exception e)
                             {
-                                
+
                             }
                         }
                         var consumeResult = consumer.Consume();
@@ -312,13 +306,16 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        private static bool ConsumerIsStar = false;
         public async Task CreateAllConsumers()
         {
+            if (ConsumerIsStar)
+                return;
 
-            Task.Run(async () => PushOrderState());
+            //Task.Run(async () => PushOrderState());
             Task.Run(async () => PushTradeState());
 
-
+            ConsumerIsStar = true;
         }
     }
 }

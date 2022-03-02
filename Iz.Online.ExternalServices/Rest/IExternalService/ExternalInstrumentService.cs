@@ -124,6 +124,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             }
 
         }
+        public void StartConsume()
+        {
+            _hubUserService.CreateAllConsumers();
+        }
 
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
         {
