@@ -28,7 +28,9 @@ namespace Iz.Online.Services.Services
       
 
         private readonly IOrderRepository _orderRepository;
-        private readonly IExternalOrderService _externalOrderService;
+       
+
+       public IExternalOrderService _externalOrderService { get; }
 
 
         //private readonly IPushService _pushService;

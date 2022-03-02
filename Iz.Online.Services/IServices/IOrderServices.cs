@@ -10,11 +10,13 @@ using CancelOrder = Izi.Online.ViewModels.Orders.CancelOrder;
 using UpdatedOrder = Izi.Online.ViewModels.Orders.UpdatedOrder;
 using UpdateOrder = Izi.Online.ViewModels.Orders.UpdateOrder;
 using AllOrder = Izi.Online.ViewModels.Orders.AllOrder;
+using Iz.Online.ExternalServices.Rest.ExternalService;
 
 namespace Iz.Online.Services.IServices
 {
     public interface IOrderServices
     {
+        IExternalOrderService _externalOrderService { get; }
         ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
         ResultModel<List<ActiveOrder>> AllActive();
         ResultModel<OrderReport> AllActivePaged(OrderFilter filter);
