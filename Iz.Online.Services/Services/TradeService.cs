@@ -22,10 +22,7 @@ namespace Iz.Online.Services.Services
             _externalTradeService = externalTradeService;
 
         }
-
-        }
-
-        public string Id { get; set; }
+        
 
         public ResultModel<List<Trade>> Trades()
         {
