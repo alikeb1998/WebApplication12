@@ -20,7 +20,6 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
            
         }
-        public string Id { get; set; }
 
         public ResultModel<TradesList> Trades()
         {

@@ -12,6 +12,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
 {
     public class BaseService
     {
+        public string Token { get; set; }
+
         public string apiBaseAddress = "http://192.168.72.54:8080/";
 
         private readonly IBaseRepository _baseRepository;
@@ -41,7 +43,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
-                request.AddHeader("Authorization", getToken());
+                request.AddHeader("Authorization", Token);
                 IRestResponse response = client.Execute(request);
 
                 var setting = new JsonSerializerSettings() {NullValueHandling = NullValueHandling.Ignore};

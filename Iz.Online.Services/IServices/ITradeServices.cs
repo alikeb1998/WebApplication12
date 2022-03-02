@@ -13,7 +13,7 @@ namespace Iz.Online.Services.IServices
 {
     public interface ITradeServices
     {
-        string Id { get; set; }
+        string Token { get; set; }
 
         ResultModel<List<Trade>> Trades();
         ResultModel<List<Trade>> TradesPaged(TradeFilter filter);

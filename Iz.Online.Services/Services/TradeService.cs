@@ -15,7 +15,7 @@ namespace Iz.Online.Services.Services
     public class TradeService : ITradeServices
     {
         public IExternalTradeService _externalTradeService { get; }
-
+        public string Token { get; set; }
 
         public TradeService(IExternalTradeService externalTradeService)
         {
@@ -24,15 +24,13 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public string Id { get; set; }
-
         public ResultModel<List<Trade>> Trades()
         {
 
             var trades = _externalTradeService.Trades();
 
             if (!trades.IsSuccess || trades.Model.Trades == null)
-                return new ResultModel<List<Trade>>(null, trades.StatusCode==200, trades.Message, trades.StatusCode);
+                return new ResultModel<List<Trade>>(null, trades.StatusCode == 200, trades.Message, trades.StatusCode);
 
             var allTrades = trades.Model.Trades.Where(t => t.TradedAt.ToString().Substring(0, 6) == DateTime.Today.ToString().Substring(0, 6)).Select(x => new Trade()
             {
@@ -79,14 +77,14 @@ namespace Iz.Online.Services.Services
             var list = _externalTradeService.Trades();
             var result = list.Model.Trades.Select(x => new Trade()
             {
-               Price = x.Price,
-               TradedAt = x.TradedAt,
-               Name = x.Order.instrument.name,
-               OrderSide = x.Order.orderSide,
-               Quantity = x.Order.quantity,
-               TradeValue = x.Order.executedQ * x.Order.price,
-               TradeId = x.Order.id, 
-               State = x.Order.state
+                Price = x.Price,
+                TradedAt = x.TradedAt,
+                Name = x.Order.instrument.name,
+                OrderSide = x.Order.orderSide,
+                Quantity = x.Order.quantity,
+                TradeValue = x.Order.executedQ * x.Order.price,
+                TradeId = x.Order.id,
+                State = x.Order.state
             }).ToList();
 
             var a = TradeHistoryFilter(result, filter);
@@ -100,7 +98,7 @@ namespace Iz.Online.Services.Services
                 TotalCount = result.Count,
             };
             return new ResultModel<TradeHistoryReport>(res);
-           
+
 
         }
         private List<Trade> Filter(List<Trade> list, TradeFilter filter)

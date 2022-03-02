@@ -2,8 +2,8 @@
 
 //var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5224/CustomersHub").build();
-//var connection = new signalR.HubConnectionBuilder().withUrl("http://192.168.72.112:5554/CustomersHub").build();
+//var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5224/CustomersHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("http://192.168.72.112:5554/CustomersHub").build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
@@ -17,6 +17,24 @@ connection.on("ReceiveMessage", function (user, message) {
 });
 
 connection.on("OnRefreshInstrumentBestLimit", function (user, message) {
+    var li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
+    // We can assign user-supplied strings to an element's textContent because it
+    // is not interpreted as markup. If you're assigning in any other way, you 
+    // should be aware of possible script injection concerns.
+    li.textContent = `${user} ${message}`;
+});
+
+connection.on("OnChangeTrades", function (user, message) {
+    var li = document.createElement("li");
+    document.getElementById("messagesList").appendChild(li);
+    // We can assign user-supplied strings to an element's textContent because it
+    // is not interpreted as markup. If you're assigning in any other way, you 
+    // should be aware of possible script injection concerns.
+    li.textContent = `${user} ${message}`;
+});
+
+connection.on("OnChangeOrderState", function (user, message) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
     // We can assign user-supplied strings to an element's textContent because it

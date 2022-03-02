@@ -10,7 +10,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalTradeService
     {
-         string Id { get; set; }
+         string Token { get; set; }
 
         ResultModel<TradesList> Trades();
     }
