@@ -124,6 +124,11 @@ namespace Iz.Online.Services.Services
             return _instrumentsRepository.GetInstrumentComment(model);
         }
 
+        public void StartConsume()
+        {
+            _externalInstrumentsService.StartConsume();
+        }
+
         public ResultModel<BestLimits> BestLimits(SelectedInstrument model)
         {
            return _externalInstrumentsService.BestLimits(model);

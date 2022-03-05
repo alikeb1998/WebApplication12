@@ -19,7 +19,7 @@ namespace Iz.Online.Services.IServices
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
 
-
+        void StartConsume();
         ResultModel<BestLimits> BestLimits(SelectedInstrument model);
     }
 }

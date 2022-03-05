@@ -18,7 +18,7 @@ namespace Iz.Online.API.Infrastructure
         public BaseApiController(IHttpContextAccessor httpContextAccessor)
         {
           _token_ = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
-          _token_ = "mytoken";
+          _token_ = "321token123";
         }
 
     }

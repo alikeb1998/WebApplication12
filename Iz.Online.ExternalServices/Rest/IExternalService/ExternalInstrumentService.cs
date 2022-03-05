@@ -133,7 +133,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(async () => _hubUserService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
+            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)

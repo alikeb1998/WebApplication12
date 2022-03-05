@@ -18,9 +18,9 @@ namespace Iz.Online.Services.IServices
     public interface IUserService
     {
         IExternalUserService _externalUserService { get; }
-        void SetUserHub(string token, string hubId);
+        ResultModel<bool> SetUserHub(string token, string hubId);
 
-        List<UsersHubIds> UserHubsList(string UserId);
+        //CustomerInfo UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter);
         ResultModel<Wallet>  Wallet();

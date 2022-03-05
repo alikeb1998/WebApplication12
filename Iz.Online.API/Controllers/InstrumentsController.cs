@@ -21,26 +21,24 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         private readonly IInstrumentsService _instrumentsService;
-        private readonly IExternalInstrumentService _externalInstrumentService;
 
 
-        public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor, IExternalInstrumentService externalInstrumentService) : base(httpContextAccessor)
+        public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
             _instrumentsService._externalInstrumentsService.Token = _token_;
-            _externalInstrumentService = externalInstrumentService;
-            //_externalInstrumentService.StartConsume();
+            _instrumentsService.StartConsume();
 
         }
 
         #endregion
 
-        [HttpGet]
-        public void StartConsume()
-        {
-            _externalInstrumentService.StartConsume();
+        //[HttpGet]
+        //public void StartConsume()
+        //{
+        //    _externalInstrumentService.StartConsume();
 
-        }
+        //}
         //update instruments list.
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()

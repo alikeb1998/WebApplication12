@@ -23,15 +23,15 @@ namespace Iz.Online.HubConnectionHandler.Services
         }
 
 
-        public List<UsersHubIds> UserHubsList(string userId)
+        public CustomerInfo UserHubsList(string userId)
         {
-
+            userId = "KafkaUserId_" + userId;
             return _userRepository.GetUserHubs(userId);
 
         }
 
 
-        public void DeleteConnectionId( string connectionId)
+        public void DeleteConnectionId(string connectionId)
         {
             _userRepository.DeleteConnectionId( connectionId);
         }

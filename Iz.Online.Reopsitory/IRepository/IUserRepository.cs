@@ -11,11 +11,11 @@ namespace Iz.Online.Reopsitory.IRepository
 {
     public interface IUserRepository : IBaseRepository
     {
-        List<UsersHubIds> GetUserHubs(string userId);
+        CustomerInfo GetUserHubs(string userId);
     
         List<AppConfigs> GetAppConfigs();
         string GetUserLocalToken(string omsId, string omsToken);
-        void SetUserHub(string UserId, string hubId ,string sessionId);
         void DeleteConnectionId(string connectionId);
+        bool SetUserInfo(CustomerInfo model);
     }
 }

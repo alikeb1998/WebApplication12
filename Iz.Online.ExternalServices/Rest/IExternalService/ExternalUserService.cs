@@ -60,6 +60,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<LogOut>(result);
         }
 
-       
+        public ResultModel<model.CustomerInfo> CustomerInfo()
+        {
+            return new ResultModel<model.CustomerInfo>(new model.CustomerInfo(){ KafkaId = "KafkaUserId"});
+
+            var result = HttpGetRequest<model.CustomerInfo>("???");
+
+            return new ResultModel<model.CustomerInfo>(result);
+        }
     }
 }
