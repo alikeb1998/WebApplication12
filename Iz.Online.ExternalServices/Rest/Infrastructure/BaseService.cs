@@ -41,7 +41,6 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
@@ -80,7 +79,6 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
@@ -88,6 +86,16 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
+               
+                if (string.IsNullOrEmpty(response.Content))
+                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
+                    {
+                        clientMessage = "خطا در برقراری ارتباط با سرویس",
+                        code = 500,
+                        message = "خطا در برقراری ارتباط با سرویس",
+                        statusCode = 500
+                    }));
+
                 return JsonConvert.DeserializeObject<T>(response.Content);
 
             }
@@ -111,8 +119,6 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
-
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PUT);
@@ -120,6 +126,16 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
+
+                if (string.IsNullOrEmpty(response.Content))
+                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
+                    {
+                        clientMessage = "خطا در برقراری ارتباط با سرویس",
+                        code = 500,
+                        message = "خطا در برقراری ارتباط با سرویس",
+                        statusCode = 500
+                    }));
+
                 return JsonConvert.DeserializeObject<T>(response.Content);
 
             }
@@ -143,8 +159,6 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-
-
                 var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.DELETE);
@@ -152,6 +166,16 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
+                
+                if (string.IsNullOrEmpty(response.Content))
+                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
+                    {
+                        clientMessage = "خطا در برقراری ارتباط با سرویس",
+                        code = 500,
+                        message = "خطا در برقراری ارتباط با سرویس",
+                        statusCode = 500
+                    }));
+
                 return JsonConvert.DeserializeObject<T>(response.Content);
 
             }
@@ -171,16 +195,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public string GetOmsToken(string token)
-        {
-            return _baseRepository.GetOmsToken(token);
-        }
-
-        public bool LocalTokenIsValid(string token)
-        {
-            return _baseRepository.LocalTokenIsValid(token);
-        }
-
+      
     }
 
 }
