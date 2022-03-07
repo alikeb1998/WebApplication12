@@ -26,7 +26,6 @@ namespace Iz.Online.Services.Services
         private readonly IHubUserService _hubUserService;
         public IExternalUserService _externalUserService { get; }
 
-        
 
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService)
         {
@@ -35,19 +34,19 @@ namespace Iz.Online.Services.Services
             _hubUserService = hubUserService;
         }
 
-        public List<UsersHubIds> UserHubsList(string userId)
-        {
+        //public CustomerInfo UserHubsList(string userId)
+        //{
 
-            return _userRepository.GetUserHubs(userId);
+        //    return _userRepository.GetUserHubs(userId);
 
-        }
+        //}
 
         public ResultModel<List<Asset>> AllAssets()
         {
             var assets = _externalUserService.GetAllAssets();
 
             if (!assets.IsSuccess)
-                return new ResultModel<List<Asset>>(null, assets.StatusCode==200, assets.Message, assets.StatusCode);
+                return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
 
             if (assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
@@ -119,12 +118,7 @@ namespace Iz.Online.Services.Services
 
         public List<AppConfigs> AppConfigs()
         {
-            return _userRepository.GetAppConfigs().Select(x => new Izi.Online.ViewModels.AppConfigs()
-            {
-                Description = x.Description,
-                Key = x.Key,
-                Value = x.Value
-            }).ToList();
+           return _userRepository.ConfigData();
         }
 
         public ResultModel<string> GetUserLocalToken(string token)
@@ -133,7 +127,6 @@ namespace Iz.Online.Services.Services
             var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
 
             string localToken = _userRepository.GetUserLocalToken(omsId, token);
-
 
             return new ResultModel<string>(localToken);
         }
@@ -147,13 +140,25 @@ namespace Iz.Online.Services.Services
             return jsonToken;
         }
 
-        public void SetUserHub(string token, string hubId)
+        public ResultModel<bool> SetUserHub(string token, string hubId)
         {
-            var deserializedToken = CastJwtSecurityTokenHandler(token);
-            var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
-            var session = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Session").Value;
+            var CustomerInfo = _externalUserService.CustomerInfo();
+            if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.KafkaId != null)
+            {
+                bool setResult = _userRepository.SetUserInfo(new CustomerInfo()
+                {
+                    Token = token,
+                    KafkaId = CustomerInfo.Model.KafkaId,
+                    Hubs = new List<string>() { hubId }
+                });
+                if (!setResult)
+                    return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 500);
+                
+                return new ResultModel<bool>(true);
+            }
 
-            _userRepository.SetUserHub(omsId, hubId,session);
+            return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 500);
+
         }
 
         public ResultModel<Captcha> Captcha()
@@ -177,8 +182,8 @@ namespace Iz.Online.Services.Services
                 OtpId = result.Model.OtpId,
                 ExpireAt = result.Model.ExpireAt
             };
-           
-            return new ResultModel<OtpResult>(OtpResult,result.IsSuccess, result.Message, result.StatusCode);
+
+            return new ResultModel<OtpResult>(OtpResult, result.IsSuccess, result.Message, result.StatusCode);
         }
         public ResultModel<CheckedOtp> CheckOtp(Otp otp)
         {
@@ -188,15 +193,16 @@ namespace Iz.Online.Services.Services
                 Token = result.Model.Token,
                 Sockettoken = result.Model.SocketToken
             };
-            
+
             return new ResultModel<CheckedOtp>(checkOtp, result.IsSuccess, result.Message, result.StatusCode);
         }
         public ResultModel<bool> LogOut()
         {
-            var res =  _externalUserService.LogOut().StatusCode == 200;
+            var res = _externalUserService.LogOut().StatusCode == 200;
             return new ResultModel<bool>(res);
-            
         }
+
+       
         private List<Asset> Filter(List<Asset> list, PortfoFilter filter)
         {
             var report = new PortfolioReport()

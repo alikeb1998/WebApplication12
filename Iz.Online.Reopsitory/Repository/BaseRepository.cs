@@ -7,6 +7,7 @@ using Iz.Online.DataAccess;
 using Iz.Online.Entities;
 using Iz.Online.Files;
 using Iz.Online.Reopsitory.IRepository;
+using Microsoft.Extensions.Configuration;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -14,7 +15,7 @@ namespace Iz.Online.Reopsitory.Repository
     {
         protected readonly OnlineBackendDbContext _db;
 
-        public BaseRepository(OnlineBackendDbContext dataBase)
+        public BaseRepository(OnlineBackendDbContext dataBase )
         {
             _db = dataBase;
         }
@@ -33,17 +34,7 @@ namespace Iz.Online.Reopsitory.Repository
             _db.SaveChanges();
         }
 
-        public AppConfigs GetAppConfigs(string key)
-        {
-            var c = _db.AppConfigs.Where(x => x.Key == key).FirstOrDefault();
-            AppConfigs result = new AppConfigs()
-            {
-                Description = c.Description,
-                Key = c.Key,
-                Value = c.Value
-            };
-            return result;
-        }
+     
 
         public string GetOmsToken(string token)
         {

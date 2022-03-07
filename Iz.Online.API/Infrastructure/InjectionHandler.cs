@@ -11,6 +11,7 @@ using Iz.Online.HubConnectionHandler.Services;
 using Iz.Online.HubHandler.IServices;
 using Iz.Online.HubHandler.Services;
 using Microsoft.Extensions.Caching.Distributed;
+using ServiceProvider = Iz.Online.ExternalServices.Rest.Infrastructure.ServiceProvider;
 
 //using Iz.Online.HubHandler.Services;
 //using Iz.Online.HubHandler.IServices;
@@ -46,8 +47,10 @@ namespace Iz.Online.API.Infrastructure
         
    
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddTransient<IDistributedCache, DistributedCache>();
-
+            services.AddScoped<IExternalChangeBrokerService, ExternalChangeBrokerService>();
+            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IChangeBrokerService, ChangeBrokerService>();
+            
 
             return services;
 

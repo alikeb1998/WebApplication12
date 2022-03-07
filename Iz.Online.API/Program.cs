@@ -80,8 +80,8 @@ builder.Services.Configure<FormOptions>(o =>  // currently all set to max, confi
 });
 
 
-var hubService = builder.Services.BuildServiceProvider().GetService<IHubUserService>();
-hubService.CreateAllConsumers();
+//var hubService = builder.Services.BuildServiceProvider().GetService<IHubUserService>();
+//hubService.CreateAllConsumers();
 
 var app = builder.Build();
 
@@ -97,5 +97,8 @@ app.MapControllers();
 app.MapHub<CustomersHub>("/CustomersHub");
 
 
+//var hubService = builder.Services.BuildServiceProvider().GetService<IHubUserService>();
+//hubService.CreateAllConsumers();
 app.Run();
 //CacheData.
+

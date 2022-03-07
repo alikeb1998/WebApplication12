@@ -20,9 +20,9 @@ namespace Iz.Online.SignalR
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
 
-            var hubs = _hubConnationService.UserHubsList("user1").Select(x=>x.HubId);
+            //var hubs = _hubConnationService.UserHubsList("user1").Select(x=>x.HubId);
 
-            await Clients.Clients(hubs).SendAsync("ReceiveMessage", user + "hhhhh", message + "hhhhh");
+            //await Clients.Clients(hubs).SendAsync("ReceiveMessage", user + "hhhhh", message + "hhhhh");
         }
         public override async Task OnConnectedAsync()
         {

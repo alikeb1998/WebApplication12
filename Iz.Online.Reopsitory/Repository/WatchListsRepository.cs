@@ -229,10 +229,5 @@ namespace Iz.Online.Reopsitory.Repository
             });
         }
 
-        public ResultModel<long> GetInstrumentId(string nscCode)
-        {
-            var entity = _db.Instruments.Where(x => x.Code == nscCode).Select(x => x.InstrumentId).FirstOrDefault();
-            return new ResultModel<long>(entity);
-        }
     }
 }

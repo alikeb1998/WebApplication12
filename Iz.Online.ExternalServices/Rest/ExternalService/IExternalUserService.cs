@@ -19,5 +19,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         ResultModel<OtpResult> SendOtp(Credentials credentials);
         ResultModel<CheckOtp> CheckOtp(Otp otp);
         ResultModel<LogOut> LogOut();
+        ResultModel<CustomerInfo> CustomerInfo();
     }
 }

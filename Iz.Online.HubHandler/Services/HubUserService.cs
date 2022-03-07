@@ -15,7 +15,7 @@ namespace Iz.Online.HubHandler.Services
         private readonly IHubConnationService _hubConnationService;
         private readonly IHubContext<CustomersHub> _hubContext;
         private readonly ConsumerConfig _consumerConfig;
-
+        private static bool ConsumerIsStar = false;
         public HubUserService(IHubConnationService hubConnationService, IHubContext<CustomersHub> hubContext)
         {
 
@@ -44,7 +44,7 @@ namespace Iz.Online.HubHandler.Services
 
                     Izi.Online.ViewModels.Instruments.BestLimit.BestLimits model = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
                     {
-                       
+
                         orderRow1 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
                             countBestBuy = rnd.Next(20, 50),
@@ -53,7 +53,7 @@ namespace Iz.Online.HubHandler.Services
                             countBestSale = rnd.Next(20, 50),
                             priceBestSale = rnd.Next(3000, 50000),
                             volumeBestSale = rnd.Next(100000, 1000000),
-                            
+
                         },
                         orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                         {
@@ -105,17 +105,15 @@ namespace Iz.Online.HubHandler.Services
                             volumeBestSale = rnd.Next(100000, 1000000),
 
                         },
-                        
+
 
                     };
 
                     var prices = JsonConvert.SerializeObject(model);
 
-                    var hubs = _hubConnationService.UserHubsList("user1");
+                    var hubs = _hubConnationService.UserHubsList("KafkaUserId");
                     if (hubs != null)
-
-                        _hubContext.Clients.Clients(hubs.Select(x => x.HubId)).SendCoreAsync("OnRefreshInstrumentBestLimit",
-                            new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+                        _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
 
                     _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}'", " " });
                 }
@@ -282,9 +280,8 @@ namespace Iz.Online.HubHandler.Services
                                 };
 
                                 var prices = JsonConvert.SerializeObject(model);
-                                
-                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades",
-                                    new object[] { prices, c, "ttt" });
+
+                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, c, "ttt" });
                             }
                             catch (Exception e)
                             {
@@ -306,13 +303,13 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
-        private static bool ConsumerIsStar = false;
+
         public async Task CreateAllConsumers()
         {
             if (ConsumerIsStar)
                 return;
 
-            //Task.Run(async () => PushOrderState());
+            Task.Run(async () => PushOrderState());
             Task.Run(async () => PushTradeState());
 
             ConsumerIsStar = true;

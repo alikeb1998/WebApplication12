@@ -21,34 +21,24 @@ namespace Iz.Online.API.Controllers
         #region ctor
 
         private readonly IInstrumentsService _instrumentsService;
-        private readonly IExternalInstrumentService _externalInstrumentService;
 
 
-        public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor, IExternalInstrumentService externalInstrumentService) : base(httpContextAccessor)
+        public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
             _instrumentsService._externalInstrumentsService.Token = _token_;
-            _externalInstrumentService = externalInstrumentService;
-            //_externalInstrumentService.StartConsume();
+            _instrumentsService.StartConsume();
 
         }
 
         #endregion
 
-        [HttpGet]
-        public void StartConsume()
-        {
-            _externalInstrumentService.StartConsume();
-
-        }
-        //update instruments list.
+     
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
         {
-            return null;
-
-            //var updateResult = _externalInstrumentService.UpdateInstrumentList();
-            //return new ResultModel<bool>(updateResult, updateResult);
+            var updateResult = _instrumentsService.UpdateInstrumentsDb();
+            return new ResultModel<bool>(updateResult, updateResult);
         }
 
         //get instruments list.
@@ -62,20 +52,20 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("BestLimits")]
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] SelectedInstrument model)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] int InstrumentId)
         {
             //model.InstrumentId = "IRO1FOLD0001";
-            var result = _instrumentsService.BestLimits(model);
+            var result = _instrumentsService.BestLimits(InstrumentId);
             return result;
         }
 
         //get instrument details as prices or states and so on.
         [HttpPost("Detail")]
-        public ResultModel<InstrumentDetail> Detail([FromBody] SelectInstrumentDetails model)
+        public ResultModel<InstrumentDetail> Detail([FromBody] int instrumentId)
         {
             //model.InstrumentId = 658;
             //model.NscCode = "IRO1FOLD0001";
-            var result = _instrumentsService.Detail(model);
+            var result = _instrumentsService.Detail(instrumentId);
             return result;
         }
         // گذاشتن یادداشت برای  نماد

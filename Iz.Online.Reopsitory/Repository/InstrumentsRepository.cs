@@ -7,19 +7,23 @@ using StackExchange.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Iz.Online.Reopsitory.Repository
 {
     public class InstrumentsRepository : BaseRepository, IInstrumentsRepository
     {
-        private readonly IConnectionMultiplexer _redis;
+        private readonly IServer _redis;
         private readonly IDistributedCache _cache;
-        public InstrumentsRepository(OnlineBackendDbContext dataBase, IConnectionMultiplexer redis, IDistributedCache cache) : base(dataBase)
+        public InstrumentsRepository(OnlineBackendDbContext dataBase, IConnectionMultiplexer redis, IDistributedCache cache, IConfiguration configuration) : base(dataBase)
         {
-            _redis = redis;
+            IConfiguration _configuration = configuration;
+            var redisConnection = _configuration.GetSection("RedisConnection").Get<string>();
+            _redis = redis.GetServer(redisConnection);
+
             _cache = cache;
         }
-        
+
         public ResultModel<List<Instruments>> GetInstrumentsList()
         {
             try
@@ -41,7 +45,7 @@ namespace Iz.Online.Reopsitory.Repository
                     SellCommisionRate = x.SellCommisionRate,
 
                 }).ToList();
-                
+
                 return new ResultModel<List<Instruments>>(ins);
             }
             catch (Exception e)
@@ -192,13 +196,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-     
-        public ResultModel<long> GetInstrumentId(string nscCode)
-        {
-            
-            var entity = _db.Instruments.Where(x => x.Code == nscCode).Select(x => x.InstrumentId).FirstOrDefault();
-            return new ResultModel<long>(entity);
-        }
+
 
         public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
         {
@@ -244,5 +242,119 @@ namespace Iz.Online.Reopsitory.Repository
 
             return new ResultModel<string>(null, false, "یادداشتی ثبت نشده است", -1);
         }
+
+
+        #region instrument
+
+        public List<InstrumentList> InstrumentData()
+        {
+            try
+            {
+                var allInstrument = _redis.Keys(pattern: "Instrument*");
+                List<InstrumentList> result = new List<InstrumentList>();
+                foreach (var instrument in allInstrument)
+                {
+                    var data = _cache.Get(instrument);
+                    var ins = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(data));
+                    result.Add(ins);
+                }
+
+                if (result.Count > 0)
+                    return result;
+
+                result = SqlInstrumentList();
+                CacheInstrumentsData();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                var result = SqlInstrumentList();
+                CacheInstrumentsData();
+                return result;
+            }
+        }
+
+        public InstrumentList InstrumentData(int instrumentId)
+        {
+            try
+            {
+                var dataBytes = _cache.Get("Instrument" + instrumentId);
+                if (dataBytes == null)
+                    CacheInstrumentsData();
+
+                dataBytes = _cache.Get("Instrument" + instrumentId);
+                var result = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(dataBytes));
+                if (result != null)
+                    return result;
+
+                result = SqlInstrumentList().FirstOrDefault(x => x.Id == instrumentId);
+                CacheInstrumentsData();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                var result = SqlInstrumentList().FirstOrDefault(x => x.Id == instrumentId);
+                CacheInstrumentsData();
+                return result;
+            }
+        }
+
+        private List<InstrumentList> SqlInstrumentList()
+        {
+            var result = _db.Instruments.Select(instrument => new InstrumentList()
+            {
+                Id = instrument.Id,
+                Name = instrument.SymbolName.EndsWith("1")
+                    ? instrument.SymbolName.Substring(0, instrument.SymbolName.Length - 1)
+                    : instrument.SymbolName,
+                FullName = instrument.CompanyName,
+                NscCode = instrument.Code, //
+                Bourse = instrument.BourseId.Value, //
+                InstrumentId = instrument.InstrumentId, //
+                Tick = instrument.Tick,
+                BuyCommissionRate = instrument.BuyCommisionRate,
+                SellCommissionRate = instrument.SellCommisionRate,
+            }).ToList();
+            return result;
+        }
+
+        private bool CacheInstrumentsData()
+        {
+            try
+            {
+
+                var instruments = _db.Instruments.ToList();
+                foreach (var instrument in instruments)
+                {
+                    var serializedData = JsonConvert.SerializeObject(new InstrumentList()
+                    {
+                        Id = instrument.Id,
+                        Name = instrument.SymbolName.EndsWith("1") ? instrument.SymbolName.Substring(0, instrument.SymbolName.Length - 1) : instrument.SymbolName,
+                        FullName = instrument.CompanyName,
+                        NscCode = instrument.Code,//
+                        Bourse = instrument.BourseId.Value,//
+                        InstrumentId = instrument.InstrumentId,//
+                        Tick = instrument.Tick,
+                        BuyCommissionRate = instrument.BuyCommisionRate,
+                        SellCommissionRate = instrument.SellCommisionRate,
+
+                    });
+                    var content = Encoding.UTF8.GetBytes(serializedData);
+                    _cache.Set("Instrument" + instrument.Id, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
     }
 }

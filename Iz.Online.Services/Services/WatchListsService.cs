@@ -16,13 +16,13 @@ namespace Iz.Online.Services.Services
     {
         private readonly IWatchListsRepository _watchListsRepository;
         private readonly IExternalInstrumentService _externalInstrumentsService;
+        private readonly ICacheService _cache;
         
-     
-
-        public WatchListsService(IWatchListsRepository watchListsRepository, IExternalInstrumentService externalInstrumentsService)
+        public WatchListsService(IWatchListsRepository watchListsRepository,IExternalInstrumentService externalInstrumentsService, ICacheService cacheService)
         {
             _watchListsRepository = watchListsRepository;
             _externalInstrumentsService = externalInstrumentsService;
+            _cache = cacheService;
         }
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
@@ -32,9 +32,9 @@ namespace Iz.Online.Services.Services
 
             foreach (var ins in wl.Model.Instruments)
             {
-
-                var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = ins.Code });
-                var price = _externalInstrumentsService.Price(new SelectInstrumentDetails() { NscCode = ins.Code });
+               var instrumentDetails =  _cache.InstrumentData((int) ins.InstrumentId);
+                var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+                var price = _externalInstrumentsService.Price(instrumentDetails.NscCode);
 
                 if (!(bestLimit.IsSuccess && price.IsSuccess))
                     continue;
@@ -79,7 +79,7 @@ namespace Iz.Online.Services.Services
 
         private bool ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
-            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
             var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
             if (oldWl.IsSuccess)
@@ -96,7 +96,7 @@ namespace Iz.Online.Services.Services
             }
 
             if (model.WatchListName.Length >
-                Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+                Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
                 return true;
@@ -125,7 +125,7 @@ namespace Iz.Online.Services.Services
         }
         private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
-            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxLenName").Value);
+            var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
             var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
             if (oldWl.IsSuccess)
@@ -154,7 +154,7 @@ namespace Iz.Online.Services.Services
             }
 
             if (model.WatchListName.Length >
-                Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value))
+                Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
                 return true;
@@ -184,7 +184,7 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
         {
-            var maxLen = Convert.ToInt32(_watchListsRepository.GetAppConfigs("WatchListMaxInstruments").Value);
+            var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value);
 
             var old = _watchListsRepository.GetWatchListDetails(new SearchWatchList() { WatchListId = model.WatchListId });
             if (old.Model.Instruments.Count() >= maxLen)

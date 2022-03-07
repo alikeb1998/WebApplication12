@@ -1,4 +1,5 @@
 ﻿
+using System.Configuration;
 using Iz.Online.DataAccess;
 using Iz.Online.Entities;
 using Iz.Online.Reopsitory.IRepository;
@@ -10,6 +11,9 @@ using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.ShareModels;
+using Microsoft.Extensions.Configuration;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -17,22 +21,15 @@ namespace Iz.Online.Reopsitory.Repository
     {
         private readonly OnlineBackendDbContext _db;
         private readonly IDistributedCache _cache;
-        private readonly IConnectionMultiplexer _redis;
-        public UserRepository(OnlineBackendDbContext dataBase, IDistributedCache cache, IConnectionMultiplexer redis) : base(dataBase)
+        private readonly IServer _redis;
+        public UserRepository(OnlineBackendDbContext dataBase, IDistributedCache cache, IConnectionMultiplexer redis, IConfiguration configuration) : base(dataBase)
         {
+            IConfiguration _configuration = configuration;
             _db = dataBase;
             _cache = cache;
-            _redis = redis;
-        }
-        
-        public List<AppConfigs> GetAppConfigs()
-        {
-            return _db.AppConfigs.ToList();
-        }
-    
-        public AppConfigs GetAppConfigs(string key)
-        {
-            return _db.AppConfigs.FirstOrDefault(x => x.Key == key);
+
+            var redisConnection = _configuration.GetSection("RedisConnection").Get<string>();
+            _redis = redis.GetServer(redisConnection);
         }
 
         public string GetUserLocalToken(string omsId, string omsToken)
@@ -86,6 +83,88 @@ namespace Iz.Online.Reopsitory.Repository
             return entity.LocalToken;
         }
 
+        public void DeleteConnectionId(string connectionId)
+        {
+            try
+            {
+                var redisKeys = _redis.Keys().ToList();
+                foreach (var key in redisKeys)
+                {
+                    var oldDataBytes = _cache.Get(key);
+                    var oldData = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(oldDataBytes));
+                    if (oldData.Hubs.Contains(connectionId))
+                    {
+                        oldData.Hubs.Remove(connectionId);
+                        var serialized = JsonConvert.SerializeObject(oldData);
+                        var content = Encoding.UTF8.GetBytes(serialized);
+                        _cache.Set("KafkaUserId_" + oldData.KafkaId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                        return;
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public bool SetUserInfo(CustomerInfo model)
+        {
+
+            try
+            {
+                var oldDataBytes = _cache.Get("KafkaUserId_" + model.KafkaId);
+                var oldData = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(oldDataBytes));
+                oldData.Hubs.Add(model.Hubs.FirstOrDefault());
+                oldData.Hubs = oldData.Hubs.Distinct().ToList();
+
+                var serialized = JsonConvert.SerializeObject(oldData);
+                var content = Encoding.UTF8.GetBytes(serialized);
+                _cache.Set("KafkaUserId_" + model.KafkaId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public CustomerInfo GetUserHubs(string userId)
+        {
+
+            try
+            {
+
+                var dataBytes = _cache.Get(userId);
+                var result = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(dataBytes));
+                return result;
+
+                //var allKeys = _redis.GetServer("localhost", 6379).Keys().ToList();
+                //_cache.Get(userId);
+                //if (allKeys == null)
+                //    return null;
+
+                //var result = new List<UsersHubIds>();
+                //foreach (var key in allKeys)
+                //{
+                //    var content = _cache.Get(key);
+                //    var serializedModel = System.Text.Encoding.Default.GetString(content);
+                //    var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
+
+                //    if (deserializedObject.CustomerId == userId)
+                //        result.Add(deserializedObject);
+                //}
+
+                //return result;
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("_configuration[JWT:Secret]"));
@@ -96,69 +175,103 @@ namespace Iz.Online.Reopsitory.Repository
                 expires: DateTime.Now.AddHours(5),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
+            );
 
             return token;
         }
 
-        public void SetUserHub(string UserId, string hubId, string sessionId)
+
+
+        #region app configs
+
+        public List<Izi.Online.ViewModels.AppConfigs> ConfigData()
         {
             try
             {
-                var serialized = JsonConvert.SerializeObject(new UsersHubIds() { CustomerId = UserId, HubId = hubId, SessionId = sessionId });
-                var content = Encoding.UTF8.GetBytes(serialized);
-                _cache.Set(hubId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
-
-            }
-            catch (Exception e)
-            {
-                
-            }
-        }
-    
-        public void DeleteConnectionId(string connectionId)
-        {
-            try
-            {
-                //  var redisKeys = _redis.GetServer("localhost", 6379).Keys(pattern: connectionId)
-                //.Select(p => p.ToString()).FirstOrDefault();
-                _cache.Remove(connectionId);
-
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-        public List<UsersHubIds> GetUserHubs(string userId)
-        {
-
-            try
-            {
-                var allKeys = _redis.GetServer("localhost", 6379).Keys().ToList();
-
-                if (allKeys == null)
-                    return null;
-
-                var result = new List<UsersHubIds>();
-                foreach (var key in allKeys)
+                var allInstrument = _redis.Keys(pattern: "AppConfig*");
+                List<Izi.Online.ViewModels.AppConfigs> result = new List<Izi.Online.ViewModels.AppConfigs>();
+                foreach (var instrument in allInstrument)
                 {
-                    var content = _cache.Get(key);
-                    var serializedModel = System.Text.Encoding.Default.GetString(content);
-                    var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
-
-                    if (deserializedObject.CustomerId == userId)
-                        result.Add(deserializedObject);
+                    var data = _cache.Get(instrument);
+                    var ins = JsonConvert.DeserializeObject<Izi.Online.ViewModels.AppConfigs>(Encoding.Default.GetString(data));
+                    result.Add(ins);
                 }
+                if (result.Count > 0)
+                    return result;
 
+                result = SqlConfigData();
+                CacheConfigData();
                 return result;
-
             }
             catch (Exception e)
             {
                 return null;
             }
         }
+
+        private bool CacheConfigData()
+        {
+            try
+            {
+                var configs = _db.AppConfigs.ToList();
+
+                foreach (var config in configs)
+                {
+                    var serializedData = JsonConvert.SerializeObject(new Izi.Online.ViewModels.AppConfigs()
+                    {
+                        Value = config.Value,
+                        Description = config.Description
+                    });
+                    var content = Encoding.UTF8.GetBytes(serializedData);
+                    _cache.Set("AppConfig" + config.Key, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private List<Izi.Online.ViewModels.AppConfigs> SqlConfigData()
+        {
+            try
+            {
+                var configs = _db.AppConfigs.Select(config => new Izi.Online.ViewModels.AppConfigs()
+                {
+                    Value = config.Value,
+                    Description = config.Description
+                }).ToList();
+
+                return configs;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public Izi.Online.ViewModels.AppConfigs ConfigData(string key)
+        {
+            var dataBytes = _cache.Get("AppConfig" + key);
+            if (dataBytes == null)
+                CacheConfigData();
+
+            dataBytes = _cache.Get("AppConfig" + key);
+
+
+            var result = JsonConvert.DeserializeObject<Izi.Online.ViewModels.AppConfigs>(Encoding.Default.GetString(dataBytes));
+            if (result != null)
+                return result;
+
+            result = SqlConfigData().FirstOrDefault(x => x.Key == key);
+            CacheConfigData();
+            return result;
+        }
+
+
+        #endregion
+
     }
 }

@@ -18,16 +18,12 @@ namespace Iz.Online.Services.IServices
     public interface IUserService
     {
         IExternalUserService _externalUserService { get; }
-        void SetUserHub(string token, string hubId);
-
-        List<UsersHubIds> UserHubsList(string UserId);
+        ResultModel<bool> SetUserHub(string token, string hubId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter);
         ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
-
         ResultModel<string> GetUserLocalToken(string  omsId);
-
         ResultModel<Captcha> Captcha();
         ResultModel<OtpResult> SendOtp(Credentials credentials);
         ResultModel<CheckedOtp> CheckOtp(Otp otp);

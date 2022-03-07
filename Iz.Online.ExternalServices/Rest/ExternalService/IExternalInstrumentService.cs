@@ -10,9 +10,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
          string Token { get; set; }
 
          bool UpdateInstrumentList();
-        ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model);
-        ResultModel<InstrumentPriceDetails>   Price(SelectInstrumentDetails model);
-        ResultModel<Details> Details(SelectInstrumentDetails model);
+        ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(string NscCode, long InstrumentId);
+        ResultModel<InstrumentPriceDetails>   Price(string NscCode);
+        ResultModel<Details> Details(long InstrumentId);
        // InstrumentStates States(Instrument model);
        void StartConsume();
     }

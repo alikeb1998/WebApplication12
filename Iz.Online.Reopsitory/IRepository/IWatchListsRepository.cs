@@ -19,9 +19,8 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model);
         ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
         ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
-        AppConfigs GetAppConfigs(string key);
-
+        
         ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
-        ResultModel<long> GetInstrumentId(string nscCode);
+        
     }
 }

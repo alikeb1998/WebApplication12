@@ -18,7 +18,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     public class ExternalUserService : BaseService, IExternalUserService
     {
 
-        public ExternalUserService(IBaseRepository baseRepository) : base(baseRepository)
+        public ExternalUserService(IBaseRepository baseRepository) : base(baseRepository, ServiceProvider.Oms)
         {
         }
 
@@ -60,6 +60,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<LogOut>(result);
         }
 
-       
+        public ResultModel<model.CustomerInfo> CustomerInfo()
+        {
+            return new ResultModel<model.CustomerInfo>(new model.CustomerInfo(){ KafkaId = "KafkaUserId"});
+
+            var result = HttpGetRequest<model.CustomerInfo>("???");
+
+            return new ResultModel<model.CustomerInfo>(result);
+        }
     }
 }

@@ -16,57 +16,38 @@ namespace Iz.Online.Services.Services
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
         public IExternalInstrumentService _externalInstrumentsService { get; }
-        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService)
+        private readonly ICacheService _cacheService;
+        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService,ICacheService cacheService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
+            _cacheService= cacheService;
         }
 
 
-
-        public ResultModel<List<Instruments>> Instruments()
-        {
-            return _instrumentsRepository.GetInstrumentsList();
-        }
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
-
-            var ins = _instrumentsRepository.GetInstrumentsList();
-
-            if (ins.StatusCode != 200 || ins.Model == null)
-                return new ResultModel<List<InstrumentList>>(null, ins.StatusCode == 200, ins.Message, ins.StatusCode);
-
-            return new ResultModel<List<InstrumentList>>(ins.Model.Select(x => new InstrumentList()
-            {
-                Id = x.Id,
-                Name = x.SymbolName.EndsWith("1") ? x.SymbolName.Substring(0, x.SymbolName.Length - 1) : x.SymbolName,
-                FullName = x.CompanyName,
-                NscCode = x.Code,//
-                Bourse = x.Bourse,//
-                InstrumentId = x.InstrumentId,//
-                Tick = x.Tick,
-                BuyCommissionRate = x.BuyCommisionRate,
-                SellCommissionRate = x.SellCommisionRate,
-
-            }).ToList());
-
+           var result =  _cacheService.InstrumentData();
+            return new ResultModel<List<InstrumentList>>(result);
+            
         }
 
 
-        public ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model)
+        public ResultModel<InstrumentDetail> Detail(int instrumentId)
         {
             var result = new InstrumentDetail();
+            var instrumentDetails = _cacheService.InstrumentData(instrumentId);
 
 
-            var detail = _externalInstrumentsService.Details(model);
+            var detail = _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
             if (!detail.IsSuccess || detail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, detail.StatusCode==200, detail.Message, detail.StatusCode);
 
-            var priceDetail = _externalInstrumentsService.Price(model);
+            var priceDetail = _externalInstrumentsService.Price(instrumentDetails.NscCode);
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
-                return new ResultModel<InstrumentDetail>(null, priceDetail.StatusCode==200, priceDetail.Message, priceDetail.StatusCode);
-
-            var bestLimit = _externalInstrumentsService.BestLimits(new SelectedInstrument() { NscCode = model.NscCode });
+                return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
+            
+            var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode , instrumentDetails.InstrumentId);
             if (!bestLimit.IsSuccess || bestLimit.Model == null)
                 return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode==200, bestLimit.Message, bestLimit.StatusCode);
 
@@ -124,9 +105,22 @@ namespace Iz.Online.Services.Services
             return _instrumentsRepository.GetInstrumentComment(model);
         }
 
-        public ResultModel<BestLimits> BestLimits(SelectedInstrument model)
+        public void StartConsume()
         {
-           return _externalInstrumentsService.BestLimits(model);
+            _externalInstrumentsService.StartConsume();
+        }
+
+        public ResultModel<BestLimits> BestLimits(int InstrumentId)
+        {
+           var instrumentDetails =  _cacheService.InstrumentData(InstrumentId);
+       
+           return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode , instrumentDetails.InstrumentId);
+        }
+
+        public bool UpdateInstrumentsDb()
+        {
+           return _externalInstrumentsService.UpdateInstrumentList();
+
         }
     }
 

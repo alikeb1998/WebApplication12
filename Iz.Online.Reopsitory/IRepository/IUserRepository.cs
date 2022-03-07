@@ -5,17 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.Entities;
+using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.ShareModels;
 using Izi.Online.ViewModels.Users;
 
 namespace Iz.Online.Reopsitory.IRepository
 {
     public interface IUserRepository : IBaseRepository
     {
-        List<UsersHubIds> GetUserHubs(string userId);
+        CustomerInfo GetUserHubs(string userId);
     
-        List<AppConfigs> GetAppConfigs();
         string GetUserLocalToken(string omsId, string omsToken);
-        void SetUserHub(string UserId, string hubId ,string sessionId);
         void DeleteConnectionId(string connectionId);
+        bool SetUserInfo(CustomerInfo model);
+        Izi.Online.ViewModels.AppConfigs ConfigData(string key);
+        List<Izi.Online.ViewModels.AppConfigs> ConfigData();
     }
 }

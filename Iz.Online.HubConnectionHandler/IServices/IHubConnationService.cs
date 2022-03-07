@@ -16,7 +16,7 @@ namespace Iz.Online.HubConnectionHandler.IServices
     public interface IHubConnationService
     {
 
-        List<UsersHubIds> UserHubsList(string userId);
+        CustomerInfo UserHubsList(string userId);
         void DeleteConnectionId(string connectionId);
     }
 }
