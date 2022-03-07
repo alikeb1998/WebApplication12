@@ -16,9 +16,12 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model);
         ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
         ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
-        ResultModel<long> GetInstrumentId(string nscCode);
+        //ResultModel<long> GetInstrumentId(int InstrumentId);
 
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
+      
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
+        InstrumentList InstrumentData(int instrumentId);
+        List<InstrumentList> InstrumentData();
     }
 }

@@ -18,7 +18,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     public class ExternalUserService : BaseService, IExternalUserService
     {
 
-        public ExternalUserService(IBaseRepository baseRepository) : base(baseRepository)
+        public ExternalUserService(IBaseRepository baseRepository) : base(baseRepository, ServiceProvider.Oms)
         {
         }
 

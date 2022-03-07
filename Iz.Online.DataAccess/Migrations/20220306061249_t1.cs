@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Iz.Online.DataAccess.Migrations
 {
-    public partial class _1 : Migration
+    public partial class t1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,7 +32,10 @@ namespace Iz.Online.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    OmsId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OmsToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LocalToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TokenExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

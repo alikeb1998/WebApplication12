@@ -27,7 +27,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         
 
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService  
-            , IHubUserService hubUserService) : base(instrumentsRepository)
+            , IHubUserService hubUserService ) : base(instrumentsRepository, ServiceProvider.Oms)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
@@ -129,21 +129,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _hubUserService.CreateAllConsumers();
         }
 
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(string NscCode , long InstrumentId)
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit(model.NscCode));
+            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit(NscCode));
 
-            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{model.NscCode}");
+            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
 
-            var detail = Details(new SelectInstrumentDetails()
-            {
-                InstrumentId = (int)_instrumentsRepository.GetInstrumentId(model.NscCode).Model
-            });
-
+            var detail = Details(InstrumentId);
             if (detail.Model == null || detail.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
 
@@ -215,7 +211,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             foreach (var order in activeOrders.Model.Orders)
             {
 
-                if (model.NscCode == order.instrument.code)
+                if (NscCode == order.instrument.code)
                 {
                     result.orderRow1.HasOrderBuy = !result.orderRow1.HasOrderBuy ? order.price == result.orderRow1.priceBestBuy : true;
                     result.orderRow2.HasOrderBuy = !result.orderRow2.HasOrderBuy ? order.price == result.orderRow2.priceBestBuy : true;
@@ -238,17 +234,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 
-        public ResultModel<InstrumentPriceDetails> Price(SelectInstrumentDetails model)
+        public ResultModel<InstrumentPriceDetails> Price(string NscCode)
         {
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{model.NscCode}");
+            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
 
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<Details> Details(SelectInstrumentDetails model)
+        public ResultModel<Details> Details(long InstrumentId)
         {
-            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{model.InstrumentId}");
+            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
 
 
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);

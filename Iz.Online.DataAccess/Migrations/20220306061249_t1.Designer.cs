@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Iz.Online.DataAccess.Migrations
 {
     [DbContext(typeof(OnlineBackendDbContext))]
-    [Migration("20220223114920_local")]
-    partial class local
+    [Migration("20220306061249_t1")]
+    partial class t1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

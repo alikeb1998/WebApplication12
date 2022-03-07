@@ -27,7 +27,6 @@ namespace Iz.Online.Services.Services
         public IExternalUserService _externalUserService { get; }
 
 
-
         public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService)
         {
             _userRepository = userRepository;
@@ -119,12 +118,7 @@ namespace Iz.Online.Services.Services
 
         public List<AppConfigs> AppConfigs()
         {
-            return _userRepository.GetAppConfigs().Select(x => new Izi.Online.ViewModels.AppConfigs()
-            {
-                Description = x.Description,
-                Key = x.Key,
-                Value = x.Value
-            }).ToList();
+           return _userRepository.ConfigData();
         }
 
         public ResultModel<string> GetUserLocalToken(string token)
@@ -148,12 +142,6 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<bool> SetUserHub(string token, string hubId)
         {
-            //var deserializedToken = CastJwtSecurityTokenHandler(token);
-            //var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
-            //var session = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Session").Value;
-
-            //_userRepository.SetUserHub(omsId, hubId, session);
-
             var CustomerInfo = _externalUserService.CustomerInfo();
             if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.KafkaId != null)
             {
@@ -213,6 +201,8 @@ namespace Iz.Online.Services.Services
             var res = _externalUserService.LogOut().StatusCode == 200;
             return new ResultModel<bool>(res);
         }
+
+       
         private List<Asset> Filter(List<Asset> list, PortfoFilter filter)
         {
             var report = new PortfolioReport()

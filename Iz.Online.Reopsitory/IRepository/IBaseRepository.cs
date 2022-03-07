@@ -12,7 +12,6 @@ namespace Iz.Online.Reopsitory.IRepository
 
         string GetOmsToken(string token);
         void LogException(Exception exception);
-        AppConfigs GetAppConfigs(string key);
         bool LocalTokenIsValid(string token);
     }
 }

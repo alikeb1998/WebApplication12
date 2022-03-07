@@ -19,7 +19,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         
 
 
-        public ExternalTradeService(IBaseRepository baseRepository) : base(baseRepository)
+        public ExternalTradeService(IBaseRepository baseRepository) : base(baseRepository, ServiceProvider.Oms)
         {
            
         }

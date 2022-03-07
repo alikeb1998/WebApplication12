@@ -13,13 +13,14 @@ namespace Iz.Online.Services.IServices
     public interface IInstrumentsService
     {
         IExternalInstrumentService _externalInstrumentsService { get;  }
-        ResultModel<List<Instruments>> Instruments();
+
         ResultModel<List<InstrumentList>> InstrumentList();
-        ResultModel<InstrumentDetail> Detail(SelectInstrumentDetails model);
+        ResultModel<InstrumentDetail> Detail(int instrumentId);
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
 
         void StartConsume();
-        ResultModel<BestLimits> BestLimits(SelectedInstrument model);
+        ResultModel<BestLimits> BestLimits(int InstrumentId);
+        bool UpdateInstrumentsDb();
     }
 }

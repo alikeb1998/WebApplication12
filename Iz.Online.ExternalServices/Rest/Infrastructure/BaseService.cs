@@ -14,28 +14,17 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
     {
         public string Token { get; set; }
 
-        public string apiBaseAddress = "http://192.168.72.54:8080/";
+        private readonly string apiBaseAddress = "http://192.168.72.54:8080/";
 
         private readonly IBaseRepository _baseRepository;
+        private readonly ServiceProvider provider;
 
-
-        public BaseService(IBaseRepository baseRepository)
+        public BaseService(IBaseRepository baseRepository, ServiceProvider provider =ServiceProvider.Oms)
         {
             _baseRepository = baseRepository;
-
+            if (provider == ServiceProvider.BackOffice)
+                apiBaseAddress = "oms api address ... ";
         }
-
-        //public string getToken()
-        //{
-
-        //    //var client = new RestClient($@"http://192.168.72.112:5554/V1/User/token/get");
-        //    //client.Timeout = -1;
-        //    //var request = new RestRequest(Method.GET);
-        //    //IRestResponse response = client.Execute(request);
-        //    //var token = JsonConvert.DeserializeObject<string>(response.Content);
-        //    var res = Iz.Online.Files.ShareValue.Token;
-        //    return res;
-        //}
 
         public T HttpGetRequest<T>(string RequestAddress)
         {
@@ -46,14 +35,14 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("Authorization", Token);
                 IRestResponse response = client.Execute(request);
-                
+
                 if (string.IsNullOrEmpty(response.Content))
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
                     {
                         clientMessage = "خطا در برقراری ارتباط با سرویس",
                         code = 500,
                         message = "خطا در برقراری ارتباط با سرویس",
-                        statusCode =500
+                        statusCode = 500
                     }));
 
                 var setting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
@@ -86,7 +75,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
-               
+
                 if (string.IsNullOrEmpty(response.Content))
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
                     {
@@ -166,7 +155,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", SerializedObject, ParameterType.RequestBody);
                 IRestResponse response = client.Execute(request);
-                
+
                 if (string.IsNullOrEmpty(response.Content))
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
                     {
@@ -195,7 +184,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-      
+
     }
 
 }

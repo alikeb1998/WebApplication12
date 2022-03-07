@@ -19,15 +19,11 @@ namespace Iz.Online.Services.IServices
     {
         IExternalUserService _externalUserService { get; }
         ResultModel<bool> SetUserHub(string token, string hubId);
-
-        //CustomerInfo UserHubsList(string UserId);
         ResultModel<List<Asset>> AllAssets();
         ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter);
         ResultModel<Wallet>  Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
-
         ResultModel<string> GetUserLocalToken(string  omsId);
-
         ResultModel<Captcha> Captcha();
         ResultModel<OtpResult> SendOtp(Credentials credentials);
         ResultModel<CheckedOtp> CheckOtp(Otp otp);
