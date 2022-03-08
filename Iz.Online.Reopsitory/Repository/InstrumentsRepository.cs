@@ -203,7 +203,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 var entity = _db.InstrumentComments.FirstOrDefault(x =>
-                    x.CustomerId == model.CustomerId && x.InstrumentId == model.Id);
+                    x.CustomerId == model.CustomerId && x.InstrumentId == model.InstrumentId);
 
                 if (entity != null)
                 {
@@ -215,7 +215,7 @@ namespace Iz.Online.Reopsitory.Repository
                 {
                     _db.InstrumentComments.Add(new InstrumentComment()
                     {
-                        InstrumentId = model.Id,
+                        InstrumentId = model.InstrumentId,
                         CommentText = model.Comment,
                         Id = Guid.NewGuid().ToString(),
                         CustomerId = model.CustomerId
@@ -235,7 +235,7 @@ namespace Iz.Online.Reopsitory.Repository
         public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
         {
             var entity = _db.InstrumentComments.FirstOrDefault(x =>
-                x.CustomerId == model.CustomerId && x.InstrumentId == model.Id);
+                x.CustomerId == model.CustomerId && x.InstrumentId == model.InstrumentId);
 
             if (entity != null)
                 return new ResultModel<string>(entity.CommentText);

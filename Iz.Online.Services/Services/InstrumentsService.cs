@@ -16,20 +16,32 @@ namespace Iz.Online.Services.Services
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
         public IExternalInstrumentService _externalInstrumentsService { get; }
+        public IExternalOrderService _externalOrderService { get; }
+
         private readonly ICacheService _cacheService;
-        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalInstrumentService externalInstrumentsService,ICacheService cacheService)
+        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalInstrumentService externalInstrumentsService, ICacheService cacheService)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
-            _cacheService= cacheService;
+            _cacheService = cacheService;
+            _externalOrderService = externalOrderService;
         }
 
 
         public ResultModel<List<InstrumentList>> InstrumentList()
         {
-           var result =  _cacheService.InstrumentData();
+            var result = _cacheService.InstrumentData().Select(x => new InstrumentList()
+            {
+                Bourse = x.Bourse,
+                BuyCommissionRate = x.BuyCommissionRate,
+                FullName = x.FullName,
+                Name = x.Name,
+                Id = x.Id,
+                SellCommissionRate = x.SellCommissionRate,
+                Tick = x.Tick
+            }).ToList();
             return new ResultModel<List<InstrumentList>>(result);
-            
+
         }
 
 
@@ -41,15 +53,15 @@ namespace Iz.Online.Services.Services
 
             var detail = _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
             if (!detail.IsSuccess || detail.Model == null)
-                return new ResultModel<InstrumentDetail>(null, detail.StatusCode==200, detail.Message, detail.StatusCode);
+                return new ResultModel<InstrumentDetail>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
 
             var priceDetail = _externalInstrumentsService.Price(instrumentDetails.NscCode);
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
-            
-            var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode , instrumentDetails.InstrumentId);
+
+            var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
             if (!bestLimit.IsSuccess || bestLimit.Model == null)
-                return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode==200, bestLimit.Message, bestLimit.StatusCode);
+                return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode == 200, bestLimit.Message, bestLimit.StatusCode);
 
             result.closingPrice = priceDetail.Model.closingPrice.Value;
             result.firstPrice = priceDetail.Model.firstPrice == null ? 0 : priceDetail.Model.firstPrice.Value;
@@ -112,14 +124,14 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<BestLimits> BestLimits(int InstrumentId)
         {
-           var instrumentDetails =  _cacheService.InstrumentData(InstrumentId);
-       
-           return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode , instrumentDetails.InstrumentId);
+            var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
+
+            return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }
 
         public bool UpdateInstrumentsDb()
         {
-           return _externalInstrumentsService.UpdateInstrumentList();
+            return _externalInstrumentsService.UpdateInstrumentList();
 
         }
     }

@@ -32,7 +32,7 @@ namespace Iz.Online.Services.Services
 
             foreach (var ins in wl.Model.Instruments)
             {
-               var instrumentDetails =  _cache.InstrumentData((int) ins.InstrumentId);
+               var instrumentDetails =  _cache.InstrumentData((int) ins.Id);
                 var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
                 var price = _externalInstrumentsService.Price(instrumentDetails.NscCode);
 

@@ -9,7 +9,7 @@ namespace Izi.Online.ViewModels.Instruments
 {
     public class GetInstrumentComment:ViewBaseModel
     {
-        public int Id { get; set; }
+        public int InstrumentId { get; set; }
 
     }
 }

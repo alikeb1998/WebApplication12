@@ -13,6 +13,7 @@ namespace Iz.Online.Services.IServices
     public interface IInstrumentsService
     {
         IExternalInstrumentService _externalInstrumentsService { get;  }
+        IExternalOrderService _externalOrderService { get;  }
 
         ResultModel<List<InstrumentList>> InstrumentList();
         ResultModel<InstrumentDetail> Detail(int instrumentId);

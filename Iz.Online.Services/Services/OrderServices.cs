@@ -31,14 +31,16 @@ namespace Iz.Online.Services.Services
        
 
        public IExternalOrderService _externalOrderService { get; }
+       public ICacheService _cacheService { get; }
 
 
         //private readonly IPushService _pushService;
-        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService)
+        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService,ICacheService cacheService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
             //_pushService = pushService;
+            _cacheService = cacheService;
         }
 
 
@@ -46,7 +48,8 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
         {
-
+        var instrumentData =     _cacheService.InstrumentData((int) addOrderModel.InstrumentId);
+            
             //09:00
             var dbEntity = new db.Orders()
             {
@@ -63,7 +66,7 @@ namespace Iz.Online.Services.Services
                 Price = addOrderModel.Price,
                 CustomerId = addOrderModel.CustomerId,
             };
-
+            addOrderModel.InstrumentId = instrumentData.InstrumentId;
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)

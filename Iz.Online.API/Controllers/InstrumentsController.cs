@@ -26,14 +26,14 @@ namespace Iz.Online.API.Controllers
         public InstrumentsController(IInstrumentsService instrumentsService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instrumentsService = instrumentsService;
-            _instrumentsService._externalInstrumentsService.Token = _token_;
+            _instrumentsService._externalInstrumentsService.Token = _instrumentsService._externalOrderService.Token = _token_;
             _instrumentsService.StartConsume();
 
         }
 
         #endregion
 
-     
+
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
         {
@@ -51,7 +51,7 @@ namespace Iz.Online.API.Controllers
 
 
 
-        [HttpPost("BestLimits")]
+        [HttpGet("BestLimits")]
         public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody] int InstrumentId)
         {
             //model.InstrumentId = "IRO1FOLD0001";
@@ -60,7 +60,7 @@ namespace Iz.Online.API.Controllers
         }
 
         //get instrument details as prices or states and so on.
-        [HttpPost("Detail")]
+        [HttpGet("Detail")]
         public ResultModel<InstrumentDetail> Detail([FromBody] int instrumentId)
         {
             //model.InstrumentId = 658;
