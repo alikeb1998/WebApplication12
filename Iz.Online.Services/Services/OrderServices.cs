@@ -358,10 +358,14 @@ namespace Iz.Online.Services.Services
                     var a = list.Where(x => x.InstrumentId == f).ToList();
                     instrumentList.AddRange(a);
                 }
-                else
-                {
-                    instrumentList.AddRange(list);
-                }
+                //else
+                //{
+                //    instrumentList.AddRange(list);
+                //}
+            }
+            if (instrumentList.Count == 0)
+            {
+                instrumentList.AddRange(list);
             }
 
             //if (filter.InstrumentId != 0)
