@@ -28,7 +28,7 @@ namespace Iz.Online.Services.Services
         public IExternalUserService _externalUserService { get; }
 
 
-        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService,ICacheService cacheService)
+        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService, ICacheService cacheService)
         {
             _userRepository = userRepository;
             _externalUserService = externalUserService;
@@ -40,10 +40,7 @@ namespace Iz.Online.Services.Services
             var assets = _externalUserService.GetAllAssets();
             var instruments = _cacheService.InstrumentData();
 
-            if (!assets.IsSuccess)
-                return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
-
-            if (assets.Model.Assets == null)
+            if (!assets.IsSuccess || assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
 
             var allAssets = assets.Model.Assets.Select(x => new Asset()
@@ -63,19 +60,19 @@ namespace Iz.Online.Services.Services
 
             var result = from aset in allAssets
                          join instrument in instruments on aset.InstrumentId equals instrument.InstrumentId
-                select new Asset()
-                {
-                    Name = aset.Name,
-                    LastPrice = aset.LastPrice,
-                    TradeableQuantity = aset.TradeableQuantity,
-                    Gav = aset.Gav,
-                    AvgPrice = aset.AvgPrice,
-                    FianlAmount = aset.FianlAmount,
-                    ProfitAmount = aset.ProfitAmount,
-                    ProfitPercent = aset.ProfitPercent,
-                    SellProfit = aset.SellProfit,
-                    InstrumentId = (int)instrument.Id,
-                };
+                         select new Asset()
+                         {
+                             Name = aset.Name,
+                             LastPrice = aset.LastPrice,
+                             TradeableQuantity = aset.TradeableQuantity,
+                             Gav = aset.Gav,
+                             AvgPrice = aset.AvgPrice,
+                             FianlAmount = aset.FianlAmount,
+                             ProfitAmount = aset.ProfitAmount,
+                             ProfitPercent = aset.ProfitPercent,
+                             SellProfit = aset.SellProfit,
+                             InstrumentId = (int)instrument.Id,
+                         };
 
 
             return new ResultModel<List<Asset>>(result.ToList());
@@ -131,7 +128,7 @@ namespace Iz.Online.Services.Services
 
         public List<AppConfigs> AppConfigs()
         {
-           return _userRepository.ConfigData();
+            return _userRepository.ConfigData();
         }
 
         public ResultModel<string> GetUserLocalToken(string token)
@@ -166,7 +163,7 @@ namespace Iz.Online.Services.Services
                 });
                 if (!setResult)
                     return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 500);
-                
+
                 return new ResultModel<bool>(true);
             }
 
@@ -215,7 +212,7 @@ namespace Iz.Online.Services.Services
             return new ResultModel<bool>(res);
         }
 
-       
+
         private List<Asset> Filter(List<Asset> list, PortfoFilter filter)
         {
             var report = new PortfolioReport()
