@@ -16,16 +16,17 @@ namespace Iz.Online.Services.Services
     {
         public IExternalTradeService _externalTradeService { get; }
         public string Token { get; set; }
-
-        public TradeService(IExternalTradeService externalTradeService)
+        private readonly ICacheService _cacheService;
+        public TradeService(IExternalTradeService externalTradeService,ICacheService cacheService)
         {
             _externalTradeService = externalTradeService;
-
+            _cacheService = cacheService;
         }
         
 
         public ResultModel<List<Trade>> Trades()
         {
+            var instruments = _cacheService.InstrumentData();
 
             var trades = _externalTradeService.Trades();
 
@@ -39,13 +40,25 @@ namespace Iz.Online.Services.Services
                 State = x.Order.state,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
-                TradedAt = x.TradedAt
-                  ,
+                TradedAt = x.TradedAt,
                 InstrumentId = x.Order.instrument.id,
-                NscCode = x.Order.instrument.code
+                //NscCode = x.Order.instrument.code
             }).ToList();
 
-            return new ResultModel<List<Trade>>(allTrades);
+            var result = from trade in allTrades
+                join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
+                select new Trade()
+                {
+                    Name = trade.Name,
+                    Price = trade.Price,
+                    State = trade.State,
+                    OrderSide = trade.OrderSide,
+                    ExecutedQ = trade.ExecutedQ,
+                    TradedAt = trade.TradedAt,
+                    InstrumentId =(int) instrument.Id,
+                };
+
+            return new ResultModel<List<Trade>>(result.ToList());
         }
 
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)

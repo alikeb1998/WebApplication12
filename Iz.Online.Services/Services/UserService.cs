@@ -24,26 +24,21 @@ namespace Iz.Online.Services.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IHubUserService _hubUserService;
+        private readonly ICacheService _cacheService;
         public IExternalUserService _externalUserService { get; }
 
 
-        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService)
+        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService,ICacheService cacheService)
         {
             _userRepository = userRepository;
             _externalUserService = externalUserService;
-            _hubUserService = hubUserService;
+            _cacheService = cacheService;
         }
-
-        //public CustomerInfo UserHubsList(string userId)
-        //{
-
-        //    return _userRepository.GetUserHubs(userId);
-
-        //}
 
         public ResultModel<List<Asset>> AllAssets()
         {
             var assets = _externalUserService.GetAllAssets();
+            var instruments = _cacheService.InstrumentData();
 
             if (!assets.IsSuccess)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
@@ -51,7 +46,7 @@ namespace Iz.Online.Services.Services
             if (assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
 
-            var result = assets.Model.Assets.Select(x => new Asset()
+            var allAssets = assets.Model.Assets.Select(x => new Asset()
             {
                 Name = x.Instrument.name,
                 LastPrice = x.LastPrice,
@@ -63,9 +58,27 @@ namespace Iz.Online.Services.Services
                 ProfitPercent = x.ProfitPercent,
                 SellProfit = x.SellProfit,
                 InstrumentId = x.Instrument.id,
-                NscCode = x.Instrument.code
+                //NscCode = x.Instrument.code
             }).ToList();
-            return new ResultModel<List<Asset>>(result);
+
+            var result = from aset in allAssets
+                         join instrument in instruments on aset.InstrumentId equals instrument.InstrumentId
+                select new Asset()
+                {
+                    Name = aset.Name,
+                    LastPrice = aset.LastPrice,
+                    TradeableQuantity = aset.TradeableQuantity,
+                    Gav = aset.Gav,
+                    AvgPrice = aset.AvgPrice,
+                    FianlAmount = aset.FianlAmount,
+                    ProfitAmount = aset.ProfitAmount,
+                    ProfitPercent = aset.ProfitPercent,
+                    SellProfit = aset.SellProfit,
+                    InstrumentId = (int)instrument.Id,
+                };
+
+
+            return new ResultModel<List<Asset>>(result.ToList());
 
         }
 

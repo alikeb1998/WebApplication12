@@ -106,12 +106,14 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<List<ActiveOrder>> AllActive()
         {
+            var instruments = _cacheService.InstrumentData();
+          
             var activeOrders = _externalOrderService.GetAllActives();
             if (activeOrders.StatusCode != 200|| activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<List<ActiveOrder>>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
            
-            var result = activeOrders.Model.Orders.Select(x => new ActiveOrder()
+            var allActiveOrders = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = (long)x.quantity,
                 ExecutedQ = (long)x.executedQ,
@@ -124,17 +126,35 @@ namespace Iz.Online.Services.Services
                 CreatedAt = x.createdAt,
                 Price = x.price,
                 State = x.state,
-                // StateText = EnumHelper.OrderStates(x.state),
-
                 NscCode = x.instrument.code,
                 InstrumentId = x.instrument.id,
-
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
 
+            var result = from trade in allActiveOrders
+                         join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
+                select new ActiveOrder()
+                {
+                    Quantity = trade.Quantity,
+                    ExecutedQ = trade.ExecutedQ,
+                    InstrumentName = trade.InstrumentName,
+                    OrderSide = trade.OrderSide,
+                    OrderSideText = trade.OrderSideText,
+                    RemainedQ = trade.RemainedQ,
+                    ValidityType = trade.ValidityType,
+                    OrderQtyWait = trade.OrderQtyWait,
+                    CreatedAt = trade.CreatedAt,
+                    Price = trade.Price,
+                    State = trade.State,
+                    NscCode = trade.NscCode,
+                    ValidityInfo = trade.ValidityInfo,
+                    ExecutePercent = trade.ExecutePercent,
+                    InstrumentId = (int)instrument.Id,
+                    StateText = trade.StateText
+                };
 
-            return new ResultModel<List<ActiveOrder>>(result);
+            return new ResultModel<List<ActiveOrder>>(result.ToList());
         }
         public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
         {
