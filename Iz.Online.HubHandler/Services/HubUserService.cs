@@ -154,7 +154,7 @@ namespace Iz.Online.HubHandler.Services
         public async Task PushOrderAdded()
         {
             //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
-            _hubContext.Clients.All.SendCoreAsync("OnRefreshOrders", new object[] { model });
+            //_hubContext.Clients.All.SendCoreAsync("OnRefreshOrders", new object[] { model });
 
         }
 
@@ -200,10 +200,10 @@ namespace Iz.Online.HubHandler.Services
 
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
-                        model1.customer
-                        var hubs = _hubConnationService.UserHubsList("KafkaUserId");
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+                        //model1.customer
+                        //var hubs = _hubConnationService.UserHubsList("KafkaUserId");
+                        //if (hubs != null)
+                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
 
                         _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value});
 
