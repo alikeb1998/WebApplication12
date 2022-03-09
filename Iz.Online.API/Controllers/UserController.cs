@@ -176,7 +176,5 @@ namespace Iz.Online.API.Controllers
                 return e.Message.ToString() + " ___ " + e.InnerException.Message.ToString();
             }
         }
-        
-
     }
 }
