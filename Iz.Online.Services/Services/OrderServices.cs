@@ -344,10 +344,12 @@ namespace Iz.Online.Services.Services
                 filter.To = a[0].CreatedAt;
             }
 
+            
+            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From)>0).ToList();
 
-            list = list.Where
-            (x => x.CreatedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.CreatedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
-            .OrderByDescending(x => x.CreatedAt).ToList();
+            //list = list.Where
+            //(x => x.CreatedAt.Ticks - DateTime.MinValue.Ticks >= filter.From.Ticks - DateTime.MinValue.Ticks && x.CreatedAt.Ticks - DateTime.MinValue.Ticks <= filter.To.Ticks - DateTime.MinValue.Ticks)
+            //.OrderByDescending(x => x.CreatedAt).ToList();
 
             var instrumentList = new List<AllOrder>();
 
