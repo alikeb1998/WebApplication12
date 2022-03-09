@@ -25,17 +25,17 @@ namespace Iz.Online.Services.Services
     {
 
         #region ctor
-      
+
 
         private readonly IOrderRepository _orderRepository;
-       
 
-       public IExternalOrderService _externalOrderService { get; }
-       public ICacheService _cacheService { get; }
+
+        public IExternalOrderService _externalOrderService { get; }
+        public ICacheService _cacheService { get; }
 
 
         //private readonly IPushService _pushService;
-        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService,ICacheService cacheService)
+        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, ICacheService cacheService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
@@ -48,8 +48,8 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
         {
-        var instrumentData =     _cacheService.InstrumentData((int) addOrderModel.InstrumentId);
-            
+            var instrumentData = _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
+
             //09:00
             var dbEntity = new db.Orders()
             {
@@ -70,7 +70,7 @@ namespace Iz.Online.Services.Services
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)
-                return new ResultModel<AddOrderResult>(null, addOrderResult.StatusCode==200, addOrderResult.Message, addOrderResult.StatusCode );
+                return new ResultModel<AddOrderResult>(null, addOrderResult.StatusCode == 200, addOrderResult.Message, addOrderResult.StatusCode);
 
             dbEntity.OmsResponseDate = DateTime.Now;
             dbEntity.OrderId = addOrderResult.Model.order.id;
@@ -79,7 +79,7 @@ namespace Iz.Online.Services.Services
 
             var allOrders = _externalOrderService.GetAll();
             if (!allOrders.IsSuccess)
-                return new ResultModel<AddOrderResult>(null, allOrders.StatusCode==200, allOrders.Message, allOrders.StatusCode);
+                return new ResultModel<AddOrderResult>(null, allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
             //09:02
 
             var result =
@@ -95,7 +95,7 @@ namespace Iz.Online.Services.Services
 
             _orderRepository.Add(dbEntity);
 
-         
+
 
             return new ResultModel<AddOrderResult>(new AddOrderResult()
             {
@@ -107,12 +107,12 @@ namespace Iz.Online.Services.Services
         public ResultModel<List<ActiveOrder>> AllActive()
         {
             var instruments = _cacheService.InstrumentData();
-          
+
             var activeOrders = _externalOrderService.GetAllActives();
-            if (activeOrders.StatusCode != 200|| activeOrders.Model.Orders.Count == 0)
+            if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<List<ActiveOrder>>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
-           
+
             var allActiveOrders = activeOrders.Model.Orders.Select(x => new ActiveOrder()
             {
                 Quantity = (long)x.quantity,
@@ -132,8 +132,30 @@ namespace Iz.Online.Services.Services
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
-            
-            return new ResultModel<List<ActiveOrder>>(allActiveOrders);
+
+            var result = from trade in allActiveOrders
+                         join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
+                select new ActiveOrder()
+                {
+                    Quantity = trade.Quantity,
+                    ExecutedQ = trade.ExecutedQ,
+                    InstrumentName = trade.InstrumentName,
+                    OrderSide = trade.OrderSide,
+                    OrderSideText = trade.OrderSideText,
+                    RemainedQ = trade.RemainedQ,
+                    ValidityType = trade.ValidityType,
+                    OrderQtyWait = trade.OrderQtyWait,
+                    CreatedAt = trade.CreatedAt,
+                    Price = trade.Price,
+                    State = trade.State,
+                    NscCode = trade.NscCode,
+                    ValidityInfo = trade.ValidityInfo,
+                    ExecutePercent = trade.ExecutePercent,
+                    InstrumentId = (int)instrument.Id,
+                    StateText = trade.StateText
+                };
+
+            return new ResultModel<List<ActiveOrder>>(result.ToList());
         }
         public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
         {
@@ -187,8 +209,8 @@ namespace Iz.Online.Services.Services
         {
             var allOrders = _externalOrderService.GetAll();
             var result = allOrders.Model.orders.Select(x => new AllOrder()
-            { 
-                CreatedAt = x.CreatedAt, 
+            {
+                CreatedAt = x.CreatedAt,
                 ExecutedQ = x.ExecutedQ,
                 Id = x.id,
                 price = x.price,
@@ -227,9 +249,9 @@ namespace Iz.Online.Services.Services
             });
 
             var result = new UpdatedOrder();
-            if (respond.StatusCode != 200 || respond.Model== null)
+            if (respond.StatusCode != 200 || respond.Model == null)
                 return new ResultModel<UpdatedOrder>(null, respond.StatusCode == 200, respond.Message, respond.StatusCode);
-            
+
             return new ResultModel<UpdatedOrder>(result);
         }
 
@@ -310,7 +332,7 @@ namespace Iz.Online.Services.Services
         }
         private List<AllOrder> AllOrdersFilter(List<AllOrder> list, AllOrderCustomFilter filter)
         {
-           
+
 
             if (filter.From == DateTime.MinValue)
             {
@@ -323,25 +345,38 @@ namespace Iz.Online.Services.Services
                 filter.To = a[0].CreatedAt;
             }
 
+            
+            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From)>0).ToList();
 
-            list= list.Where
-            (x => x.CreatedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.CreatedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
-            .OrderByDescending(x=>x.CreatedAt).ToList();
+            //list = list.Where
+            //(x => x.CreatedAt.Ticks - DateTime.MinValue.Ticks >= filter.From.Ticks - DateTime.MinValue.Ticks && x.CreatedAt.Ticks - DateTime.MinValue.Ticks <= filter.To.Ticks - DateTime.MinValue.Ticks)
+            //.OrderByDescending(x => x.CreatedAt).ToList();
 
             var instrumentList = new List<AllOrder>();
+
             foreach (var f in filter.InstrumentId)
             {
-                var a = list.Where(x => x.InstrumentId == f).ToList();
-                
-                instrumentList.AddRange(a);
-                    
+                if (f != 0)
+                {
+                    var a = list.Where(x => x.InstrumentId == f).ToList();
+                    instrumentList.AddRange(a);
+                }
+                //else
+                //{
+                //    instrumentList.AddRange(list);
+                //}
             }
+            if (instrumentList.Count == 0)
+            {
+                instrumentList.AddRange(list);
+            }
+
             //if (filter.InstrumentId != 0)
             //{
             //    list = list.Where(x=>x.InstrumentId==filter.InstrumentId).ToList();
             //}
 
-            if (filter.OrderSide!=0)
+            if (filter.OrderSide != 0)
             {
                 switch (filter.OrderSide)
                 {
@@ -356,7 +391,7 @@ namespace Iz.Online.Services.Services
             }
 
             if (!string.IsNullOrEmpty(filter.State))
-            {             
+            {
                 switch (filter.State)
                 {
                     case "انجام شده":
