@@ -151,8 +151,8 @@ namespace Iz.Online.HubHandler.Services
                 consumer.Subscribe($"{InstrumentId}-bestLimit");
                 while (true)
                 {
-
-                    var consumeResult = consumer.Consume();
+                    //Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
+                   var consumeResult = consumer.Consume();
                     var prices =
                         JsonConvert.DeserializeObject<OmsModels.ResponsModels.BestLimits.BestLimit>(consumeResult.Message.Value);
 
@@ -165,6 +165,53 @@ namespace Iz.Online.HubHandler.Services
             }
 
         }
+
+        /// <summary>
+        ///  topic=> {InstrumentId}-price
+        /// </summary>
+        /// <returns></returns>
+        public async Task PushPrice(string InstrumentId)
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                var c = 0;
+                consumer.Subscribe($"{InstrumentId}-price");
+                while (true)
+                {
+                    try
+                    {
+                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model1}-price", new object[] { model1, $"InstrumentId : '{model1}{c}'", " " });
+
+                        _hubContext.Clients.All.SendCoreAsync($"{model1}-price", new object[] { consumeResult.Message.Value });
+
+
+
+                        var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+            }
+
+
+
+        }
+
+
+
+        //// start auto
+
 
         /// <summary>
         /// topic => OrderTrade
@@ -181,7 +228,7 @@ namespace Iz.Online.HubHandler.Services
                     {
                         var consumeResult = consumer.Consume();
                         var t = consumeResult.Message.Value;
-                        _hubContext.Clients.All.SendCoreAsync("PushOrderAdded", new object[] { consumeResult.Message.Value });
+                        _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { consumeResult.Message.Value });
 
                     }
                     catch (Exception e)
@@ -191,35 +238,6 @@ namespace Iz.Online.HubHandler.Services
                 }
                 consumer.Close();
             }
-
-        }
-
-
-        public Task PushOrderState()
-        {
-
-
-            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
-            {
-
-                consumer.Subscribe($"CustomerWallet");
-                while (true)
-                {
-                    try
-                    {
-                        var consumeResult = consumer.Consume();
-                        var t = consumeResult.Message.Value;
-                        _hubContext.Clients.All.SendCoreAsync("OnChangeOrderState", new object[] { consumeResult.Message.Value });
-
-                    }
-                    catch (Exception e)
-                    {
-
-                    }
-                }
-                consumer.Close();
-            }
-
 
         }
 
@@ -374,9 +392,9 @@ namespace Iz.Online.HubHandler.Services
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
 
                         if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("CustomerWallet", new object[] { model1 });
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerWallet", new object[] { model1 });
 
-                        _hubContext.Clients.All.SendCoreAsync("CustomerWallet", new object[] { consumeResult.Message.Value });
+                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerWallet", new object[] { consumeResult.Message.Value });
 
 
 
@@ -413,9 +431,9 @@ namespace Iz.Online.HubHandler.Services
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
 
                         if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("CustomerPortfolioL", new object[] { model1 });
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
-                        _hubContext.Clients.All.SendCoreAsync("CustomerPortfolioL", new object[] { consumeResult.Message.Value });
+                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { consumeResult.Message.Value });
 
 
 
@@ -432,55 +450,21 @@ namespace Iz.Online.HubHandler.Services
             }
         }
 
-        /// <summary>
-        ///  topic=> {InstrumentId}-price
-        /// </summary>
-        /// <returns></returns>
-        public async Task PushPrice()
-        {
-            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
-            {
-
-                var c = 0;
-                consumer.Subscribe("{InstrumentId}-price");
-                while (true)
-                {
-                    try
-                    {
-                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
-                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
-
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model1}-price", new object[] { model1, $"InstrumentId : '{model1}{c}'", " " });
-
-                        _hubContext.Clients.All.SendCoreAsync($"{model1}-price", new object[] { consumeResult.Message.Value });
-
-
-
-                        var t = consumeResult.Message.Value;
-                    }
-                    catch (Exception e)
-                    {
-
-
-                    }
-                }
-                consumer.Close();
-            }
-
-
-          
-        }
         public async Task CreateAllConsumers()
         {
             if (ConsumerIsStar)
                 return;
 
-            await Task.WhenAll(PushOrderState(), PushTradeState(), PushOrderAdded());
+            Task.Run(() => PushTradeState());
+            Task.Run(() => PushOrderAdded());
+            Task.Run(() => PushCustomerPortfolio());
+            Task.Run(() => PushCustomerWallet());
+
+
             ConsumerIsStar = true;
         }
+
+       
     }
 
 }

@@ -61,7 +61,7 @@ namespace Iz.Online.Services.Services
                 ins.LastPrice = price.Model.lastPrice.Value;
                 var name = ins.SymbolName;
                 ins.SymbolName = name.EndsWith("1") ? name.Substring(0, ins.SymbolName.Length - 1) : name;
-                ins.InstrumentId = instrumentDetails.InstrumentId;
+                ins.InstrumentId = instrumentDetails.Id;
             }
 
             return wl;

@@ -18,9 +18,10 @@ namespace Iz.Online.HubHandler.IServices
         Task ConsumeRefreshInstrumentBestLimit(string InstrumentId);
         Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId);
         Task PushOrderAdded();
-        Task PushOrderState();
+      
         Task PushTradeState();
 
         Task CreateAllConsumers();
+        Task PushPrice(string InstrumentId);
     }
 }
