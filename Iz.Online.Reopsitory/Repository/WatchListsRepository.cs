@@ -27,7 +27,8 @@ namespace Iz.Online.Reopsitory.Repository
                 .Select(x => new WatchList()
                 {
                     Id = x.Id,
-                    WatchListName = x.WatchListName
+                    WatchListName = x.WatchListName,
+                    
                 }).ToList();
 
                 if (wl == null || wl.Count == 0)

@@ -74,6 +74,7 @@ namespace Iz.Online.Services.Services
             result.yesterdayPrice = priceDetail.Model.yesterdayPrice == null ? 0 : priceDetail.Model.yesterdayPrice.Value;
             result.highPrice = priceDetail.Model.maximumPrice == null ? 0 : (long)priceDetail.Model.maximumPrice;
             result.lowPrice = priceDetail.Model.minimumPrice == null ? 0 : (long)priceDetail.Model.minimumPrice;
+            
 
             var lastPrice = result.lastPrice;
             var yesterdayPrice = result.yesterdayPrice;
@@ -96,6 +97,7 @@ namespace Iz.Online.Services.Services
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
                 result.PriceMin = detail.Model.PriceMin;
+                
 
 
                 result.Tick = detail.Model.Tick;

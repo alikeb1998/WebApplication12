@@ -208,7 +208,5 @@ namespace Iz.Online.API.Controllers
             return _userService.GetUserLocalToken(token);
             //return new ResultModel<string>(Guid.NewGuid().ToString());
         }
-
-
     }
 }

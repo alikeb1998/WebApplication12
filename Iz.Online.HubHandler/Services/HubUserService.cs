@@ -13,8 +13,12 @@ namespace Iz.Online.HubHandler.Services
 {
 
     //topics =>
-    //CustomerWallet , CustomerPortfolioL  ,  OrderChange (active order tab ) ,
-    //OrderTrade  (today trades tab) , {InstrumentId}-bestLimit ,{InstrumentId}-price (details)
+    //OrderChange (active order tab ) ,\
+    //OrderTrade  (today trades tab) , \
+    //{InstrumentId}-bestLimit ,       \
+    //CustomerWallet , 
+    //CustomerPortfolioL  ,
+    //{InstrumentId}-price (details)
 
     public class HubUserService : IServices.IHubUserService
     {
@@ -35,6 +39,8 @@ namespace Iz.Online.HubHandler.Services
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
         }
+
+
         public async Task ConsumeRefreshInstrumentBestLimit(string InstrumentId)
         {
             var c = 0;
@@ -132,6 +138,9 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        /// <summary>
+        /// {InstrumentId}-bestLimit
+        /// </summary>
         public async Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId)
         {
             //InstrumentId = "IRO1FOLD0001"; // <= sample فولاد
@@ -157,13 +166,9 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
-
-
-
         /// <summary>
-        /// 
+        /// topic => OrderTrade
         /// </summary>
-        
         public async Task PushOrderAdded()
         {
             //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
@@ -171,9 +176,7 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
-        /// <summary>
-        /// topic => OrderTrade
-        /// </summary>
+
         public Task PushOrderState()
         {
 
@@ -181,7 +184,7 @@ namespace Iz.Online.HubHandler.Services
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
 
-                consumer.Subscribe($"OrderTrade");
+                consumer.Subscribe($"CustomerWallet");
                 while (true)
                 {
                     try
@@ -220,12 +223,12 @@ namespace Iz.Online.HubHandler.Services
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
-                        
+
                         if (hubs != null)
                             _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
 
-                        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value});
-                   
+                        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value });
+
                         #region fake data
 
                         //while (c < 50)
@@ -318,7 +321,7 @@ namespace Iz.Online.HubHandler.Services
                         //}
 
                         #endregion
-                        
+
                         var t = consumeResult.Message.Value;
                     }
                     catch (Exception e)
@@ -333,17 +336,53 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        /// <summary>
+        ///  topic=> CustomerWallet
+        /// </summary>
+        /// <returns></returns>
+        public async Task PushCustomerWallet()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+                var c = 0;
+                consumer.Subscribe($"CustomerWallet");
+                while (true)
+                {
+                    try
+                    {
+                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("CustomerWallet", new object[] { model1 });
+
+                        _hubContext.Clients.All.SendCoreAsync("CustomerWallet", new object[] { consumeResult.Message.Value });
+
+
+
+                        var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+
+            }
+        }
 
         public async Task CreateAllConsumers()
         {
             if (ConsumerIsStar)
                 return;
 
-            Task.Run(async () => PushOrderState());
-            Task.Run(async () => PushTradeState());
-            Task.Run(async () => PushOrderAdded());
-
+            await Task.WhenAll(PushOrderState(), PushTradeState(), PushOrderAdded());
             ConsumerIsStar = true;
         }
     }
 }
+

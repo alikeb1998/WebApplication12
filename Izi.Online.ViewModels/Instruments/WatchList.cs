@@ -9,6 +9,7 @@ namespace Izi.Online.ViewModels.Instruments
     public class WatchList
     {
         public string Id { get; set; }
+
         public string WatchListName { get; set; }
        
     }
