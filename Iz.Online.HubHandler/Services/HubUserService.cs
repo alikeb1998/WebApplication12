@@ -7,6 +7,7 @@ using Iz.Online.SignalR;
 using Izi.Online.ViewModels.Users;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using OrderChanged = Iz.Online.OmsModels.ResponsModels.Order.OrderChangeTopic;
 
 namespace Iz.Online.HubHandler.Services
 {
@@ -197,13 +198,14 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
-
+                        var hubs = _hubConnationService.UserHubsList("KafkaUserId");
                         var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
-                        //model1.customer
-                        //var hubs = _hubConnationService.UserHubsList("KafkaUserId");
-                        //if (hubs != null)
-                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+                        var model1 = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
+                        
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+                        
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
 
                         _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value});
 
