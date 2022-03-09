@@ -41,24 +41,12 @@ namespace Iz.Online.Services.Services
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt,
-                InstrumentId = x.Order.instrument.id,
+                InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Order.instrument.id),
                 //NscCode = x.Order.instrument.code
             }).ToList();
+            
 
-            var result = from trade in allTrades
-                join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
-                select new Trade()
-                {
-                    Name = trade.Name,
-                    Price = trade.Price,
-                    State = trade.State,
-                    OrderSide = trade.OrderSide,
-                    ExecutedQ = trade.ExecutedQ,
-                    TradedAt = trade.TradedAt,
-                    InstrumentId =(int) instrument.Id,
-                };
-
-            return new ResultModel<List<Trade>>(result.ToList());
+            return new ResultModel<List<Trade>>(allTrades);
         }
 
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)

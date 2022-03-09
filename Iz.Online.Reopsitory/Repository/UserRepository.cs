@@ -135,28 +135,9 @@ namespace Iz.Online.Reopsitory.Repository
 
             try
             {
-
                 var dataBytes = _cache.Get(userId);
                 var result = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(dataBytes));
                 return result;
-
-                //var allKeys = _redis.GetServer("localhost", 6379).Keys().ToList();
-                //_cache.Get(userId);
-                //if (allKeys == null)
-                //    return null;
-
-                //var result = new List<UsersHubIds>();
-                //foreach (var key in allKeys)
-                //{
-                //    var content = _cache.Get(key);
-                //    var serializedModel = System.Text.Encoding.Default.GetString(content);
-                //    var deserializedObject = JsonConvert.DeserializeObject<UsersHubIds>(serializedModel);
-
-                //    if (deserializedObject.CustomerId == userId)
-                //        result.Add(deserializedObject);
-                //}
-
-                //return result;
 
             }
             catch (Exception e)

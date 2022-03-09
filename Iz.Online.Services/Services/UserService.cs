@@ -54,28 +54,11 @@ namespace Iz.Online.Services.Services
                 ProfitAmount = x.ProfitAmount,
                 ProfitPercent = x.ProfitPercent,
                 SellProfit = x.SellProfit,
-                InstrumentId = x.Instrument.id,
-                //NscCode = x.Instrument.code
+                InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Instrument.id),
+                //NscCode =Convert.ToString( _cacheService.GetLocalInstrumentIdFromOmsId(x.Instrument.id))// x.Instrument.code
             }).ToList();
 
-            var result = from aset in allAssets
-                         join instrument in instruments on aset.InstrumentId equals instrument.InstrumentId
-                         select new Asset()
-                         {
-                             Name = aset.Name,
-                             LastPrice = aset.LastPrice,
-                             TradeableQuantity = aset.TradeableQuantity,
-                             Gav = aset.Gav,
-                             AvgPrice = aset.AvgPrice,
-                             FianlAmount = aset.FianlAmount,
-                             ProfitAmount = aset.ProfitAmount,
-                             ProfitPercent = aset.ProfitPercent,
-                             SellProfit = aset.SellProfit,
-                             InstrumentId = (int)instrument.Id,
-                         };
-
-
-            return new ResultModel<List<Asset>>(result.ToList());
+            return new ResultModel<List<Asset>>(allAssets);
 
         }
 
@@ -153,6 +136,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<bool> SetUserHub(string token, string hubId)
         {
             var CustomerInfo = _externalUserService.CustomerInfo();
+            //TODO
             if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.KafkaId != null)
             {
                 bool setResult = _userRepository.SetUserInfo(new CustomerInfo()

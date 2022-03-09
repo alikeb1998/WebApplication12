@@ -127,34 +127,13 @@ namespace Iz.Online.Services.Services
                 Price = x.price,
                 State = x.state,
                 NscCode = x.instrument.code,
-                InstrumentId = x.instrument.id,
+                InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.instrument.id),
+
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
-
-            var result = from trade in allActiveOrders
-                         join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
-                select new ActiveOrder()
-                {
-                    Quantity = trade.Quantity,
-                    ExecutedQ = trade.ExecutedQ,
-                    InstrumentName = trade.InstrumentName,
-                    OrderSide = trade.OrderSide,
-                    OrderSideText = trade.OrderSideText,
-                    RemainedQ = trade.RemainedQ,
-                    ValidityType = trade.ValidityType,
-                    OrderQtyWait = trade.OrderQtyWait,
-                    CreatedAt = trade.CreatedAt,
-                    Price = trade.Price,
-                    State = trade.State,
-                    NscCode = trade.NscCode,
-                    ValidityInfo = trade.ValidityInfo,
-                    ExecutePercent = trade.ExecutePercent,
-                    InstrumentId = (int)instrument.Id,
-                    StateText = trade.StateText
-                };
-
-            return new ResultModel<List<ActiveOrder>>(result.ToList());
+            
+            return new ResultModel<List<ActiveOrder>>(allActiveOrders);
         }
         public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
         {

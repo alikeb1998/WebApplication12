@@ -23,5 +23,6 @@ namespace Iz.Online.Reopsitory.IRepository
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
         InstrumentList InstrumentData(int instrumentId);
         List<InstrumentList> InstrumentData();
+        int GetLocalInstrumentIdFromOmsId(int omsId);
     }
 }

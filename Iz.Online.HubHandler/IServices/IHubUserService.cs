@@ -17,7 +17,7 @@ namespace Iz.Online.HubHandler.IServices
     {
         Task ConsumeRefreshInstrumentBestLimit(string InstrumentId);
         Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId);
-        Task PushOrderAdded(List<string> CustomerHubsId, Izi.Online.ViewModels.Orders.ActiveOrder model);
+        Task PushOrderAdded();
         Task PushOrderState();
         Task PushTradeState();
 

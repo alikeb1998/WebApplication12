@@ -141,8 +141,8 @@ namespace Iz.Online.HubHandler.Services
                     var prices =
                         JsonConvert.DeserializeObject<OmsModels.ResponsModels.BestLimits.BestLimit>(consumeResult.Message.Value);
 
-                    //var hubs = _hubConnationService.UserHubsList("user1").HubId;
-                    //await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
+                    //var hubs = _hubConnationService.UserHubsList("user1");
+                    //await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
 
                     //_hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
                 }
@@ -151,7 +151,7 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
-        public async Task PushOrderAdded(List<string> CustomerHubsId, Izi.Online.ViewModels.Orders.ActiveOrder model)
+        public async Task PushOrderAdded()
         {
             //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
             _hubContext.Clients.All.SendCoreAsync("OnRefreshOrders", new object[] { model });
@@ -198,7 +198,14 @@ namespace Iz.Online.HubHandler.Services
                     try
                     {
 
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
+                        model1.customer
+                        var hubs = _hubConnationService.UserHubsList("KafkaUserId");
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
 
+                        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value});
 
                         while (c < 50)
                         {
@@ -288,7 +295,7 @@ namespace Iz.Online.HubHandler.Services
 
                             }
                         }
-                        var consumeResult = consumer.Consume();
+                        
                         var t = consumeResult.Message.Value;
                     }
                     catch (Exception e)
@@ -311,6 +318,7 @@ namespace Iz.Online.HubHandler.Services
 
             Task.Run(async () => PushOrderState());
             Task.Run(async () => PushTradeState());
+            Task.Run(async () => PushOrderAdded());
 
             ConsumerIsStar = true;
         }

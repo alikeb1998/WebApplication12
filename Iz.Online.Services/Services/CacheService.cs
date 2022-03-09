@@ -42,6 +42,12 @@ namespace Iz.Online.Services.Services
             return _userRepository.ConfigData();
 
         }
+
+        public int GetLocalInstrumentIdFromOmsId(int omsId)
+        {
+            return _instrumentsRepository.GetLocalInstrumentIdFromOmsId(omsId);
+        }
+
         public Izi.Online.ViewModels.AppConfigs ConfigData(string key)
         {
             return _userRepository.ConfigData(key);

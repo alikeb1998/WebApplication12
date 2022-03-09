@@ -300,6 +300,31 @@ namespace Iz.Online.Reopsitory.Repository
                 return result;
             }
         }
+        public int GetLocalInstrumentIdFromOmsId(int omsId)
+        {
+            try
+            {
+                var dataBytes = _cache.Get("omsId" + omsId);
+                if (dataBytes == null)
+                    CacheInstrumentsData();
+
+                dataBytes = _cache.Get("omsId" + omsId);
+                var result = JsonConvert.DeserializeObject<int>(Encoding.Default.GetString(dataBytes));
+                if (result != null)
+                    return result;
+
+                result = (int)SqlInstrumentList().FirstOrDefault(x => x.InstrumentId == omsId).Id;
+                CacheInstrumentsData();
+                return result;
+            }
+            catch (Exception e)
+            {
+                var result = (int)SqlInstrumentList().FirstOrDefault(x => x.InstrumentId == omsId).Id;
+
+                CacheInstrumentsData();
+                return result;
+            }
+        }
 
         private List<InstrumentList> SqlInstrumentList()
         {
@@ -343,6 +368,9 @@ namespace Iz.Online.Reopsitory.Repository
                     });
                     var content = Encoding.UTF8.GetBytes(serializedData);
                     _cache.Set("Instrument" + instrument.Id, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+
+                    content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Id = instrument.Id }));
+                    _cache.Set("omsId" + instrument.InstrumentId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
 
                 }
 
