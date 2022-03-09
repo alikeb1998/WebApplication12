@@ -11,6 +11,11 @@ using OrderChanged = Iz.Online.OmsModels.ResponsModels.Order.OrderChangeTopic;
 
 namespace Iz.Online.HubHandler.Services
 {
+
+    //topics =>
+    //CustomerWallet , CustomerPortfolioL  ,  OrderChange (active order tab ) ,
+    //OrderTrade  (today trades tab) , {InstrumentId}-bestLimit ,{InstrumentId}-price (details)
+
     public class HubUserService : IServices.IHubUserService
     {
         private readonly IHubConnationService _hubConnationService;
@@ -152,6 +157,13 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        
         public async Task PushOrderAdded()
         {
             //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
@@ -159,6 +171,9 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        /// <summary>
+        /// topic => OrderTrade
+        /// </summary>
         public Task PushOrderState()
         {
 
@@ -187,6 +202,9 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        /// <summary>
+        /// topic=> OrderChange
+        /// </summary>
         public async Task PushTradeState()
         {
 
@@ -198,105 +216,108 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
-                        var hubs = _hubConnationService.UserHubsList("KafkaUserId");
+                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
-                        
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
                         
                         if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
 
                         _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value});
+                   
+                        #region fake data
 
-                        while (c < 50)
-                        {
-                            c++;
-                            try
-                            {
-                                Random rnd = new Random();
-                                Thread.Sleep(2000);
+                        //while (c < 50)
+                        //{
+                        //    c++;
+                        //    try
+                        //    {
+                        //        Random rnd = new Random();
+                        //        Thread.Sleep(2000);
 
-                                OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
-                                {
-                                    changeRow1 = rnd.Next(20, 30) > 25,
-                                    changeRow2 = rnd.Next(20, 30) > 25,
-                                    changeRow3 = rnd.Next(20, 30) > 25,
-                                    changeRow4 = rnd.Next(20, 30) > 25,
-                                    changeRow5 = rnd.Next(20, 30) > 25,
-                                    changeRow6 = rnd.Next(20, 30) > 25,
-                                    orderRow1 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //        OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
+                        //        {
+                        //            changeRow1 = rnd.Next(20, 30) > 25,
+                        //            changeRow2 = rnd.Next(20, 30) > 25,
+                        //            changeRow3 = rnd.Next(20, 30) > 25,
+                        //            changeRow4 = rnd.Next(20, 30) > 25,
+                        //            changeRow5 = rnd.Next(20, 30) > 25,
+                        //            changeRow6 = rnd.Next(20, 30) > 25,
+                        //            orderRow1 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    },
-                                    orderRow2 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //            },
+                        //            orderRow2 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    },
-                                    orderRow3 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //            },
+                        //            orderRow3 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    },
-                                    orderRow4 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //            },
+                        //            orderRow4 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    },
-                                    orderRow5 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //            },
+                        //            orderRow5 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    },
-                                    orderRow6 = new OrderRow()
-                                    {
-                                        countBestBuy = rnd.Next(20, 50),
-                                        priceBestBuy = rnd.Next(3000, 50000),
-                                        volumeBestBuy = rnd.Next(100000, 1000000),
-                                        countBestSale = rnd.Next(20, 50),
-                                        priceBestSale = rnd.Next(3000, 50000),
-                                        volumeBestSale = rnd.Next(100000, 1000000),
+                        //            },
+                        //            orderRow6 = new OrderRow()
+                        //            {
+                        //                countBestBuy = rnd.Next(20, 50),
+                        //                priceBestBuy = rnd.Next(3000, 50000),
+                        //                volumeBestBuy = rnd.Next(100000, 1000000),
+                        //                countBestSale = rnd.Next(20, 50),
+                        //                priceBestSale = rnd.Next(3000, 50000),
+                        //                volumeBestSale = rnd.Next(100000, 1000000),
 
-                                    }
+                        //            }
 
-                                };
+                        //        };
 
-                                var prices = JsonConvert.SerializeObject(model);
+                        //        var prices = JsonConvert.SerializeObject(model);
 
-                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, c, "ttt" });
-                            }
-                            catch (Exception e)
-                            {
+                        //        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, c, "ttt" });
+                        //    }
+                        //    catch (Exception e)
+                        //    {
 
-                            }
-                        }
+                        //    }
+                        //}
+
+                        #endregion
                         
                         var t = consumeResult.Message.Value;
                     }

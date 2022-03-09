@@ -114,11 +114,20 @@ namespace Iz.Online.Reopsitory.Repository
 
             try
             {
+                var oldData = new CustomerInfo();
                 var oldDataBytes = _cache.Get("KafkaUserId_" + model.KafkaId);
-                var oldData = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(oldDataBytes));
+                if (oldDataBytes != null)
+                {
+                    oldData = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(oldDataBytes));
+                }
+                else
+                {
+                    oldData.Hubs = new List<string>();
+                    oldData.Token = model.Token;
+                    oldData.KafkaId = model.KafkaId;
+                }
                 oldData.Hubs.Add(model.Hubs.FirstOrDefault());
                 oldData.Hubs = oldData.Hubs.Distinct().ToList();
-
                 var serialized = JsonConvert.SerializeObject(oldData);
                 var content = Encoding.UTF8.GetBytes(serialized);
                 _cache.Set("KafkaUserId_" + model.KafkaId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
