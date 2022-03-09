@@ -12,16 +12,17 @@ namespace Iz.Online.API.Controllers
     {
         #region ctor
         public IWatchListsService _watchListsServices { get; set; }
-        
+        private readonly IInstrumentsService _instrumentsService;
 
-        public WatchListController(IWatchListsService watchListsServices, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public WatchListController(IWatchListsService watchListsServices, IHttpContextAccessor httpContextAccessor, IInstrumentsService instrumentsService) : base(httpContextAccessor)
         {
-            _watchListsServices = watchListsServices; 
-           
+            _watchListsServices = watchListsServices;
 
+            _instrumentsService._externalInstrumentsService.Token = _token_;
         }
         #endregion
         // get watchlist.
+      
         [HttpGet("WatchLists")]
         public ResultModel<List<WatchList>> WatchLists(string customerId)
         {

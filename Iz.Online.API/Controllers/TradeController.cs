@@ -37,6 +37,7 @@ namespace Iz.Online.API.Controllers
             var result = _tradeServices.Trades();
             return result;
         }
+      
         [HttpGet("dailyTradesPaged")]
         public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
         {
