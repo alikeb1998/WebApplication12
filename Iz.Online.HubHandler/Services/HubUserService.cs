@@ -155,6 +155,7 @@ namespace Iz.Online.HubHandler.Services
                    var consumeResult = consumer.Consume();
                     var prices =
                         JsonConvert.DeserializeObject<OmsModels.ResponsModels.BestLimits.BestLimit>(consumeResult.Message.Value);
+                    //TODO cast to Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
 
                     //var hubs = _hubConnationService.UserHubsList("user1");
                     //await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
