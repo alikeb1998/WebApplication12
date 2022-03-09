@@ -16,9 +16,9 @@ namespace Iz.Online.HubHandler.Services
     //OrderChange (active order tab ) ,\
     //OrderTrade  (today trades tab) , \
     //{InstrumentId}-bestLimit ,       \
-    //CustomerWallet , 
-    //CustomerPortfolioL  ,
-    //{InstrumentId}-price (details)
+    //CustomerWallet ,                 \
+    //CustomerPortfolioL  ,            \
+    //{InstrumentId}-price (details)   \
 
     public class HubUserService : IServices.IHubUserService
     {
@@ -159,7 +159,7 @@ namespace Iz.Online.HubHandler.Services
                     //var hubs = _hubConnationService.UserHubsList("user1");
                     //await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
 
-                    //_hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
+                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
                 }
                 consumer.Close();
             }
@@ -171,8 +171,26 @@ namespace Iz.Online.HubHandler.Services
         /// </summary>
         public async Task PushOrderAdded()
         {
-            //_hubContext.Clients.Users(CustomerHubsId).SendCoreAsync("OnRefreshOrders", new object[] { model});
-            //_hubContext.Clients.All.SendCoreAsync("OnRefreshOrders", new object[] { model });
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                consumer.Subscribe($"OrderTrade");
+                while (true)
+                {
+                    try
+                    {
+                        var consumeResult = consumer.Consume();
+                        var t = consumeResult.Message.Value;
+                        _hubContext.Clients.All.SendCoreAsync("PushOrderAdded", new object[] { consumeResult.Message.Value });
+
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                consumer.Close();
+            }
 
         }
 
@@ -375,6 +393,86 @@ namespace Iz.Online.HubHandler.Services
             }
         }
 
+        /// <summary>
+        ///  topic=> CustomerPortfolioL
+        /// </summary>
+        /// <returns></returns>
+        public async Task PushCustomerPortfolio()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+                var c = 0;
+                consumer.Subscribe($"CustomerPortfolioL");
+                while (true)
+                {
+                    try
+                    {
+                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("CustomerPortfolioL", new object[] { model1 });
+
+                        _hubContext.Clients.All.SendCoreAsync("CustomerPortfolioL", new object[] { consumeResult.Message.Value });
+
+
+
+                        var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+
+            }
+        }
+
+        /// <summary>
+        ///  topic=> {InstrumentId}-price
+        /// </summary>
+        /// <returns></returns>
+        public async Task PushPrice()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                var c = 0;
+                consumer.Subscribe("{InstrumentId}-price");
+                while (true)
+                {
+                    try
+                    {
+                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model1}-price", new object[] { model1, $"InstrumentId : '{model1}{c}'", " " });
+
+                        _hubContext.Clients.All.SendCoreAsync($"{model1}-price", new object[] { consumeResult.Message.Value });
+
+
+
+                        var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+            }
+
+
+          
+        }
         public async Task CreateAllConsumers()
         {
             if (ConsumerIsStar)
@@ -384,5 +482,5 @@ namespace Iz.Online.HubHandler.Services
             ConsumerIsStar = true;
         }
     }
-}
 
+}

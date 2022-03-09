@@ -12,6 +12,7 @@ namespace Iz.Online.Services.IServices
 {
     public interface IInstrumentsService
     {
+
         IExternalInstrumentService _externalInstrumentsService { get;  }
         IExternalOrderService _externalOrderService { get;  }
 

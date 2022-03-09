@@ -12,17 +12,22 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.Services.Services
 {
-    public class WatchListsService :IWatchListsService
+    public class WatchListsService : IWatchListsService
     {
         private readonly IWatchListsRepository _watchListsRepository;
         private readonly IExternalInstrumentService _externalInstrumentsService;
         private readonly ICacheService _cache;
-        
-        public WatchListsService(IWatchListsRepository watchListsRepository,IExternalInstrumentService externalInstrumentsService, ICacheService cacheService)
+
+      public  IExternalInstrumentService _externalInstrumentsServices  {get;}
+      public  IExternalOrderService _externalOrderService {get;}
+
+        public WatchListsService(IWatchListsRepository watchListsRepository,IExternalInstrumentService externalInstrumentsService, IExternalOrderService externalOrderService , ICacheService cacheService)
         {
             _watchListsRepository = watchListsRepository;
             _externalInstrumentsService = externalInstrumentsService;
             _cache = cacheService;
+            _externalInstrumentsServices = externalInstrumentsService;
+            _externalOrderService = externalOrderService;
         }
 
         public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)

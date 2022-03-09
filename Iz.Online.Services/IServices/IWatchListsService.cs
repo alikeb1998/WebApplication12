@@ -1,4 +1,5 @@
-﻿using Izi.Online.ViewModels.Instruments;
+﻿using Iz.Online.ExternalServices.Rest.ExternalService;
+using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Iz.Online.Services.IServices
 {
     public interface IWatchListsService
     {
+        IExternalInstrumentService _externalInstrumentsServices { get; }
+        IExternalOrderService _externalOrderService { get; }
         ResultModel<List<WatchList>> UserWatchLists(string customerId);
         ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model);
         ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);

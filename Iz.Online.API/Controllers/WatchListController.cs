@@ -18,7 +18,7 @@ namespace Iz.Online.API.Controllers
         {
             _watchListsServices = watchListsServices;
 
-            _instrumentsService._externalInstrumentsService.Token = _token_;
+            _watchListsServices._externalInstrumentsServices.Token = _watchListsServices._externalOrderService.Token = _token_;
         }
         #endregion
         // get watchlist.
