@@ -10,7 +10,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Order
     {
         public long OrderId { get; set; }
         public string State { get; set; }
-        public long OrderParentId { get; set; }
+        public long? OrderParentId { get; set; }
         public string Customer { get; set; }
         public string Instrument { get; set; }
         public int OrderSide { get; set; }
