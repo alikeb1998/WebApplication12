@@ -47,6 +47,8 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<InstrumentDetail> Detail(int instrumentId)
         {
+
+
             var result = new InstrumentDetail();
             var instrumentDetails = _cacheService.InstrumentData(instrumentId);
 

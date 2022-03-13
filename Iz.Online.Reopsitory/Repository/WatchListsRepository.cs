@@ -15,6 +15,7 @@ namespace Iz.Online.Reopsitory.Repository
 {
     public class WatchListsRepository : BaseRepository, IWatchListsRepository
     {
+        
         public WatchListsRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
         }
@@ -208,7 +209,7 @@ namespace Iz.Online.Reopsitory.Repository
 
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
-
+            
             var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
 
             entity.WatchListName = model.WatchListName;
@@ -217,7 +218,7 @@ namespace Iz.Online.Reopsitory.Repository
             string query = $"INSERT  into WatchListsInstruments  values ";
             foreach (var id in model.Id)
             {
-                query += $" ({id},'{model.Id}') ,";
+                query += $" ({id},'{model.WatchListId}') ,";
             }
             query = query.Substring(0, query.Length - 1);
 

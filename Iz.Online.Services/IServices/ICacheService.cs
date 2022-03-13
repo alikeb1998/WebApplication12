@@ -15,5 +15,6 @@ namespace Iz.Online.Services.IServices
         List<InstrumentList> InstrumentData();
         List<Izi.Online.ViewModels.AppConfigs> ConfigData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
+        int GetOmsIdFromLocalInstrumentId(int id);
     }
 }
