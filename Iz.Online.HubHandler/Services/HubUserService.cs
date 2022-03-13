@@ -259,12 +259,8 @@ namespace Iz.Online.HubHandler.Services
                     try
                     {
 
-                        //var consumeResult = consumer.Consume();
-                        //var model = JsonConvert.DeserializeObject<InstrumentDetail>(consumeResult.Message.Value);
-                        //var hubs = _hubConnationService.UserHubsList(model.Customer);
 
-                        //if (hubs != null)
-                        //  await  _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model}-price", new object[] { model, $"InstrumentId : '{model}'", " " });
+        //// start auto
 
                         //await _hubContext.Clients.All.SendCoreAsync($"{model}-price", new object[] { consumeResult.Message.Value });
 
@@ -757,7 +753,6 @@ namespace Iz.Online.HubHandler.Services
             Task.Run(() => PushOrderAdded());
             Task.Run(() => PushCustomerPortfolio());
             Task.Run(() => PushCustomerWallet());
-
 
 
             ConsumerIsStar = true;

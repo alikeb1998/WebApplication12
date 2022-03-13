@@ -45,9 +45,10 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public ResultModel<InstrumentDetail> Detail(int instrumentId)
+        public ResultModel<InstrumentDetail> Detail(int instrumentId, string HubId)
         {
 
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = HubId, InstrumentId = instrumentId });
 
             var result = new InstrumentDetail();
             var instrumentDetails = _cacheService.InstrumentData(instrumentId);
@@ -76,7 +77,7 @@ namespace Iz.Online.Services.Services
             result.yesterdayPrice = priceDetail.Model.yesterdayPrice == null ? 0 : priceDetail.Model.yesterdayPrice.Value;
             result.highPrice = priceDetail.Model.maximumPrice == null ? 0 : (long)priceDetail.Model.maximumPrice;
             result.lowPrice = priceDetail.Model.minimumPrice == null ? 0 : (long)priceDetail.Model.minimumPrice;
-            
+
 
             var lastPrice = result.lastPrice;
             var yesterdayPrice = result.yesterdayPrice;
@@ -99,7 +100,7 @@ namespace Iz.Online.Services.Services
                 result.GroupStateText = EnumHelper.InstrumentGroupStates(result.GroupState.ToString());
                 result.PriceMax = detail.Model.PriceMax;
                 result.PriceMin = detail.Model.PriceMin;
-                
+
 
 
                 result.Tick = detail.Model.Tick;
@@ -126,10 +127,11 @@ namespace Iz.Online.Services.Services
             _externalInstrumentsService.StartConsume();
         }
 
-        public ResultModel<BestLimits> BestLimits(int InstrumentId)
+        public ResultModel<BestLimits> BestLimits(int InstrumentId, string hubId)
         {
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
 
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, InstrumentId = InstrumentId });
             return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }
 

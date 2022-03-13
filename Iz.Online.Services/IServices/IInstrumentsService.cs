@@ -17,12 +17,12 @@ namespace Iz.Online.Services.IServices
         IExternalOrderService _externalOrderService { get;  }
 
         ResultModel<List<InstrumentList>> InstrumentList();
-        ResultModel<InstrumentDetail> Detail(int instrumentId);
+        ResultModel<InstrumentDetail> Detail(int instrumentId , string HubId);
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
 
         void StartConsume();
-        ResultModel<BestLimits> BestLimits(int InstrumentId);
+        ResultModel<BestLimits> BestLimits(int InstrumentIdint , string hubId);
         bool UpdateInstrumentsDb();
     }
 }

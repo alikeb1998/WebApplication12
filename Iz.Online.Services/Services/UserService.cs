@@ -137,12 +137,12 @@ namespace Iz.Online.Services.Services
         {
             var CustomerInfo = _externalUserService.CustomerInfo();
             //TODO
-            if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.KafkaId != null)
+            if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.tradingID != null)
             {
                 bool setResult = _userRepository.SetUserInfo(new CustomerInfo()
                 {
                     Token = token,
-                    KafkaId = CustomerInfo.Model.KafkaId,
+                    KafkaId = CustomerInfo.Model.tradingID,
                     Hubs = new List<string>() { hubId }
                 });
                 if (!setResult)
@@ -194,6 +194,22 @@ namespace Iz.Online.Services.Services
         {
             var res = _externalUserService.LogOut().StatusCode == 200;
             return new ResultModel<bool>(res);
+        }
+
+        public ResultModel<CustomerData> GetCustomerInfo()
+        {
+            var result = _externalUserService.CustomerInfo();
+
+            if (!result.IsSuccess || result.Model == null)
+                return new ResultModel<CustomerData>(null, result.IsSuccess, result.Message, result.StatusCode);
+            return new ResultModel<CustomerData>(new CustomerData()
+            {
+                FullName = result.Model.nameFirst + " " + result.Model.nameLast,
+                BourseCode = result.Model.borseCode
+
+            }, result.IsSuccess, result.Message, result.StatusCode);
+
+
         }
 
 

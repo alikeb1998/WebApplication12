@@ -82,6 +82,11 @@ namespace Iz.Online.API.Controllers
 
         }
 
+        [HttpGet("CustomerInfo")]
+        public ResultModel<CustomerData> CustomerInfo()
+        {
+            return _userService.GetCustomerInfo();
+        }
         [HttpGet("Config")]
         public ResultModel<List<AppConfigs>> Config()
         {

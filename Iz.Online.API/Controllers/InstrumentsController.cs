@@ -52,20 +52,20 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpGet("BestLimits")]
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits( int InstrumentId)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
-            var result = _instrumentsService.BestLimits(InstrumentId);
+            var result = _instrumentsService.BestLimits(model.InstrumentId , model.HubId);
             return result;
         }
 
         //get instrument details as prices or states and so on.
         [HttpGet("Detail")]
-        public ResultModel<InstrumentDetail> Detail( int instrumentId)
+        public ResultModel<InstrumentDetail> Detail(SelectedInstrument model)
         {
             //model.InstrumentId = 658;
             //model.NscCode = "IRO1FOLD0001";
-            var result = _instrumentsService.Detail(instrumentId);
+            var result = _instrumentsService.Detail(model.InstrumentId , model.HubId);
             return result;
         }
         // گذاشتن یادداشت برای  نماد
