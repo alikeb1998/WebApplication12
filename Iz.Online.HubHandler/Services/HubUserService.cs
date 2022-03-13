@@ -538,15 +538,15 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
-                        //    var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        //var consumeResult = consumer.Consume();
-                        //var model = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
-                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+                        //var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        var consumeResult = consumer.Consume();
+                        var model = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
+                        var hubs = _hubConnationService.UserHubsList(model.Customer);
 
-                        //if (hubs != null)
-                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}'", " " });
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model.Price, $"InstrumentId : '{model1.Instrument}'", " " });
 
-                        //var t = consumeResult.Message.Value;
+                        var t = consumeResult.Message.Value;
 
                     }
                     catch (Exception e)
@@ -626,6 +626,7 @@ namespace Iz.Online.HubHandler.Services
                     try
                     {
 
+                        #region comment
                         //var consumeResult = consumer.Consume();
                         //var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
@@ -633,7 +634,8 @@ namespace Iz.Online.HubHandler.Services
                         //if (hubs != null)
                         //    await _hubContext.Clients.Clients("KafkaUserId").SendCoreAsync("OnUpdateCustomerWallet", new object[] { consumeResult.Value });
 
-                        //var t = consumeResult.Message.Value;
+                        //var t = consumeResult.Message.Value; 
+                        #endregion
                     }
                     catch (Exception e)
                     {

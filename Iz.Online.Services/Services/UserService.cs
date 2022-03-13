@@ -136,7 +136,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<bool> SetUserHub(string token, string hubId)
         {
             var CustomerInfo = _externalUserService.CustomerInfo();
-            //TODO
+          
             if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.tradingID != null)
             {
                 bool setResult = _userRepository.SetUserInfo(new CustomerInfo()
