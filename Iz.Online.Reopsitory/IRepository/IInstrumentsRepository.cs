@@ -25,5 +25,6 @@ namespace Iz.Online.Reopsitory.IRepository
         List<InstrumentList> InstrumentData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
         void CustomerSelectInstrument(CustomerSelectInstrumentModel model);
+        List<string> GetInstrumentHubs(string NscCode);
     }
 }

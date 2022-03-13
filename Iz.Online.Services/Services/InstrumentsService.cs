@@ -131,7 +131,8 @@ namespace Iz.Online.Services.Services
         {
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
 
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, InstrumentId = InstrumentId });
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
+           
             return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }
 

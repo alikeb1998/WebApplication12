@@ -166,9 +166,9 @@ namespace Iz.Online.HubHandler.Services
                     var prices = JsonConvert.DeserializeObject<BestLimit>(consumeResult.Message.Value);
                     //TODO cast to Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
 
-                    var hubs = _hubConnationService.UserHubsList("user1");
+                    var hubs = _hubConnationService.GetInstrumentHubs(InstrumentId);
                     if (hubs != null)
-                        await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
+                        await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
                 }
                 consumer.Close();
             }
@@ -259,10 +259,14 @@ namespace Iz.Online.HubHandler.Services
                     try
                     {
 
+                        var consumeResult = consumer.Consume();
 
-        //// start auto
+                        //// start auto
 
                         //await _hubContext.Clients.All.SendCoreAsync($"{model}-price", new object[] { consumeResult.Message.Value });
+                        var hubs = _hubConnationService.GetInstrumentHubs(InstrumentId);
+                        if (hubs != null)
+                            await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
 
 
 

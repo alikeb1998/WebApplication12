@@ -414,11 +414,24 @@ namespace Iz.Online.Reopsitory.Repository
 
         public void CustomerSelectInstrument(CustomerSelectInstrumentModel model)
         {
-
             var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model));
-            _cache.Set("pushNotificationByInstrument" + model.InstrumentId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+            _cache.Set("pushNotificationByInstrument" + model.NscCode, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
         }
 
+        public List<string> GetInstrumentHubs(string NscCode)
+        {
+
+            var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument"+NscCode);
+            List<string> result = new List<string>();
+            foreach (var hub in allHubs)
+            {
+                var data = _cache.Get(hub);
+                var ins = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
+                result.Add(ins.HubId);
+            }
+
+            return result;
+        }
         #endregion
     }
 }

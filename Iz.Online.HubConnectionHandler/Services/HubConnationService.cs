@@ -9,10 +9,12 @@ namespace Iz.Online.HubConnectionHandler.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ConsumerConfig _consumerConfig;
+        private readonly IInstrumentsRepository _instrumentsRepository;
         
-        public HubConnationService(IUserRepository userRepository )
+        public HubConnationService(IUserRepository userRepository , IInstrumentsRepository instrumentsRepository)
         {
             _userRepository = userRepository;
+            _instrumentsRepository = instrumentsRepository;
             _consumerConfig = new ConsumerConfig
             {
 
@@ -36,6 +38,11 @@ namespace Iz.Online.HubConnectionHandler.Services
             _userRepository.DeleteConnectionId( connectionId);
         }
 
-        
+        public List<string> GetInstrumentHubs(string NscCode)
+        {
+          return  _instrumentsRepository.GetInstrumentHubs(NscCode);
+        }
+
+
     }
 }
