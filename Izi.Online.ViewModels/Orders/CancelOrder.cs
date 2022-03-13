@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.Orders
 {
-    public class CancelOrder:ViewBaseModel
+    public class CancelOrder
     {
         public int InstrumentId { get; set; }
     }

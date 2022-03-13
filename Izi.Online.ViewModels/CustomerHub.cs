@@ -7,7 +7,7 @@ using Izi.Online.ViewModels.ShareModels;
 
 namespace Izi.Online.ViewModels
 {
-    public class CustomerHub : ViewBaseModel
+    public class CustomerHub 
     {
         public string HubId { get; set; }
     }

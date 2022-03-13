@@ -2,7 +2,7 @@
 
 namespace Izi.Online.ViewModels.Instruments
 {
-    public class SelectedInstrument : ViewBaseModel
+    public class SelectedInstrument 
     {
         public int InstrumentId { get; set; }
         public string HubId { get; set; }
