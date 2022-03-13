@@ -240,7 +240,7 @@ namespace Iz.Online.Reopsitory.Repository
             if (entity != null)
                 return new ResultModel<string>(entity.CommentText);
 
-            return new ResultModel<string>(null, false, "یادداشتی ثبت نشده است", -1);
+            return new ResultModel<string>(null, true, "یادداشتی ثبت نشده است", -1);
         }
 
 

@@ -207,8 +207,6 @@ namespace Iz.Online.Services.Services
                 FullName = result.Model.nameFirst + " " + result.Model.nameLast,
                 BourseCode = result.Model.borseCode,
                 TradingId = result.Model.tradingID,
-
-
             }, result.IsSuccess, result.Message, result.StatusCode);
 
 
