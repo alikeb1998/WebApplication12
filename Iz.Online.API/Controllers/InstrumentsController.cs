@@ -52,10 +52,10 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpGet("BestLimits")]
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits( int InstrumentId)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
-            var result = _instrumentsService.BestLimits(InstrumentId);
+            var result = _instrumentsService.BestLimits(model.InstrumentId);
             return result;
         }
 

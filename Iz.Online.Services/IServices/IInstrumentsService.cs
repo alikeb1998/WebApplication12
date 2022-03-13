@@ -22,7 +22,7 @@ namespace Iz.Online.Services.IServices
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
 
         void StartConsume();
-        ResultModel<BestLimits> BestLimits(int InstrumentId);
+        ResultModel<BestLimits> BestLimits(int InstrumentIdint , string hubId);
         bool UpdateInstrumentsDb();
     }
 }

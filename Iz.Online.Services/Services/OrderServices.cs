@@ -67,6 +67,7 @@ namespace Iz.Online.Services.Services
                 CustomerId = addOrderModel.CustomerId,
             };
             addOrderModel.InstrumentId = instrumentData.InstrumentId;
+           
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)

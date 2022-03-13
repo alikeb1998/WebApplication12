@@ -384,5 +384,16 @@ namespace Iz.Online.Reopsitory.Repository
 
         #endregion
 
+
+        #region instrulentTopics
+
+        public void CustomerSelectInstrument(CustomerSelectInstrumentModel model)
+        {
+
+            var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model));
+            _cache.Set("pushNotificationByInstrument" + model.InstrumentId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+        }
+
+        #endregion
     }
 }

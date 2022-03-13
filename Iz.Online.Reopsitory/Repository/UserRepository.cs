@@ -92,14 +92,15 @@ namespace Iz.Online.Reopsitory.Repository
                 {
                     var oldDataBytes = _cache.Get(key);
                     var oldData = JsonConvert.DeserializeObject<CustomerInfo>(Encoding.Default.GetString(oldDataBytes));
-                    if (oldData.Hubs.Contains(connectionId))
-                    {
-                        oldData.Hubs.Remove(connectionId);
-                        var serialized = JsonConvert.SerializeObject(oldData);
-                        var content = Encoding.UTF8.GetBytes(serialized);
-                        _cache.Set("KafkaUserId_" + oldData.KafkaId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
-                        return;
-                    }
+                    if (oldData.Hubs!=null)
+                        if (oldData.Hubs.Contains(connectionId))
+                        {
+                            oldData.Hubs.Remove(connectionId);
+                            var serialized = JsonConvert.SerializeObject(oldData);
+                            var content = Encoding.UTF8.GetBytes(serialized);
+                            _cache.Set("KafkaUserId_" + oldData.KafkaId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                            return;
+                        }
                 }
 
             }
