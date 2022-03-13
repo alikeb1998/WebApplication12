@@ -12,5 +12,6 @@ namespace Izi.Online.ViewModels.Users
         public string  BourseCode { get; set; }
         public string  UserNamre { get; set; }
         public string  MobileNumber { get; set; }
+        public string  TradingId { get; set; }
     }
 }

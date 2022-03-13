@@ -136,7 +136,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<bool> SetUserHub(string token, string hubId)
         {
             var CustomerInfo = _externalUserService.CustomerInfo();
-          
+
             if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.tradingID != null)
             {
                 bool setResult = _userRepository.SetUserInfo(new CustomerInfo()
@@ -205,7 +205,9 @@ namespace Iz.Online.Services.Services
             return new ResultModel<CustomerData>(new CustomerData()
             {
                 FullName = result.Model.nameFirst + " " + result.Model.nameLast,
-                BourseCode = result.Model.borseCode
+                BourseCode = result.Model.borseCode,
+                TradingId = result.Model.tradingID,
+
 
             }, result.IsSuccess, result.Message, result.StatusCode);
 

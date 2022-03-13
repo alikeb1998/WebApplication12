@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Iz.Online.DataAccess.Migrations
 {
     [DbContext(typeof(OnlineBackendDbContext))]
-    [Migration("20220313104445_removeCustomers")]
-    partial class removeCustomers
+    [Migration("20220313113856_start")]
+    partial class start
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

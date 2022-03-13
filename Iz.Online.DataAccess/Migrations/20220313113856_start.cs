@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Iz.Online.DataAccess.Migrations
 {
-    public partial class t1 : Migration
+    public partial class start : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,18 +28,16 @@ namespace Iz.Online.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "CustomerHubs",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OmsId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OmsToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocalToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TokenExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HubId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.PrimaryKey("PK_CustomerHubs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,41 +143,16 @@ namespace Iz.Online.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerHubs",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HubId = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomerHubs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CustomerHubs_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "WathLists",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     WatchListName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WathLists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WathLists_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,18 +207,12 @@ namespace Iz.Online.DataAccess.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InstrumentId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InstrumentComments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InstrumentComments_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_InstrumentComments_Instruments_InstrumentId",
                         column: x => x.InstrumentId,
@@ -281,16 +248,6 @@ namespace Iz.Online.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerHubs_CustomerId",
-                table: "CustomerHubs",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InstrumentComments_CustomerId",
-                table: "InstrumentComments",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InstrumentComments_InstrumentId",
                 table: "InstrumentComments",
                 column: "InstrumentId");
@@ -317,11 +274,6 @@ namespace Iz.Online.DataAccess.Migrations
                 name: "IX_WatchListsInstruments_WatchListId",
                 table: "WatchListsInstruments",
                 column: "WatchListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WathLists_CustomerId",
-                table: "WathLists",
-                column: "CustomerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -365,9 +317,6 @@ namespace Iz.Online.DataAccess.Migrations
             migrationBuilder.DropTable(
                 name: "InstrumentSubSectors",
                 schema: "Symbols");
-
-            migrationBuilder.DropTable(
-                name: "Customer");
         }
     }
 }
