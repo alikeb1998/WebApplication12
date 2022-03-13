@@ -544,7 +544,7 @@ namespace Iz.Online.HubHandler.Services
                         var hubs = _hubConnationService.UserHubsList(model.Customer);
 
                         if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model.Price, $"InstrumentId : '{model1.Instrument}'", " " });
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model.Price, $"InstrumentId : '{model.Instrument}'", " " });
 
                         var t = consumeResult.Message.Value;
 

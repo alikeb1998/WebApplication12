@@ -100,7 +100,7 @@ namespace Iz.Online.Reopsitory.Repository
                 _db.WathLists.Remove(entity);
                 _db.SaveChanges();
 
-                return GetUserWatchLists(model.CustomerId);
+                return GetUserWatchLists(model.TradingId);
 
             }
             catch (Exception)
@@ -122,12 +122,12 @@ namespace Iz.Online.Reopsitory.Repository
                 }
                 query = query.Substring(0, query.Length - 1);
 
-                _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.CustomerId}');{query}");
+                _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}');{query}");
 
 
                 return GetWatchListDetails(new SearchWatchList()
                 {
-                    CustomerId = model.CustomerId,
+                    TradingId = model.TradingId,
                     WatchListId = wlId
                 });
             }
@@ -148,7 +148,7 @@ namespace Iz.Online.Reopsitory.Repository
 
                 return GetWatchListDetails(new SearchWatchList()
                 {
-                    CustomerId = model.CustomerId,
+                    TradingId = model.TradingId,
                     WatchListId = model.WatchListId
                 });
 
@@ -169,7 +169,7 @@ namespace Iz.Online.Reopsitory.Repository
 
                 return GetWatchListDetails(new SearchWatchList()
                 {
-                    CustomerId = model.CustomerId,
+                    TradingId = model.TradingId,
                     WatchListId = model.WatchListId
                 });
             }
@@ -186,7 +186,7 @@ namespace Iz.Online.Reopsitory.Repository
             {
 
                 var wl = _db.WathLists
-                     .Where(w => w.CustomerId == model.CustomerId && w.WatchListsInstruments.Select(x => x.InstrumentId).Contains(model.Id))
+                     .Where(w => w.CustomerId == model.TradingId && w.WatchListsInstruments.Select(x => x.InstrumentId).Contains(model.Id))
                      .SelectMany(c => c.WatchListsInstruments, (c, w) =>
                           new WatchList
                           {
@@ -229,7 +229,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             return GetWatchListDetails(new SearchWatchList()
             {
-                CustomerId = model.CustomerId,
+                TradingId = model.TradingId,
                 WatchListId = model.WatchListId
             });
         }

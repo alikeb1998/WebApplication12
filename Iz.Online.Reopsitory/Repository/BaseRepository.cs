@@ -15,7 +15,7 @@ namespace Iz.Online.Reopsitory.Repository
     {
         protected readonly OnlineBackendDbContext _db;
 
-        public BaseRepository(OnlineBackendDbContext dataBase )
+        public BaseRepository(OnlineBackendDbContext dataBase)
         {
             _db = dataBase;
         }
@@ -34,22 +34,24 @@ namespace Iz.Online.Reopsitory.Repository
             _db.SaveChanges();
         }
 
-     
+
 
         public string GetOmsToken(string token)
         {
-            var custmer = _db.Customer.FirstOrDefault(x => x.LocalToken.Contains( token));
+            return null;
+            //var custmer = _db.Customer.FirstOrDefault(x => x.LocalToken.Contains( token));
 
-            if (custmer == null)
-                return null;
+            //if (custmer == null)
+            //    return null;
 
-            return custmer.OmsToken;
+            //return custmer.OmsToken;
         }
 
         public bool LocalTokenIsValid(string token)
         {
-            return _db.Customer.Any(x => x.LocalToken == token && x.TokenExpireDate > DateTime.Now);
-            
+            return false;
+            //return _db.Customer.Any(x => x.LocalToken == token && x.TokenExpireDate > DateTime.Now);
+
         }
     }
 }

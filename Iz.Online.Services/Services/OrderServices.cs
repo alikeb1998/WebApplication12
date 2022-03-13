@@ -64,7 +64,7 @@ namespace Iz.Online.Services.Services
                 Quantity = addOrderModel.Quantity,
                 CreateOrderDate = DateTime.Now,
                 Price = addOrderModel.Price,
-                CustomerId = addOrderModel.CustomerId,
+                CustomerId = addOrderModel.TradingId,
             };
             addOrderModel.InstrumentId = instrumentData.InstrumentId;
            

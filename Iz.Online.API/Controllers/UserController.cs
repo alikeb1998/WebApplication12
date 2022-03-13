@@ -128,7 +128,7 @@ namespace Iz.Online.API.Controllers
                 });
         }
 
-            [HttpPost("SetHubId")]
+        [HttpPost("SetHubId")]
         public ResultModel<bool> SetHubId([FromBody] CustomerHub model)
         {
             var result = _userService.SetUserHub(_token_, model.HubId);

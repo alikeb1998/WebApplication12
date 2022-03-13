@@ -52,7 +52,7 @@ namespace Iz.Online.API.Controllers
 
 
         [HttpPost("BestLimits")]
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(SelectedInstrument model)
+        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody]  SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
             var result = _instrumentsService.BestLimits(model.InstrumentId , model.HubId);
@@ -61,7 +61,7 @@ namespace Iz.Online.API.Controllers
 
         //get instrument details as prices or states and so on.
         [HttpPost("Detail")]
-        public ResultModel<InstrumentDetail> Detail(SelectedInstrument model)
+        public ResultModel<InstrumentDetail> Detail([FromBody] SelectedInstrument model)
         {
             //model.InstrumentId = 658;
             //model.NscCode = "IRO1FOLD0001";

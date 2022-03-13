@@ -87,7 +87,7 @@ namespace Iz.Online.Services.Services
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
-            var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
+            var oldWl = _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
@@ -108,7 +108,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
-            if (string.IsNullOrEmpty(model.CustomerId))
+            if (string.IsNullOrEmpty(model.TradingId))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
                 return true;
@@ -133,7 +133,7 @@ namespace Iz.Online.Services.Services
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
-            var oldWl = _watchListsRepository.GetUserWatchLists(model.CustomerId);
+            var oldWl = _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model.Where(x => x.Id != model.WatchListId).Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
@@ -143,7 +143,7 @@ namespace Iz.Online.Services.Services
 
             var entity = _watchListsRepository.GetWatchListDetails(new SearchWatchList()
             {
-                CustomerId = model.CustomerId,
+                TradingId = model.TradingId,
                 WatchListId = model.WatchListId
 
             });
@@ -166,7 +166,7 @@ namespace Iz.Online.Services.Services
                 return true;
             }
 
-            if (string.IsNullOrEmpty(model.CustomerId))
+            if (string.IsNullOrEmpty(model.TradingId))
             {
                 resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
                 return true;

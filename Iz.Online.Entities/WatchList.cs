@@ -11,7 +11,7 @@ namespace Iz.Online.Entities
         public string Id { get; set; }
         public string WatchListName { get; set; }
         public string CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        //public Customer Customer { get; set; }
         public ICollection<WatchListsInstruments> WatchListsInstruments { get; set; }
 
 

@@ -11,7 +11,7 @@ namespace Iz.Online.DataAccess
         }
 
         public DbSet<Orders> Orders { get; set; }
-        public DbSet<Customer> Customer { get; set; }
+        //public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerHubs> CustomerHubs { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
         public DbSet<WatchList> WathLists { get; set; }

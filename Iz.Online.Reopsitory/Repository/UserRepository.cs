@@ -34,53 +34,55 @@ namespace Iz.Online.Reopsitory.Repository
 
         public string GetUserLocalToken(string omsId, string omsToken)
         {
-            var entity = _db.Customer.FirstOrDefault(x => x.OmsId == omsId);
+            return null;
 
-            if (entity != null)
-            {
-                if (entity.TokenExpireDate.Date > DateTime.Now.Date)
-                {
+            //var entity = _db.Customer.FirstOrDefault(x => x.OmsId == omsId);
 
-                }
-                else
-                {
-                    entity.TokenExpireDate = DateTime.Now.Date;
-                    _db.SaveChanges();
-                }
-            }
-            else
-            {
-                entity = new Customer()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    OmsId = omsId,
-                    TokenExpireDate = DateTime.Now.Date,
-                    OmsToken = omsToken
-                };
+            //if (entity != null)
+            //{
+            //    if (entity.TokenExpireDate.Date > DateTime.Now.Date)
+            //    {
 
-                _db.Customer.Add(entity);
-                _db.SaveChanges();
+            //    }
+            //    else
+            //    {
+            //        entity.TokenExpireDate = DateTime.Now.Date;
+            //        _db.SaveChanges();
+            //    }
+            //}
+            //else
+            //{
+            //    entity = new Customer()
+            //    {
+            //        Id = Guid.NewGuid().ToString(),
+            //        OmsId = omsId,
+            //        TokenExpireDate = DateTime.Now.Date,
+            //        OmsToken = omsToken
+            //    };
 
-            }
+            //    _db.Customer.Add(entity);
+            //    _db.SaveChanges();
+
+            //}
 
 
-            var authClaims = new List<Claim>
-                {
-                    new Claim("UserId", entity.Id),
-                };
+            //var authClaims = new List<Claim>
+            //    {
+            //        new Claim("UserId", entity.Id),
+            //    };
 
-            authClaims.Add(new Claim("Roles", "normalCustomer"));
+            //authClaims.Add(new Claim("Roles", "normalCustomer"));
 
-            var token_ = GetToken(authClaims);
+            //var token_ = GetToken(authClaims);
 
-            var obj = new
-            {
-                token = new JwtSecurityTokenHandler().WriteToken(token_),
-                expiration = token_.ValidTo
-            };
-            entity.LocalToken = JsonConvert.SerializeObject(obj);
-            _db.SaveChanges();
-            return entity.LocalToken;
+            //var obj = new
+            //{
+            //    token = new JwtSecurityTokenHandler().WriteToken(token_),
+            //    expiration = token_.ValidTo
+            //};
+            //entity.LocalToken = JsonConvert.SerializeObject(obj);
+            //_db.SaveChanges();
+            //return entity.LocalToken;
         }
 
         public void DeleteConnectionId(string connectionId)

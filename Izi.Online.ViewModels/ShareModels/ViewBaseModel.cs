@@ -11,6 +11,6 @@ namespace Izi.Online.ViewModels.ShareModels
     public abstract class ViewBaseModel
     {
         //public string Token { get; set; }
-        public string CustomerId { get; set; }
+        public string TradingId { get; set; }
     }
 }
