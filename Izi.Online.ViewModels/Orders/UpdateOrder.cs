@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Izi.Online.ViewModels.Orders
 {
-    public class UpdateOrder: ViewBaseModel
+    public class UpdateOrder
     {
         public int InstrumentId { get; set; }
         public long Price { get; set; }

@@ -7,7 +7,7 @@ using Izi.Online.ViewModels.ShareModels;
 
 namespace Izi.Online.ViewModels.Instruments
 {
-    public class SelectInstrumentDetails:ViewBaseModel
+    public class SelectInstrumentDetails
     {
         public int InstrumentId { get; set; }
         public string NscCode { get; set; }

@@ -7,7 +7,7 @@ using Izi.Online.ViewModels.ShareModels;
 
 namespace Izi.Online.ViewModels.Orders
 {
-    public class CanceledOrder:ViewBaseModel
+    public class CanceledOrder
     {
 
     }
