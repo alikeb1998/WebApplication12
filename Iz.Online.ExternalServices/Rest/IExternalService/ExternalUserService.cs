@@ -62,8 +62,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<model.CustomerInfo> CustomerInfo()
         {
-            return new ResultModel<model.CustomerInfo>(new model.CustomerInfo() { KafkaId = "CustomerInfoUserId" });
-
+          
             var result = HttpGetRequest<model.CustomerInfo>("Customer/GetCustomerInfo");
 
             return new ResultModel<model.CustomerInfo>(result);

@@ -45,9 +45,10 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public ResultModel<InstrumentDetail> Detail(int instrumentId)
+        public ResultModel<InstrumentDetail> Detail(int instrumentId, string HubId)
         {
 
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = HubId, InstrumentId = instrumentId });
 
             var result = new InstrumentDetail();
             var instrumentDetails = _cacheService.InstrumentData(instrumentId);

@@ -755,7 +755,6 @@ namespace Iz.Online.HubHandler.Services
             Task.Run(() => PushCustomerWallet());
 
 
-
             ConsumerIsStar = true;
         }
 

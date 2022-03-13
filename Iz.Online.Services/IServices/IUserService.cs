@@ -28,6 +28,7 @@ namespace Iz.Online.Services.IServices
         ResultModel<OtpResult> SendOtp(Credentials credentials);
         ResultModel<CheckedOtp> CheckOtp(Otp otp);
         ResultModel<bool> LogOut();
+        ResultModel<CustomerData> GetCustomerInfo();
 
     }
 }

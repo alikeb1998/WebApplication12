@@ -54,9 +54,6 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public int GetOmsIdFromLocalInstrumentId(int id)
-        {
-            return _instrumentsRepository.GetOmsIdFromLocalInstrumentId(id);
-        }
+       
     }
 }

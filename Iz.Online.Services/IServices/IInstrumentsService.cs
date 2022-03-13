@@ -17,7 +17,7 @@ namespace Iz.Online.Services.IServices
         IExternalOrderService _externalOrderService { get;  }
 
         ResultModel<List<InstrumentList>> InstrumentList();
-        ResultModel<InstrumentDetail> Detail(int instrumentId);
+        ResultModel<InstrumentDetail> Detail(int instrumentId , string HubId);
         ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
         ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
 
