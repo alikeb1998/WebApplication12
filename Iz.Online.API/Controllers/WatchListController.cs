@@ -45,7 +45,7 @@ namespace Iz.Online.API.Controllers
             var result = _watchListsServices.DeleteWatchList(model);
             return result;
         }
-
+        
         //add new watchlist.
         [HttpPost("NewWatchList")]
         public ResultModel<WatchListDetails> NewWatchList([FromBody] NewWatchList model)
