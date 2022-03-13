@@ -53,5 +53,10 @@ namespace Iz.Online.Services.Services
             return _userRepository.ConfigData(key);
 
         }
+
+        public int GetOmsIdFromLocalInstrumentId(int id)
+        {
+            return _instrumentsRepository.GetOmsIdFromLocalInstrumentId(id);
+        }
     }
 }

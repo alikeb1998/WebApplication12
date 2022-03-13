@@ -214,11 +214,13 @@ namespace Iz.Online.Services.Services
         }
         public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
         {
+           //var a = _cache.GetOmsIdFromLocalInstrumentId((int)model.Id[0]);
+
             model.WatchListName = model.WatchListName.Trim();
 
             if (ValidateWatchList(model, out var resultModel))
                 return resultModel;
-
+            
             return _watchListsRepository.UpdateWatchList(model);
 
         }

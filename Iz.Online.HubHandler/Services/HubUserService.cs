@@ -2,8 +2,12 @@
 using Iz.Online.HubConnectionHandler.IServices;
 using Iz.Online.HubHandler.IServices;
 using Iz.Online.OmsModels.ResponsModels.BestLimits;
+
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.SignalR;
+using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Trades;
 using Izi.Online.ViewModels.Users;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -22,6 +26,7 @@ namespace Iz.Online.HubHandler.Services
 
     public class HubUserService : IServices.IHubUserService
     {
+        public static bool isFakeData = false;
         private readonly IHubConnationService _hubConnationService;
         private readonly IHubContext<CustomersHub> _hubContext;
         private readonly ConsumerConfig _consumerConfig;
@@ -40,101 +45,107 @@ namespace Iz.Online.HubHandler.Services
             };
         }
 
-
+        #region BESTLIMIT
         public async Task ConsumeRefreshInstrumentBestLimit(string InstrumentId)
         {
-            var c = 0;
-            while (c < 50)
+            if (isFakeData)
             {
-                //Task.Run(async () => CreateAllConsumers());
-                c++;
-                try
+                var c = 0;
+                while (c < 50)
                 {
-                    Thread.Sleep(2000);
-                    Random rnd = new Random();
+                    //Task.Run(async () => CreateAllConsumers());
+                    c++;
+                    try
+                    {
+                        Thread.Sleep(10000);
+                        Random rnd = new Random();
 
 
-                    Izi.Online.ViewModels.Instruments.BestLimit.BestLimits model = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
+                        Izi.Online.ViewModels.Instruments.BestLimit.BestLimits model = new Izi.Online.ViewModels.Instruments.BestLimit.BestLimits()
+                        {
+
+                            orderRow1 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+                            orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+                            orderRow3 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+                            orderRow4 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+                            orderRow5 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+                            orderRow6 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = rnd.Next(20, 50),
+                                priceBestBuy = rnd.Next(3000, 50000),
+                                volumeBestBuy = rnd.Next(100000, 1000000),
+                                countBestSale = rnd.Next(20, 50),
+                                priceBestSale = rnd.Next(3000, 50000),
+                                volumeBestSale = rnd.Next(100000, 1000000),
+
+                            },
+
+
+                        };
+
+                        var prices = JsonConvert.SerializeObject(model);
+
+                        var hubs = _hubConnationService.UserHubsList("KafkaUserId");
+                        if (hubs != null)
+                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
+
+                        _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}'", " " });
+                    }
+                    catch (Exception e)
                     {
 
-                        orderRow1 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-                        orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-                        orderRow3 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-                        orderRow4 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-                        orderRow5 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-                        orderRow6 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
-                        {
-                            countBestBuy = rnd.Next(20, 50),
-                            priceBestBuy = rnd.Next(3000, 50000),
-                            volumeBestBuy = rnd.Next(100000, 1000000),
-                            countBestSale = rnd.Next(20, 50),
-                            priceBestSale = rnd.Next(3000, 50000),
-                            volumeBestSale = rnd.Next(100000, 1000000),
-
-                        },
-
-
-                    };
-
-                    var prices = JsonConvert.SerializeObject(model);
-
-                    var hubs = _hubConnationService.UserHubsList("KafkaUserId");
-                    if (hubs != null)
-                        _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}{c}'", " " });
-
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, $"InstrumentId : '{InstrumentId}'", " " });
-                }
-                catch (Exception e)
-                {
-
+                    }
                 }
             }
+            else
+            {
 
+            }
 
         }
 
@@ -147,26 +158,25 @@ namespace Iz.Online.HubHandler.Services
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
-
                 consumer.Subscribe($"{InstrumentId}-bestLimit");
                 while (true)
                 {
                     //Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
-                   var consumeResult = consumer.Consume();
-                    var prices =
-                        JsonConvert.DeserializeObject<OmsModels.ResponsModels.BestLimits.BestLimit>(consumeResult.Message.Value);
+                    var consumeResult = consumer.Consume();
+                    var prices = JsonConvert.DeserializeObject<BestLimit>(consumeResult.Message.Value);
                     //TODO cast to Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
 
-                    //var hubs = _hubConnationService.UserHubsList("user1");
-                    //await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
-
-                    _hubContext.Clients.All.SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
+                    var hubs = _hubConnationService.UserHubsList("user1");
+                    if (hubs != null)
+                        await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { consumeResult.Message.Value, InstrumentId, " " });
                 }
                 consumer.Close();
             }
 
         }
+        #endregion
 
+        #region PRICE
         /// <summary>
         ///  topic=> {InstrumentId}-price
         /// </summary>
@@ -177,24 +187,54 @@ namespace Iz.Online.HubHandler.Services
             {
 
                 var c = 0;
-                consumer.Subscribe($"{InstrumentId}-price");
+                //  consumer.Subscribe($"{InstrumentId}-price");
                 while (true)
                 {
                     try
                     {
-                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
+                        Thread.Sleep(5000);
+                        var rnd = new Random();
+                        //var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        //var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<object>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
 
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model1}-price", new object[] { model1, $"InstrumentId : '{model1}{c}'", " " });
+                        //if (hubs != null)
+                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model1}-price", new object[] { model1, $"InstrumentId : '{model1}{c}'", " " });
 
-                        _hubContext.Clients.All.SendCoreAsync($"{model1}-price", new object[] { consumeResult.Message.Value });
+                        //_hubContext.Clients.All.SendCoreAsync($"{model1}-price", new object[] { consumeResult.Message.Value });
 
+                        var model = new InstrumentDetail()
+                        {
+                            AskPrice = rnd.NextInt64(100, 1000),
+                            BidPrice = rnd.NextInt64(100, 1000),
+                            BuyCommissionRate = rnd.NextDouble(),
+                            closingPrice = rnd.NextDouble(),
+                            firstPrice = rnd.NextDouble(),
+                            GroupState = 1,
+                            GroupStateText = "text",
+                            highPrice = rnd.NextDouble(),
+                            lastPrice = rnd.NextDouble(),
+                            LastPriceChangePercent = rnd.NextInt64(100, 1000),
+                            lastTradeDate = DateTime.Today,
+                            lowPrice = rnd.NextDouble(),
+                            NscCode = "folllda",
+                            numberOfTrades = 1,
+                            PriceMax = rnd.NextInt64(100, 1000),
+                            PriceMin = rnd.NextInt64(100, 1000),
+                            SellCommissionRate = rnd.NextDouble(),
+                            State = 1,
+                            StateText = "text",
+                            Tick = 1,
+                            valueOfTrades = 1,
+                            volumeOfTrades = 1,
+                            yesterdayPrice = rnd.NextDouble(),
 
-
-                        var t = consumeResult.Message.Value;
+                        };
+                        var res = JsonConvert.SerializeObject(model);
+                        _hubContext.Clients.All.SendCoreAsync($"{InstrumentId}-price", new object[] { res });
+                        //var t = consumeResult.Message.Value;
+                        var t = "test";
                     }
                     catch (Exception e)
                     {
@@ -209,15 +249,99 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        public async Task PushPrice_Orginal(string InstrumentId)
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+                consumer.Subscribe($"{InstrumentId}-price");
+                while (true)
+                {
+                    try
+                    {
+
+                        //var consumeResult = consumer.Consume();
+                        //var model = JsonConvert.DeserializeObject<InstrumentDetail>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model.Customer);
+
+                        //if (hubs != null)
+                        //  await  _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync($"{model}-price", new object[] { model, $"InstrumentId : '{model}'", " " });
+
+                        //await _hubContext.Clients.All.SendCoreAsync($"{model}-price", new object[] { consumeResult.Message.Value });
 
 
-        //// start auto
+
+                        //var t = consumeResult.Message.Value;
+
+                    }
+                    catch (Exception e)
+                    {
 
 
+                    }
+                }
+                consumer.Close();
+            }
+
+
+
+        }
+
+        #endregion
+
+        #region ADDORDER
         /// <summary>
         /// topic => OrderTrade
         /// </summary>
         public async Task PushOrderAdded()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                //consumer.Subscribe($"OrderTrade");
+                while (true)
+                {
+                    try
+                    {
+                        Thread.Sleep(10000);
+                        var rnd = new Random();
+                        //var consumeResult = consumer.Consume();
+                        //var t = consumeResult.Message.Value;
+                        // _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { consumeResult.Message.Value });
+
+                        var active = new ActiveOrder()
+                        {
+                            CreatedAt = DateTime.Now,
+                            ExecutedQ = rnd.NextInt64(1, 100),
+                            ExecutePercent = rnd.NextDouble(),
+                            InstrumentId = 12,
+                            InstrumentName = "foolaad",
+                            NscCode = "IRO1fold0001",
+                            OrderQtyWait = rnd.NextInt64(1, 100),
+                            OrderSide = 1,
+                            OrderSideText = "sell",
+                            Price = rnd.NextInt64(1, 100),
+                            Quantity = rnd.NextInt64(1, 100),
+                            RemainedQ = rnd.NextInt64(1, 100),
+                            State = "در صف",
+                            StateText = "fdf",
+                            ValidityType = 1,
+
+                        };
+                        var res = JsonConvert.SerializeObject(active);
+                        _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { res });
+
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                consumer.Close();
+            }
+
+        }
+
+        public async Task PushOrderAdded_Original()
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -227,9 +351,18 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
-                        var consumeResult = consumer.Consume();
-                        var t = consumeResult.Message.Value;
-                        _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { consumeResult.Message.Value });
+
+                        //var consumeResult = consumer.Consume();
+                        //var model = JsonConvert.DeserializeObject<ActiveOrder>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model.Customer);
+
+                        //if (hubs != null)
+                        //    await _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { consumeResult.Value });
+
+
+
+
+                        //var t = consumeResult.Message.Value;
 
                     }
                     catch (Exception e)
@@ -242,6 +375,9 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        #endregion
+
+        #region ORDERSTATE
         /// <summary>
         /// topic=> OrderChange
         /// </summary>
@@ -256,110 +392,130 @@ namespace Iz.Online.HubHandler.Services
                 {
                     try
                     {
-                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
+                        //    var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        //    var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
 
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
+                        //if (hubs != null)
+                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}{c}'", " " });
 
-                        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value });
+                        //_hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { consumeResult.Message.Value });
 
                         #region fake data
 
-                        //while (c < 50)
-                        //{
-                        //    c++;
-                        //    try
-                        //    {
-                        //        Random rnd = new Random();
-                        //        Thread.Sleep(2000);
+                        while (true)
+                        {
+                            c++;
+                            try
+                            {
+                                Random rnd = new Random();
+                                Thread.Sleep(10000);
+                                #region f
+                                //OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
+                                //{
+                                //    changeRow1 = rnd.Next(20, 30) > 25,
+                                //    changeRow2 = rnd.Next(20, 30) > 25,
+                                //    changeRow3 = rnd.Next(20, 30) > 25,
+                                //    changeRow4 = rnd.Next(20, 30) > 25,
+                                //    changeRow5 = rnd.Next(20, 30) > 25,
+                                //    changeRow6 = rnd.Next(20, 30) > 25,
+                                //    orderRow1 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //        OmsModels.ResponsModels.BestLimits.BestLimit model = new OmsModels.ResponsModels.BestLimits.BestLimit()
-                        //        {
-                        //            changeRow1 = rnd.Next(20, 30) > 25,
-                        //            changeRow2 = rnd.Next(20, 30) > 25,
-                        //            changeRow3 = rnd.Next(20, 30) > 25,
-                        //            changeRow4 = rnd.Next(20, 30) > 25,
-                        //            changeRow5 = rnd.Next(20, 30) > 25,
-                        //            changeRow6 = rnd.Next(20, 30) > 25,
-                        //            orderRow1 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    },
+                                //    orderRow2 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //            },
-                        //            orderRow2 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    },
+                                //    orderRow3 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //            },
-                        //            orderRow3 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    },
+                                //    orderRow4 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //            },
-                        //            orderRow4 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    },
+                                //    orderRow5 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //            },
-                        //            orderRow5 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    },
+                                //    orderRow6 = new OrderRow()
+                                //    {
+                                //        countBestBuy = rnd.Next(20, 50),
+                                //        priceBestBuy = rnd.Next(3000, 50000),
+                                //        volumeBestBuy = rnd.Next(100000, 1000000),
+                                //        countBestSale = rnd.Next(20, 50),
+                                //        priceBestSale = rnd.Next(3000, 50000),
+                                //        volumeBestSale = rnd.Next(100000, 1000000),
 
-                        //            },
-                        //            orderRow6 = new OrderRow()
-                        //            {
-                        //                countBestBuy = rnd.Next(20, 50),
-                        //                priceBestBuy = rnd.Next(3000, 50000),
-                        //                volumeBestBuy = rnd.Next(100000, 1000000),
-                        //                countBestSale = rnd.Next(20, 50),
-                        //                priceBestSale = rnd.Next(3000, 50000),
-                        //                volumeBestSale = rnd.Next(100000, 1000000),
+                                //    }
 
-                        //            }
+                                //};
+                                #endregion
+                                var model = new List<Trade>();
+                                var r = new Trade()
+                                {
+                                    ExecutedQ = rnd.NextInt64(1, 100),
+                                    InstrumentId = 121,
+                                    Name = "fooolaad",
+                                    NscCode = "sdfafdf",
+                                    OrderSide = 1,
+                                    Price = rnd.NextInt64(1, 1000),
+                                    Quantity = rnd.NextDouble(),
+                                    State = "texxt",
+                                    TradedAt = DateTime.Now,
+                                    TradeId = rnd.NextInt64(1, 100),
+                                    TradeValue = rnd.NextDouble(),
+                                };
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    model.Add(r);
+                                }
+                                var prices = JsonConvert.SerializeObject(model);
 
-                        //        };
+                                _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices });
+                            }
+                            catch (Exception e)
+                            {
 
-                        //        var prices = JsonConvert.SerializeObject(model);
-
-                        //        _hubContext.Clients.All.SendCoreAsync("OnChangeTrades", new object[] { prices, c, "ttt" });
-                        //    }
-                        //    catch (Exception e)
-                        //    {
-
-                        //    }
-                        //}
+                            }
+                        }
 
                         #endregion
 
-                        var t = consumeResult.Message.Value;
+                        // var t = consumeResult.Message.Value;
+                        var t = "test";
                     }
                     catch (Exception e)
                     {
@@ -373,6 +529,38 @@ namespace Iz.Online.HubHandler.Services
 
         }
 
+        public async Task PushTradeState_Original()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+                consumer.Subscribe($"OrderChange");
+                while (true)
+                {
+                    try
+                    {
+                        //    var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        //var consumeResult = consumer.Consume();
+                        //var model = JsonConvert.DeserializeObject<OrderChanged>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        //if (hubs != null)
+                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1.Price, $"InstrumentId : '{model1.Instrument}'", " " });
+
+                        //var t = consumeResult.Message.Value;
+
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+            }
+        }
+        #endregion
+
+        #region WALLET
         /// <summary>
         ///  topic=> CustomerWallet
         /// </summary>
@@ -382,24 +570,38 @@ namespace Iz.Online.HubHandler.Services
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
                 var c = 0;
-                consumer.Subscribe($"CustomerWallet");
+                // consumer.Subscribe($"CustomerWallet");
                 while (true)
                 {
+
                     try
                     {
-                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+
+                        Thread.Sleep(10000);
+                        Random rnd = new Random();
+                        var wallet = new Wallet()
+                        {
+
+                            BlockedValue = rnd.NextInt64(100, 1000),
+                            BuyingPower = rnd.NextInt64(100, 1000),
+                            LendedCredit = rnd.NextInt64(100, 1000),
+                            NonWithdrawable = rnd.NextInt64(100, 1000),
+                            Withdrawable = rnd.NextInt64(100, 1000)
+                        };
+                        var prices = JsonConvert.SerializeObject(wallet);
+                        //var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        //  var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+                        //var hubs = _hubConnationService.UserHubsList("KafkaUserId");
+                        //if (hubs != null)
+                        // _hubContext.Clients.Clients("KafkaUserId").SendCoreAsync("OnUpdateCustomerWallet", new object[] { prices });
 
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerWallet", new object[] { model1 });
-
-                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerWallet", new object[] { consumeResult.Message.Value });
+                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerWallet", new object[] { prices });
 
 
 
-                        var t = consumeResult.Message.Value;
+                        var t = "test";
                     }
                     catch (Exception e)
                     {
@@ -412,6 +614,40 @@ namespace Iz.Online.HubHandler.Services
             }
         }
 
+        public async Task PushCustomerWallet_Original()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+
+                consumer.Subscribe($"CustomerWallet");
+                while (true)
+                {
+
+                    try
+                    {
+
+                        //var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        //if (hubs != null)
+                        //    await _hubContext.Clients.Clients("KafkaUserId").SendCoreAsync("OnUpdateCustomerWallet", new object[] { consumeResult.Value });
+
+                        //var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                consumer.Close();
+
+            }
+        }
+
+        #endregion
+
+        #region PORTFOLIO
         /// <summary>
         ///  topic=> CustomerPortfolioL
         /// </summary>
@@ -422,23 +658,50 @@ namespace Iz.Online.HubHandler.Services
             {
                 var c = 0;
                 consumer.Subscribe($"CustomerPortfolioL");
+
                 while (true)
                 {
                     try
                     {
-                        var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+                        Random rnd = new Random();
+                        Thread.Sleep(10000);
+                        //var hubs = _hubConnationService.UserHubsList("CustomerInfoUserId");
+                        //var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
                         //var hubs = _hubConnationService.UserHubsList(model1.Customer);
 
-                        if (hubs != null)
-                            _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+                        //if (hubs != null)
+                        //    _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
-                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { consumeResult.Message.Value });
+                        //_hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { consumeResult.Message.Value });
+                        // var portfo = new 
+                        var model = new List<Asset>();
+                        var pr = new Asset()
+                        {
+                            AvgPrice = rnd.NextInt64(100, 1000),
+                            FianlAmount = rnd.NextInt64(100, 1000),
+                            InstrumentId = rnd.Next(100, 1000),
+                            LastPrice = rnd.NextInt64(100, 1000),
+                            NscCode = "FOLD0001",
+                            ProfitAmount = rnd.NextInt64(100, 1000),
+                            Name = "fooolad",
+                            ProfitPercent = 10,
+                            SellProfit = 12,
+                            TradeableQuantity = rnd.NextInt64(100, 1000),
+                            Gav = rnd.NextInt64(100, 1000),
+                        };
+                        for (int i = 0; i < 3; i++)
+                        {
+                            model.Add(pr);
+                        }
+                        var res = JsonConvert.SerializeObject(model);
+                        _hubContext.Clients.All.SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model });
 
 
 
-                        var t = consumeResult.Message.Value;
+
+
+                        var t = "test";
                     }
                     catch (Exception e)
                     {
@@ -450,6 +713,40 @@ namespace Iz.Online.HubHandler.Services
 
             }
         }
+
+        public async Task PushCustomerPortfolio_Original()
+        {
+            using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
+            {
+                
+                consumer.Subscribe($"CustomerPortfolioL");
+
+                while (true)
+                {
+                    try
+                    {
+                       
+                        
+                        //var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<Object>(consumeResult.Message.Value);
+                        //var hubs = _hubConnationService.UserHubsList(model1.Customer);
+
+                        //if (hubs != null)
+                        //    await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+
+                        //var t = consumeResult.Message.Value;
+                    }
+                    catch (Exception e)
+                    {
+
+
+                    }
+                }
+                consumer.Close();
+
+            }
+        }
+        #endregion
 
         public async Task CreateAllConsumers()
         {
@@ -462,10 +759,11 @@ namespace Iz.Online.HubHandler.Services
             Task.Run(() => PushCustomerWallet());
 
 
+
             ConsumerIsStar = true;
         }
 
-       
+
     }
 
 }

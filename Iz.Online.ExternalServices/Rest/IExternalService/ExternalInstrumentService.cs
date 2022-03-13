@@ -133,7 +133,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
+            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit(NscCode));
 
             var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
@@ -244,6 +244,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public ResultModel<Details> Details(long InstrumentId)
         {
+            Task.Run(() => _hubUserService.PushPrice("dfdsf"));
             var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
 
 
