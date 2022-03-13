@@ -213,11 +213,14 @@ namespace Iz.Online.Reopsitory.Repository
             var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
 
             entity.WatchListName = model.WatchListName;
-            _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
+            
+           // _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
             _db.SaveChanges();
             string query = $"INSERT  into WatchListsInstruments  values ";
             foreach (var id in model.Id)
             {
+                _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.WatchListId}'");
+                _db.SaveChanges();
                 query += $" ({id},'{model.WatchListId}') ,";
             }
             query = query.Substring(0, query.Length - 1);
