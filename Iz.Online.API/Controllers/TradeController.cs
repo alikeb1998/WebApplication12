@@ -60,17 +60,10 @@ namespace Iz.Online.API.Controllers
         {
 
             var states = new List<OrderStates>();
-            states.Add(new OrderStates { Code = 1, Key = "OrderCancelled", Value = "لغو شده" });
-            states.Add(new OrderStates { Code = 2, Key = "OrderCompletelyExecuted", Value = "سفارش به طور کامل اجرا شده است" });
-            states.Add(new OrderStates { Code = 3, Key = "OrderError", Value = "خطای هسته معاملات" });
-            states.Add(new OrderStates { Code = 4, Key = "OrderExpired", Value = "منقضی شده" });
-            states.Add(new OrderStates { Code = 5, Key = "OrderFilled", Value = "انجام شده" });
-            states.Add(new OrderStates { Code = 6, Key = "OrderInProgress", Value = "در حال انتظار" });
-            states.Add(new OrderStates { Code = 7, Key = "OrderInQueue", Value = "در صف" });
-            states.Add(new OrderStates { Code = 8, Key = "OrderInQueuePendingForCancel", Value = "در صف در انتظار تایید لغو" });
-            states.Add(new OrderStates { Code = 9, Key = "OrderInQueuePendingForModify", Value = "در صف در انتظار تایید ویرایش" });
-            states.Add(new OrderStates { Code = 10, Key = "OrderPartial", Value = "قسمتی انجام شده" });
-            states.Add(new OrderStates { Code = 11, Key = "OrderRejected", Value = "رد شده" });
+            states.Add(new OrderStates { Code = 1, Key = "Cancelled", Value = "لغو شده" });
+            states.Add(new OrderStates { Code = 2, Key = "Executed", Value = "معامله شده" });
+            states.Add(new OrderStates { Code = 3, Key = "ExternallyCreated", Value = "معامله توسط ناظر بازار" });
+         
 
 
             return new ResultModel<List<OrderStates>>(states);

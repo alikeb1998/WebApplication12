@@ -214,43 +214,16 @@ namespace Iz.Online.Services.Services
             if (!string.IsNullOrEmpty(filter.State))
             {
                 switch (filter.State)
-                {
-                    case "انجام شده":
-                        tradeList = tradeList.Where(x => x.State == "انجام شده").ToList();
-                        break;
-
-                    case "منقضی شده":
-                        tradeList = tradeList.Where(x => x.State == "منقضی شده").ToList();
-                        break;
-                    case "درحال انتظار":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
+                { 
                     case "لغو شده":
                         tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
                         break;
-                    case "سفارش به طور کامل اجرا شده است":
-                        tradeList = tradeList.Where(x => x.State == "سفارش به طور کامل اجرا شده است").ToList();
+                    case "معامله شده":
+                        tradeList = tradeList.Where(x => x.State == "معامله شده").ToList();
                         break;
-                    case "خطای هسته معاملات":
-                        tradeList = tradeList.Where(x => x.State == "خطای هسته معاملات").ToList();
+                    case "معامله توسط ناظر بازار":
+                        tradeList = tradeList.Where(x => x.State == "معامله توسط ناظر بازار").ToList();
                         break;
-                    case "در صف":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
-                    case "در صف در انتظار تایید لغو":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
-                    case "در صف در انتظار تایید ویرایش":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
-                    case "قسمتی انجام شده":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
-                    case "رد شده":
-                        tradeList = tradeList.Where(x => x.State == "درحال انتظار").ToList();
-                        break;
-
-
                 }
             }
             var report = new TradeHistoryReport()

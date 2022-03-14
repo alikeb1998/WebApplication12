@@ -428,6 +428,7 @@ namespace Iz.Online.Reopsitory.Repository
             var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument*" );
             foreach (var hub in allHubs)
             {
+                //TODO
                 var data = _cache.Get(hub);
                 var h = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
                 if(h.HubId == model.HubId                    )
