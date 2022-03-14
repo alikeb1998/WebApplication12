@@ -38,8 +38,8 @@ namespace Iz.Online.API.Controllers
             return result;
         }
       
-        [HttpGet("dailyTradesPaged")]
-        public ResultModel<List<model.Trade>> TradesPaged(TradeFilter filter)
+        [HttpPost("dailyTradesPaged")]
+        public ResultModel<List<model.Trade>> TradesPaged([FromBody] TradeFilter filter)
         {
             var result = _tradeServices.TradesPaged(filter);
             return result;

@@ -174,9 +174,11 @@ namespace Iz.Online.Services.Services
             }
 
 
-            list = list.Where
-            (x => x.TradedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.TradedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
-            .OrderByDescending(x => x.TradedAt).ToList();
+            //list = list.Where
+            //(x => x.TradedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.TradedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
+            //.OrderByDescending(x => x.TradedAt).ToList();
+
+            list = list.Where(x => DateTime.Compare(x.TradedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.TradedAt) >= 0).ToList(); 
 
             var tradeList = new List<Trade>();
             

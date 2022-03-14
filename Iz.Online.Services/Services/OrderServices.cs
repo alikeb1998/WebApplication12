@@ -347,7 +347,8 @@ namespace Iz.Online.Services.Services
             }
 
             
-            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From)>0).ToList();
+            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From)>=0 && DateTime.Compare(filter.To, x.CreatedAt)>=0).ToList();
+            
 
             //list = list.Where
             //(x => x.CreatedAt.Ticks - DateTime.MinValue.Ticks >= filter.From.Ticks - DateTime.MinValue.Ticks && x.CreatedAt.Ticks - DateTime.MinValue.Ticks <= filter.To.Ticks - DateTime.MinValue.Ticks)
