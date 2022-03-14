@@ -406,6 +406,30 @@ namespace Iz.Online.Services.Services
                     case "درحال انتظار":
                         instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
                         break;
+                    case "لغو شده":
+                        instrumentList = instrumentList.Where(x => x.State == "لغو شده").ToList();
+                        break;
+                    case "سفارش به طور کامل اجرا شده است":
+                        instrumentList = instrumentList.Where(x => x.State == "سفارش به طور کامل اجرا شده است").ToList();
+                        break;
+                    case "خطای هسته معاملات":
+                        instrumentList = instrumentList.Where(x => x.State == "خطای هسته معاملات").ToList();
+                        break;
+                    case "در صف":
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                    case "در صف در انتظار تایید لغو":
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                    case "در صف در انتظار تایید ویرایش":
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                    case "قسمتی انجام شده":
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
+                    case "رد شده":
+                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                        break;
                 }
             }
             var report = new AllOrderReport()
