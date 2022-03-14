@@ -179,17 +179,19 @@ namespace Iz.Online.Services.Services
             .OrderByDescending(x => x.TradedAt).ToList();
 
             var tradeList = new List<Trade>();
+            
             foreach (var f in filter.InstrumentId)
             {
-                var a = list.Where(x => x.InstrumentId == f).ToList();
-
-                tradeList.AddRange(a);
-
+                if (f != 0)
+                {
+                    var a = list.Where(x => x.InstrumentId == f).ToList();
+                    tradeList.AddRange(a);
+                }
             }
-            //if (filter.InstrumentId != 0)
-            //{
-            //    list = list.Where(x => x.InstrumentId == filter.InstrumentId).ToList();
-            //}
+            if (tradeList.Count==0)
+            {
+                tradeList.AddRange(list);
+            }
 
             if (filter.OrderSide != 0)
             {

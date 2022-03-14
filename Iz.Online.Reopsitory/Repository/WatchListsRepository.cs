@@ -33,7 +33,7 @@ namespace Iz.Online.Reopsitory.Repository
                 }).ToList();
 
                 if (wl == null || wl.Count == 0)
-                    return new ResultModel<List<WatchList>>(null, false, "دیده بان برای این مشتری تعریف نشده است", -1);
+                    return new ResultModel<List<WatchList>>(null, true, "دیده بان برای این مشتری تعریف نشده است", -1);
 
                 return new ResultModel<List<WatchList>>(wl);
 
@@ -76,7 +76,7 @@ namespace Iz.Online.Reopsitory.Repository
                             }).ToList()
                     }).FirstOrDefault();
                 if (wl == null)
-                    return new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد", -1);
+                    return new ResultModel<WatchListDetails>(null, true, "دیده بان یافت نشد", -1);
 
                 return new ResultModel<WatchListDetails>(wl);
 
@@ -197,7 +197,7 @@ namespace Iz.Online.Reopsitory.Repository
                           }).Distinct().ToList();
 
                 if (wl == null || wl.Count == 0)
-                    return new ResultModel<List<WatchList>>(null, false, "دیده بان یافت نشد", -1);
+                    return new ResultModel<List<WatchList>>(null, true, "دیده بان یافت نشد", -1);
 
                 return new ResultModel<List<WatchList>>(wl);
 
