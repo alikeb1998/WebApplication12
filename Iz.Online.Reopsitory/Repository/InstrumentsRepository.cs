@@ -246,10 +246,21 @@ namespace Iz.Online.Reopsitory.Repository
 
         #region instrument
 
+        public void CleareCache()
+        {
+            var allInstrument = _redis.Keys(pattern: "Instrument*");
+
+            foreach (var instrument in allInstrument)
+            {
+                _cache.Remove(instrument);
+
+            }
+        }
         public List<InstrumentList> InstrumentData()
         {
             try
             {
+                _cache.Remove("");
                 var allInstrument = _redis.Keys(pattern: "Instrument*");
                 List<InstrumentList> result = new List<InstrumentList>();
                 foreach (var instrument in allInstrument)
@@ -421,7 +432,7 @@ namespace Iz.Online.Reopsitory.Repository
         public List<string> GetInstrumentHubs(string NscCode)
         {
 
-            var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument"+NscCode);
+            var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument" + NscCode);
             List<string> result = new List<string>();
             foreach (var hub in allHubs)
             {

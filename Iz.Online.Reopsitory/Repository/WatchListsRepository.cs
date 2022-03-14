@@ -122,6 +122,8 @@ namespace Iz.Online.Reopsitory.Repository
                 }
                 query = query.Substring(0, query.Length - 1);
 
+                var c = $"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}')";
+
                 _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}');{query}");
 
 

@@ -26,7 +26,10 @@ namespace Iz.Online.Services.Services
         }
 
 
-
+       public void CleareCache()
+        {
+            _instrumentsRepository.CleareCache();
+        }
         public InstrumentList InstrumentData(int instrumentId)
         {
             return _instrumentsRepository.InstrumentData(instrumentId);

@@ -24,9 +24,9 @@ namespace Iz.Online.API.Controllers
         // get watchlist.
       
         [HttpGet("WatchLists")]
-        public ResultModel<List<WatchList>> WatchLists(string customerId)
+        public ResultModel<List<WatchList>> WatchLists(string TradingId)
         {
-            var result = _watchListsServices.UserWatchLists(customerId);
+            var result = _watchListsServices.UserWatchLists(TradingId);
             return result;
         }
 

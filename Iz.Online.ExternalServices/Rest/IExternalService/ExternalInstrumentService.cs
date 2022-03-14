@@ -122,7 +122,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 _instrumentsRepository.LogException(e);
                 return false;
             }
-
+            
         }
         public void StartConsume()
         {

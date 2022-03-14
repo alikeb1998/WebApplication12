@@ -138,8 +138,10 @@ namespace Iz.Online.Services.Services
 
         public bool UpdateInstrumentsDb()
         {
-            return _externalInstrumentsService.UpdateInstrumentList();
+            _cacheService.CleareCache();
 
+            return _externalInstrumentsService.UpdateInstrumentList();
+            
         }
     }
 
