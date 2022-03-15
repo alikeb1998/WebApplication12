@@ -89,7 +89,7 @@ namespace Iz.Online.Services.Services
 
             var oldWl = _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
-                if (oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
+                if (oldWl.Model!=null && oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
                     resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
                     return true;

@@ -48,8 +48,7 @@ namespace Iz.Online.HubHandler.Services
         #region BESTLIMIT
         public async Task ConsumeRefreshInstrumentBestLimit(string InstrumentId)
         {
-            if (isFakeData)
-            {
+            
                 var c = 0;
                 while (c < 50)
                 {
@@ -72,6 +71,8 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
+                                BuyWeight = 50,
+                                SellWeight = 0
 
                             },
                             orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
@@ -82,7 +83,8 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
-
+                                SellWeight = 20,
+                                BuyWeight = 0
                             },
                             orderRow3 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                             {
@@ -92,6 +94,8 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
+                                BuyWeight = 50,
+                                SellWeight = 0
 
                             },
                             orderRow4 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
@@ -102,7 +106,8 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
-
+                                SellWeight = 20,
+                                BuyWeight = 0,
                             },
                             orderRow5 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
                             {
@@ -112,6 +117,9 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
+                                BuyWeight =50,
+                                SellWeight= 0,
+
 
                             },
                             orderRow6 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
@@ -122,7 +130,8 @@ namespace Iz.Online.HubHandler.Services
                                 countBestSale = rnd.Next(20, 50),
                                 priceBestSale = rnd.Next(3000, 50000),
                                 volumeBestSale = rnd.Next(100000, 1000000),
-
+                                SellWeight = 20,
+                                BuyWeight = 0,
                             },
 
 
@@ -141,11 +150,7 @@ namespace Iz.Online.HubHandler.Services
 
                     }
                 }
-            }
-            else
-            {
-
-            }
+            
 
         }
 
