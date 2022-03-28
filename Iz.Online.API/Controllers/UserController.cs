@@ -77,7 +77,7 @@ namespace Iz.Online.API.Controllers
         public ResultModel<CheckedOtp> CheckOtp([FromBody] Otp otp)
         {
             var res = _userService.CheckOtp(otp);
-            SetToken(res.Model.Token);
+           // SetToken(res.Model.Token);
             return res;
 
         }

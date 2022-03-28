@@ -315,9 +315,10 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-                var dataBytes = _cache.Get("omsId" + omsId);
+                var dataBytes = _cache.Get("omsId" + omsId); 
+                //var dataBytes = _cache.Get("omsId" + omsId);
                 if (dataBytes == null)
-                    CacheInstrumentsData();
+                   CacheInstrumentsData();
 
                 dataBytes = _cache.Get("omsId" + omsId);
                 var result = JsonConvert.DeserializeObject<int>(Encoding.Default.GetString(dataBytes));
@@ -402,11 +403,13 @@ namespace Iz.Online.Reopsitory.Repository
                         SellCommissionRate = instrument.SellCommisionRate,
 
                     });
+                    var omsId = JsonConvert.SerializeObject(instrument.Id);
+                    var omsIdContent = Encoding.UTF8.GetBytes(omsId);
                     var content = Encoding.UTF8.GetBytes(serializedData);
                     _cache.Set("Instrument" + instrument.Id, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
 
                     content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Id = instrument.Id }));
-                    _cache.Set("omsId" + instrument.InstrumentId, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                    _cache.Set("omsId" + instrument.InstrumentId, omsIdContent, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
 
                 }
 

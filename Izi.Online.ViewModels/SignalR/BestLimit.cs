@@ -1,10 +1,12 @@
-﻿using System;
+﻿
+using Iz.Online.OmsModels.ResponsModels.BestLimits;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Iz.Online.OmsModels.ResponsModels.BestLimits
+namespace Izi.Online.ViewModels.SignalR
 {
     public class BestLimit
     {
@@ -14,6 +16,8 @@ namespace Iz.Online.OmsModels.ResponsModels.BestLimits
         public OrderRow orderRow4 { get; set; }
         public OrderRow orderRow5 { get; set; }
         public OrderRow orderRow6 { get; set; }
+        public bool IsSellQueue { get; set; }
+        public bool IsBuyQueue { get; set; }
         public bool changeRow1 { get; set; }
         public bool changeRow2 { get; set; }
         public bool changeRow3 { get; set; }

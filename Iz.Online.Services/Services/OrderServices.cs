@@ -67,7 +67,7 @@ namespace Iz.Online.Services.Services
                 CustomerId = addOrderModel.TradingId,
             };
             addOrderModel.InstrumentId = instrumentData.InstrumentId;
-           
+
             var addOrderResult = _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)
@@ -136,25 +136,25 @@ namespace Iz.Online.Services.Services
 
             var result = from trade in allActiveOrders
                          join instrument in instruments on trade.InstrumentId equals instrument.InstrumentId
-                select new ActiveOrder()
-                {
-                    Quantity = trade.Quantity,
-                    ExecutedQ = trade.ExecutedQ,
-                    InstrumentName = trade.InstrumentName,
-                    OrderSide = trade.OrderSide,
-                    OrderSideText = trade.OrderSideText,
-                    RemainedQ = trade.RemainedQ,
-                    ValidityType = trade.ValidityType,
-                    OrderQtyWait = trade.OrderQtyWait,
-                    CreatedAt = trade.CreatedAt,
-                    Price = trade.Price,
-                    State = trade.State,
-                    NscCode = trade.NscCode,
-                    ValidityInfo = trade.ValidityInfo,
-                    ExecutePercent = trade.ExecutePercent,
-                    InstrumentId = (int)instrument.Id,
-                    StateText = trade.StateText
-                };
+                         select new ActiveOrder()
+                         {
+                             Quantity = trade.Quantity,
+                             ExecutedQ = trade.ExecutedQ,
+                             InstrumentName = trade.InstrumentName,
+                             OrderSide = trade.OrderSide,
+                             OrderSideText = trade.OrderSideText,
+                             RemainedQ = trade.RemainedQ,
+                             ValidityType = trade.ValidityType,
+                             OrderQtyWait = trade.OrderQtyWait,
+                             CreatedAt = trade.CreatedAt,
+                             Price = trade.Price,
+                             State = trade.State,
+                             NscCode = trade.NscCode,
+                             ValidityInfo = trade.ValidityInfo,
+                             ExecutePercent = trade.ExecutePercent,
+                             InstrumentId = (int)instrument.Id,
+                             StateText = trade.StateText
+                         };
 
             return new ResultModel<List<ActiveOrder>>(result.ToList());
         }
@@ -221,19 +221,21 @@ namespace Iz.Online.Services.Services
                 InstrumentName = x.Instrument.name,
                 ValueOfExeCutedQ = x.ExecutedQ * x.price,
                 ValidityTypeText = "",
-                InstrumentId = x.Instrument.id
+                InstrumentId = x.Instrument.id,
+                OrderSide = x.orderSide
             }).ToList();
 
             var a = AllOrdersFilter(result, filter);
-            var res = new AllOrderReport()
-            {
-                Model = a,
-                OrderType = filter.OrderType,
-                PageNumber = filter.PageNumber,
-                PageSize = filter.PageSize,
-                TotalCount = result.Count,
-            };
-            return new ResultModel<AllOrderReport>(res);
+            //var res = new AllOrderReport()
+            //{
+            //    Model = a,
+            //    OrderType = filter.OrderType,
+            //    PageNumber = filter.PageNumber,
+            //    PageSize = filter.PageSize,
+            //    TotalCount = result.Count,
+            //};
+            a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
+            return new ResultModel<AllOrderReport>(a);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
@@ -331,7 +333,7 @@ namespace Iz.Online.Services.Services
             }
             return report.Model.OrderBy(x => x.CreatedAt).ToList();
         }
-        private List<AllOrder> AllOrdersFilter(List<AllOrder> list, AllOrderCustomFilter filter)
+        private AllOrderReport AllOrdersFilter(List<AllOrder> list, AllOrderCustomFilter filter)
         {
 
 
@@ -346,21 +348,24 @@ namespace Iz.Online.Services.Services
                 filter.To = a[0].CreatedAt;
             }
 
-            
-            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From)>=0 && DateTime.Compare(filter.To, x.CreatedAt)>=0).ToList();
-            
+
+            list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.CreatedAt) >= 0).ToList();
+
 
             //list = list.Where
             //(x => x.CreatedAt.Ticks - DateTime.MinValue.Ticks >= filter.From.Ticks - DateTime.MinValue.Ticks && x.CreatedAt.Ticks - DateTime.MinValue.Ticks <= filter.To.Ticks - DateTime.MinValue.Ticks)
             //.OrderByDescending(x => x.CreatedAt).ToList();
 
             var instrumentList = new List<AllOrder>();
-
+           // var t = _cacheService.GetLocalInstrumentIdFromOmsId(658);
             foreach (var f in filter.InstrumentId)
             {
                 if (f != 0)
                 {
-                    var a = list.Where(x => x.InstrumentId == f).ToList();
+                    
+                   // var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
+                    var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
+                   // var a = list.Where(x => x.InstrumentId == f).ToList();
                     instrumentList.AddRange(a);
                 }
                 //else
@@ -392,43 +397,43 @@ namespace Iz.Online.Services.Services
                 }
             }
 
-            if (!string.IsNullOrEmpty(filter.State))
+            if (filter.State != 0)
             {
                 switch (filter.State)
                 {
-                    case "انجام شده":
+                    case 5:
                         instrumentList = instrumentList.Where(x => x.State == "انجام شده").ToList();
                         break;
 
-                    case "منقضی شده":
+                    case 4:
                         instrumentList = instrumentList.Where(x => x.State == "منقضی شده").ToList();
                         break;
-                    case "درحال انتظار":
+                    case 6:
                         instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
                         break;
-                    case "لغو شده":
+                    case 1:
                         instrumentList = instrumentList.Where(x => x.State == "لغو شده").ToList();
                         break;
-                    case "سفارش به طور کامل اجرا شده است":
+                    case 2:
                         instrumentList = instrumentList.Where(x => x.State == "سفارش به طور کامل اجرا شده است").ToList();
                         break;
-                    case "خطای هسته معاملات":
+                    case 3:
                         instrumentList = instrumentList.Where(x => x.State == "خطای هسته معاملات").ToList();
                         break;
-                    case "در صف":
-                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                    case 7:
+                        instrumentList = instrumentList.Where(x => x.State == "در صف").ToList();
                         break;
-                    case "در صف در انتظار تایید لغو":
-                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                    case 8:
+                        instrumentList = instrumentList.Where(x => x.State == "در صف در انتظار تایید لغو").ToList();
                         break;
-                    case "در صف در انتظار تایید ویرایش":
-                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                    case 9:
+                        instrumentList = instrumentList.Where(x => x.State == "در صف در انتظار تایید ویرایش").ToList();
                         break;
-                    case "قسمتی انجام شده":
-                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                    case 10:
+                        instrumentList = instrumentList.Where(x => x.State == "قسمتی انجام شده").ToList();
                         break;
-                    case "رد شده":
-                        instrumentList = instrumentList.Where(x => x.State == "درحال انتظار").ToList();
+                    case 11:
+                        instrumentList = instrumentList.Where(x => x.State == "رد شده").ToList();
                         break;
                 }
             }
@@ -437,10 +442,10 @@ namespace Iz.Online.Services.Services
                 Model = instrumentList.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
-                TotalCount = list.Count,
+                TotalCount = instrumentList.Count,
                 OrderType = filter.OrderType,
             };
-            return report.Model.OrderBy(x => x.CreatedAt).ToList();
+            return report;
         }
     }
 }

@@ -17,11 +17,12 @@ namespace Iz.Online.HubHandler.IServices
     {
         Task ConsumeRefreshInstrumentBestLimit(string InstrumentId);
         Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId);
-        Task PushOrderAdded();
+        Task PushOrderAdded_Original();
       
         Task PushTradeState();
 
         Task CreateAllConsumers();
         Task PushPrice(string InstrumentId);
+        Task PushPrice_Original(string InstrumentId);
     }
 }
