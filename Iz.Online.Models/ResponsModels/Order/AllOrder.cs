@@ -18,6 +18,7 @@ namespace Iz.Online.OmsModels.ResponsModels.Order
         public DateTime CreatedAt { get; set; }
         public long ExecutedQ { get; set; }
         public int ValidityType { get; set; }
+        public ValidityInfo ValidityInfo { get; set; }
         public Instrument Instrument { get; set; }
     }
 }

@@ -398,8 +398,6 @@ namespace Iz.Online.HubHandler.Services
                                  _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { model1 });
 
 
-
-
                         var t = consumeResult.Message.Value;
 
                     }

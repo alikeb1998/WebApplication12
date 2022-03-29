@@ -220,9 +220,18 @@ namespace Iz.Online.Services.Services
                 ValidityType = x.ValidityType,
                 InstrumentName = x.Instrument.name,
                 ValueOfExeCutedQ = x.ExecutedQ * x.price,
-                ValidityTypeText = "",
+                ValidityTypeText = x.ValidityType switch
+                {
+                    1 => "روز",
+                    2 => "معتبر تا تاریخ",
+                    3 => "معتبر تا لغو",
+                    4 => "انجام و حذف",
+                    _ => " "
+                },
+
                 InstrumentId = x.Instrument.id,
-                OrderSide = x.orderSide
+                OrderSide = x.orderSide,
+
             }).ToList();
 
             var a = AllOrdersFilter(result, filter);
@@ -357,15 +366,15 @@ namespace Iz.Online.Services.Services
             //.OrderByDescending(x => x.CreatedAt).ToList();
 
             var instrumentList = new List<AllOrder>();
-           // var t = _cacheService.GetLocalInstrumentIdFromOmsId(658);
+            // var t = _cacheService.GetLocalInstrumentIdFromOmsId(658);
             foreach (var f in filter.InstrumentId)
             {
                 if (f != 0)
                 {
-                    
-                   // var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
+
+                    // var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
                     var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
-                   // var a = list.Where(x => x.InstrumentId == f).ToList();
+                    // var a = list.Where(x => x.InstrumentId == f).ToList();
                     instrumentList.AddRange(a);
                 }
                 //else
@@ -447,5 +456,6 @@ namespace Iz.Online.Services.Services
             };
             return report;
         }
+
     }
 }
