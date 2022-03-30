@@ -231,6 +231,7 @@ namespace Iz.Online.Services.Services
 
                 InstrumentId = x.Instrument.id,
                 OrderSide = x.orderSide,
+                ValidityInfo = x.ValidityInfo
 
             }).ToList();
 

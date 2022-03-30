@@ -76,7 +76,7 @@ namespace Iz.Online.API.Controllers
             states.Add(new OrderStates { Code = 2, Key = "OrderCompletelyExecuted", Value = "سفارش به طور کامل اجرا شده است" });
             states.Add(new OrderStates { Code = 3, Key = "OrderError", Value = "خطای هسته معاملات" });
             states.Add(new OrderStates { Code = 4, Key = "OrderExpired", Value = "منقضی شده" });
-            states.Add(new OrderStates { Code = 5, Key = "OrderFilled", Value = "انچام شده" });
+            states.Add(new OrderStates { Code = 5, Key = "OrderFilled", Value = "انجام شده" });
             states.Add(new OrderStates { Code = 6, Key = "OrderInProgress", Value = "در حال انتظار" });
             states.Add(new OrderStates { Code = 7, Key = "OrderInQueue", Value = "در صف" });
             states.Add(new OrderStates { Code = 8, Key = "OrderInQueuePendingForCancel", Value = "در صف در انتظار تایید لغو" });
