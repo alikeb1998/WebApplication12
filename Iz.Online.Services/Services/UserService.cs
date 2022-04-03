@@ -55,7 +55,6 @@ namespace Iz.Online.Services.Services
                 ProfitPercent = x.ProfitPercent,
                 SellProfit = x.SellProfit,
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Instrument.id),
-                //NscCode =Convert.ToString( _cacheService.GetLocalInstrumentIdFromOmsId(x.Instrument.id))// x.Instrument.code
             }).ToList();
 
             return new ResultModel<List<Asset>>(allAssets);
@@ -146,54 +145,72 @@ namespace Iz.Online.Services.Services
                     Hubs = new List<string>() { hubId }
                 });
                 if (!setResult)
-                    return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 500);
+                    return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 404);
 
                 return new ResultModel<bool>(true);
             }
 
-            return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 500);
+            return new ResultModel<bool>(false, false, "خطا در دریافت اطلاعات کاربری", 404);
 
         }
 
         public ResultModel<Captcha> Captcha()
         {
             var res = _externalUserService.Captcha();
-            var captcha = new Captcha()
+            if (res.Model != null && res.IsSuccess)
             {
+                var captcha = new Captcha()
+                {
 
-                CaptchaImage = res.Model.Captcha.Base64,
-                Id = res.Model.Captcha.Id
+                    CaptchaImage = res.Model.Captcha.Base64,
+                    Id = res.Model.Captcha.Id
 
-            };
-            return new ResultModel<Captcha>(captcha);
+                };
+                return new ResultModel<Captcha>(captcha);
+            }
+            return new ResultModel<Captcha>(null, false, res.Message, res.StatusCode);
         }
 
         public ResultModel<OtpResult> SendOtp(Credentials credentials)
         {
             var result = _externalUserService.SendOtp(credentials);
-            var OtpResult = new OtpResult()
+            if (result.Model != null && result.IsSuccess)
             {
-                OtpId = result.Model.OtpId,
-                ExpireAt = result.Model.ExpireAt
-            };
-
-            return new ResultModel<OtpResult>(OtpResult, result.IsSuccess, result.Message, result.StatusCode);
+                
+                var OtpResult = new OtpResult()
+                {
+                    OtpId = result.Model.OtpId,
+                    ExpireAt = result.Model.ExpireAt
+                };
+                return new ResultModel<OtpResult>(OtpResult);
+            }
+            return new ResultModel<OtpResult>(null, false, result.Message, result.StatusCode);
         }
+
         public ResultModel<CheckedOtp> CheckOtp(Otp otp)
         {
             var result = _externalUserService.CheckOtp(otp);
-            var checkOtp = new CheckedOtp()
+            if (result.Model != null && result.IsSuccess)
             {
-                Token = result.Model.Token,
-                Sockettoken = result.Model.SocketToken
-            };
+                var checkOtp = new CheckedOtp()
+                {
+                    Token = result.Model.Token,
+                    Sockettoken = result.Model.SocketToken
+                };
 
-            return new ResultModel<CheckedOtp>(checkOtp, result.IsSuccess, result.Message, result.StatusCode);
+                return new ResultModel<CheckedOtp>(checkOtp);
+            }
+            return new ResultModel<CheckedOtp>(null, false, result.Message, result.StatusCode);
         }
         public ResultModel<bool> LogOut()
         {
-            var res = _externalUserService.LogOut().StatusCode == 200;
-            return new ResultModel<bool>(res);
+            var res = _externalUserService.LogOut();
+            if (res.StatusCode == 200)
+            {
+                return new ResultModel<bool>(true);
+            }
+            return new ResultModel<bool>(false,false, res.Message, res.StatusCode);
+          
         }
 
         public ResultModel<CustomerData> GetCustomerInfo()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Iz.Online.OmsModels.ResponsModels.User
 {
-    public class Login
+    public class Login:OmsResponseBaseModel
     {
         public Captcha Captcha { get; set; }
     }

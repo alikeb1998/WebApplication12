@@ -39,7 +39,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public ResultModel<Login> Captcha()
         {
             var result = HttpGetRequest<Login>("user/captcha");
-            return new ResultModel<Login>(result);
+            return new ResultModel<Login>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
         public ResultModel<OtpResult> SendOtp(Credentials credentials)
@@ -57,7 +57,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             var result = HttpDeleteRequest<LogOut>("user/logout",null);
 
-            return new ResultModel<LogOut>(result);
+            return new ResultModel<LogOut>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
         public ResultModel<model.CustomerInfo> CustomerInfo()

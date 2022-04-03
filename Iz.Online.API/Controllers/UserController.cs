@@ -77,7 +77,6 @@ namespace Iz.Online.API.Controllers
         public ResultModel<CheckedOtp> CheckOtp([FromBody] Otp otp)
         {
             var res = _userService.CheckOtp(otp);
-           // SetToken(res.Model.Token);
             return res;
 
         }
@@ -159,27 +158,6 @@ namespace Iz.Online.API.Controllers
             var result = _userService.AllAssetsPaged(filter);
             return result;
         }
-        //set a token in database.
-  
-        private static string SetToken(string token)
-        {
-            try
-            {
-                // _userService.SetToken(token);
-                var path = @"C:\jafarinejad\store\token.txt";
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
-                System.IO.File.Create(path).Close();
-                System.IO.File.WriteAllText(path, token);
-
-                return "token is set";
-            }
-            catch (Exception e)
-            {
-                return e.Message.ToString() + " ___ " + e.InnerException.Message.ToString();
-            }
-        }
+       
     }
 }
