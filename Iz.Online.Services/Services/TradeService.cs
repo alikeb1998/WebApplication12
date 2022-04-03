@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.IExternalService;
+using System.Net;
 
 namespace Iz.Online.Services.Services
 {
@@ -51,6 +52,10 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)
         {
+            if (filter.PageNumber == 0 || filter.PageSize == 0)
+            {
+                return new ResultModel<List<Trade>>(null, false, 400);
+            }
             var trades = _externalTradeService.Trades();
             if (!trades.IsSuccess || trades.Model.Trades == null)
                 return new ResultModel<List<Trade>>(null, trades.StatusCode == 200, trades.Message, trades.StatusCode);
@@ -75,7 +80,16 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<TradeHistoryReport> History(TradeHistoryFilter filter)
         {
+            if (filter.PageNumber == 0 || filter.PageSize == 0)
+            {
+                return new ResultModel<TradeHistoryReport>(null, false, 400);
+            }
+
             var list = _externalTradeService.Trades();
+           
+            if (list.IsSuccess && list.Model.Trades!=null)
+            {
+
             var result = list.Model.Trades.Select(x => new Trade()
             {
                 Price = x.Price,
@@ -100,8 +114,8 @@ namespace Iz.Online.Services.Services
                 TotalCount = result.Count,
             };
             return new ResultModel<TradeHistoryReport>(res);
-
-
+            }
+            return new ResultModel<TradeHistoryReport>(null, false, list.Message, list.StatusCode);
         }
         private List<Trade> Filter(List<Trade> list, TradeFilter filter)
         {

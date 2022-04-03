@@ -28,6 +28,13 @@ namespace Izi.Online.ViewModels.ShareModels
             IsSuccess = isSuccess;
 
         }
+        public ResultModel(T model,  bool isSuccess, int statusCode)
+        {
+            Message = "خطای پیش بینی نشده";
+            Model = model;
+            IsSuccess = false;
+            StatusCode = statusCode;
+        }
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
         public int StatusCode { get; set; }

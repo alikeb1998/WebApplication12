@@ -208,6 +208,10 @@ namespace Iz.Online.Services.Services
 
         public ResultModel<AllOrderReport> AllSortedOrder(AllOrderCustomFilter filter)
         {
+            if (filter.PageNumber == 0 || filter.PageSize == 0)
+            {
+                return new ResultModel<AllOrderReport>(null, false, 400);
+            }
             var allOrders = _externalOrderService.GetAll();
             if (allOrders.IsSuccess && allOrders.Model != null && allOrders.Model.orders.Count > 0)
             {
@@ -239,7 +243,7 @@ namespace Iz.Online.Services.Services
                 var a = AllOrdersFilter(result, filter);
 
                 a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
-                return new ResultModel<AllOrderReport>(a, allOrders.IsSuccess=allOrders.StatusCode==200, allOrders.Message, allOrders.StatusCode);
+                return new ResultModel<AllOrderReport>(a);
 
             }
             return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
