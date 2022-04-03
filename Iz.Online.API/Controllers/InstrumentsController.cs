@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
-
+using Izi.Online.ViewModels.Instruments.BestLimit;
 
 namespace Iz.Online.API.Controllers
 {
@@ -46,13 +46,8 @@ namespace Iz.Online.API.Controllers
         public IActionResult List()
         {
             var result = _instrumentsService.InstrumentList();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+           return new Respond<List<InstrumentList>>().ActionRespond(result);
+            
         }
 
 
@@ -62,13 +57,7 @@ namespace Iz.Online.API.Controllers
         {
             //model.InstrumentId = "IRO1FOLD0001";
             var result = _instrumentsService.BestLimits(model.InstrumentId , model.HubId);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<BestLimits>().ActionRespond(result);
         }
 
         //get instrument details as prices or states and so on.
@@ -78,39 +67,21 @@ namespace Iz.Online.API.Controllers
             //model.InstrumentId = 658;
             //model.NscCode = "IRO1FOLD0001";
             var result = _instrumentsService.Detail(model.InstrumentId , model.HubId);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<InstrumentDetail>().ActionRespond(result);
         }
         // گذاشتن یادداشت برای  نماد
         [HttpPost("AddComment")]
         public IActionResult AddComment([FromBody] AddCommentForInstrument model)
         {
             var result = _instrumentsService.AddCommentToInstrument(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<bool>().ActionRespond(result);
         }
         // مشاهده یادداشت یک  نماد
         [HttpPost("GetComment")]
         public IActionResult GetComment([FromBody] GetInstrumentComment model)
         {
             var result = _instrumentsService.GetInstrumentComment(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<string>().ActionRespond(result);
         }
     }
 }

@@ -54,13 +54,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult logOut()
         {
             var result = _userService.LogOut();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<bool>().ActionRespond(result);
 
         }
 
@@ -68,13 +62,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult Captcha()
         {
             var result = _userService.Captcha();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<Captcha>().ActionRespond(result);
 
         }
 
@@ -82,27 +70,14 @@ namespace Iz.Online.API.Controllers
         public IActionResult SendOtp([FromBody] Credentials credentials)
         {
             var result = _userService.SendOtp(credentials);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
-
+            return new Respond<OtpResult>().ActionRespond(result);
         }
 
         [HttpPost("CheckOtp")]
         public IActionResult CheckOtp([FromBody] Otp otp)
         {
             var result = _userService.CheckOtp(otp);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<CheckedOtp>().ActionRespond(result);
 
         }
 
@@ -110,13 +85,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult CustomerInfo()
         {
             var result =  _userService.GetCustomerInfo();
-                        return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<CustomerData>().ActionRespond(result);
         }
         [HttpGet("Config")]
         public ResultModel<List<AppConfigs>> Config()
@@ -163,13 +132,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult SetHubId([FromBody] CustomerHub model)
         {
             var result = _userService.SetUserHub(_token_, model.HubId);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<bool>().ActionRespond(result);
         }
 
     
@@ -180,41 +143,23 @@ namespace Iz.Online.API.Controllers
         {
 
             var result = _userService.Wallet();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
-        
-    }
+            return new Respond<Wallet>().ActionRespond(result);
+
+        }
 
         //get customer portfolio
         [HttpGet("portfolio")]
         public IActionResult AllAssets()
         {
             var result = _userService.AllAssets();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<Asset>>().ActionRespond(result);
         }
 
         [HttpGet("portfolioPaged")]
         public IActionResult AllAssetsPaged(PortfoFilter filter)
         {
             var result = _userService.AllAssetsPaged(filter);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<Asset>>().ActionRespond(result);
         }
        
     }

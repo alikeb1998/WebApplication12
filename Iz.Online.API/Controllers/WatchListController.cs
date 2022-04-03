@@ -27,13 +27,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult WatchLists(string TradingId)
         {
             var result = _watchListsServices.UserWatchLists(TradingId);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<WatchList>>().ActionRespond(result);
         }
 
         //get watchlist details.
@@ -41,13 +35,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult WatchListsDetails([FromBody] SearchWatchList model)
         {
             var result = _watchListsServices.WatchListDetails(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<WatchListDetails>().ActionRespond(result);
         }
 
         //delete watchlist
@@ -55,13 +43,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult DeleteWatchList([FromBody] SearchWatchList model)
         {
             var result = _watchListsServices.DeleteWatchList(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<WatchList>>().ActionRespond(result);
         }
         
         //add new watchlist.
@@ -69,26 +51,14 @@ namespace Iz.Online.API.Controllers
         public IActionResult NewWatchList([FromBody] NewWatchList model)
         {
             var result = _watchListsServices.NewWatchList(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //add new watchlist.
         [HttpPost("UpdateWatchList")]
         public IActionResult UpdateWatchList([FromBody] EditWatchList model)
         {
             var result = _watchListsServices.UpdateWatchList(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<WatchListDetails>().ActionRespond(result);
         }
 
         //add an instrument to watchlists.
@@ -96,39 +66,21 @@ namespace Iz.Online.API.Controllers
         public IActionResult AddInstrumentToWatchList([FromBody] EditEathListItems model)
         {
             var result = _watchListsServices.AddInstrumentToWatchList(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //remove an instrument from watchlist.
         [HttpPost("RemoveInstrumentFromWatchList")]
         public IActionResult RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
             var result = _watchListsServices.RemoveInstrumentFromWatchList(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //یک نماد در چکدام دیده بان ها است ؟
         [HttpPost("InstrumentWatchLists")]
         public IActionResult InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
             var result = _watchListsServices.InstrumentWatchLists(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<WatchList>>().ActionRespond(result);
         }
 
       

@@ -63,13 +63,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult Add([FromBody] AddOrderModel addOrderModel)
         {
             var result = _orderService.Add(addOrderModel);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<AddOrderResult>().ActionRespond(result);
         }
 
         //get a list of all active orders.
@@ -77,14 +71,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult AllActive()
         {
             var result = _orderService.AllActive();
-
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<ActiveOrder>>().ActionRespond(result);
         }
 
         //get a list of all active orders.
@@ -92,14 +79,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult AllActivePaged([FromBody] OrderFilter filter)
         {
             var result = _orderService.AllActivePaged(filter);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
-
+            return new Respond<OrderReport>().ActionRespond(result);
         }
 
         //update & edit an order.
@@ -107,14 +87,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult Update([FromBody] UpdateOrder model)
         {
             var result = _orderService.Update(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
-
+            return new Respond<UpdatedOrder>().ActionRespond(result);
         }
 
         //cancel an order.
@@ -122,14 +95,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult Cancel([FromBody] CancelOrder model)
         {
             var result = _orderService.Cancel(model);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
-
+            return new Respond<CanceledOrder>().ActionRespond(result);
         }
 
         //get history of all orders.
@@ -137,13 +103,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult AllSortedOrder([FromBody] AllOrderCustomFilter filter)
         {
             var result = _orderService.AllSortedOrder(filter);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<AllOrderReport>().ActionRespond(result);
 
         }
 

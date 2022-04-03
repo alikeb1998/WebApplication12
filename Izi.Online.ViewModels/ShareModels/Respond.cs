@@ -7,18 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Izi.Online.ViewModels.ShareModels
 {
-    public class Respond<T>
+    public  class Respond<T>:ControllerBase
     {
         public ResultModel<T> Model { get; set; }
-        public Respond(ResultModel<T> Model)
+        public IActionResult ActionRespond(ResultModel<T> Model)
         {
-            this.Model = Model;
+            this.Model = Model; 
+            return Model.StatusCode switch
+            {
+                200 => Ok(Model),
+                401 => Unauthorized(Model),
+                404 => NotFound(Model),
+                _ => BadRequest(Model),
+            };
         }
-        //public IActionResult ActionRespond(ResultModel<T> Model)
-        //{
-        //    var res = 1;
-        //    return Ok();
-        //}
 
     }
 }

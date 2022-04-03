@@ -5,9 +5,10 @@ using Iz.Online.Services.IServices;
 using Iz.Online.SignalR;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
-using model = Izi.Online.ViewModels.Trades;
+using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Trades;
 
 namespace Iz.Online.API.Controllers
 {
@@ -36,26 +37,14 @@ namespace Iz.Online.API.Controllers
         public IActionResult Trades()
         {
             var result = _tradeServices.Trades();
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<Trade>>().ActionRespond(result);
         }
       
         [HttpPost("dailyTradesPaged")]
         public IActionResult TradesPaged([FromBody] TradeFilter filter)
         {
             var result = _tradeServices.TradesPaged(filter);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<List<Trade>>().ActionRespond(result);
         }
 
         //get history of all trades.
@@ -63,13 +52,7 @@ namespace Iz.Online.API.Controllers
         public IActionResult History([FromBody] TradeHistoryFilter filter)
         {
             var result = _tradeServices.History(filter);
-            return result.StatusCode switch
-            {
-                200 => Ok(result),
-                401 => Unauthorized(result),
-                404 => NotFound(result),
-                _ => BadRequest(result),
-            };
+            return new Respond<TradeHistoryReport>().ActionRespond(result);
 
         }
 
