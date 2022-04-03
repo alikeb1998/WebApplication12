@@ -209,43 +209,40 @@ namespace Iz.Online.Services.Services
         public ResultModel<AllOrderReport> AllSortedOrder(AllOrderCustomFilter filter)
         {
             var allOrders = _externalOrderService.GetAll();
-            var result = allOrders.Model.orders.Select(x => new AllOrder()
+            if (allOrders.IsSuccess && allOrders.Model != null && allOrders.Model.orders.Count > 0)
             {
-                CreatedAt = x.CreatedAt,
-                ExecutedQ = x.ExecutedQ,
-                Id = x.id,
-                price = x.price,
-                Quantity = x.quantity,
-                State = x.state,
-                ValidityType = x.ValidityType,
-                InstrumentName = x.Instrument.name,
-                ValueOfExeCutedQ = x.ExecutedQ * x.price,
-                ValidityTypeText = x.ValidityType switch
+                var result = allOrders.Model.orders.Select(x => new AllOrder()
                 {
-                    1 => "روز",
-                    2 => "معتبر تا تاریخ",
-                    3 => "معتبر تا لغو",
-                    4 => "انجام و حذف",
-                    _ => " "
-                },
+                    CreatedAt = x.CreatedAt,
+                    ExecutedQ = x.ExecutedQ,
+                    Id = x.id,
+                    price = x.price,
+                    Quantity = x.quantity,
+                    State = x.state,
+                    ValidityType = x.ValidityType,
+                    InstrumentName = x.Instrument.name,
+                    ValueOfExeCutedQ = x.ExecutedQ * x.price,
+                    ValidityTypeText = x.ValidityType switch
+                    {
+                        1 => "روز",
+                        2 => "معتبر تا تاریخ",
+                        3 => "معتبر تا لغو",
+                        4 => "انجام و حذف",
+                        _ => " "
+                    },
 
-                InstrumentId = x.Instrument.id,
-                OrderSide = x.orderSide,
-                ValidityInfo = x.ValidityInfo
+                    InstrumentId = x.Instrument.id,
+                    OrderSide = x.orderSide,
+                    ValidityInfo = x.ValidityInfo
 
-            }).ToList();
+                }).ToList();
+                var a = AllOrdersFilter(result, filter);
 
-            var a = AllOrdersFilter(result, filter);
-            //var res = new AllOrderReport()
-            //{
-            //    Model = a,
-            //    OrderType = filter.OrderType,
-            //    PageNumber = filter.PageNumber,
-            //    PageSize = filter.PageSize,
-            //    TotalCount = result.Count,
-            //};
-            a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
-            return new ResultModel<AllOrderReport>(a);
+                a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
+                return new ResultModel<AllOrderReport>(a, allOrders.IsSuccess=allOrders.StatusCode==200, allOrders.Message, allOrders.StatusCode);
+
+            }
+            return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
         }
 
         public ResultModel<UpdatedOrder> Update(UpdateOrder model)
