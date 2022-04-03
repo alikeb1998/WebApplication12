@@ -12,6 +12,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.Reports;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 
+
 namespace Iz.Online.API.Controllers
 {
 
@@ -38,39 +39,9 @@ namespace Iz.Online.API.Controllers
 
         #endregion
 
-
-        [HttpGet("test")]
-
-        public string OnRefreshInstrumentDetails()
-        {
-            return "ok";
-            var config = new ConsumerConfig
-            {
-
-                BootstrapServers = "192.168.72.222:9092",
-                GroupId = "N1"
-            };
-
-
-            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
-            {
-                var instrumentId = "IRO1FOLD0001-bestLimit";
-                consumer.Subscribe(instrumentId);
-                while (true)
-                {
-                    var consumeResult = consumer.Consume();
-
-                    _hubContext.Clients.All.SendAsync("ReceiveMessage", "asa", consumeResult.Value);
-
-                }
-            }
-
-        }
-
         [HttpGet("OrderState")]
-        public ResultModel<List<OrderStates>> OrderStates()
+        public IActionResult OrderStates()
         {
-
             var states = new List<OrderStates>();
             states.Add(new OrderStates { Code = 1, Key = "OrderCancelled", Value = "لغو شده" });
             states.Add(new OrderStates { Code = 2, Key = "OrderCompletelyExecuted", Value = "سفارش به طور کامل اجرا شده است" });
@@ -85,57 +56,94 @@ namespace Iz.Online.API.Controllers
             states.Add(new OrderStates { Code = 11, Key = "OrderRejected", Value = "رد شده" });
 
 
-            return new ResultModel<List<OrderStates>>(states);
+            return Ok(states);
         }
         // add order
         [HttpPost("add")]
-        public ResultModel<AddOrderResult> Add([FromBody] AddOrderModel addOrderModel)
+        public IActionResult Add([FromBody] AddOrderModel addOrderModel)
         {
             var result = _orderService.Add(addOrderModel);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
         //get a list of all active orders.
         [HttpGet("all/active")]
-        public ResultModel<List<ActiveOrder>> AllActive()
+        public IActionResult AllActive()
         {
             var result = _orderService.AllActive();
-            return result;
 
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
         //get a list of all active orders.
         [HttpPost("all/activePaged")]
-        public ResultModel<OrderReport> AllActivePaged([FromBody] OrderFilter filter)
+        public IActionResult AllActivePaged([FromBody] OrderFilter filter)
         {
             var result = _orderService.AllActivePaged(filter);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         //update & edit an order.
         [HttpPost("update")]
-        public ResultModel<UpdatedOrder> Update([FromBody] UpdateOrder model)
+        public IActionResult Update([FromBody] UpdateOrder model)
         {
             var result = _orderService.Update(model);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         //cancel an order.
         [HttpPost("cancel")]
-        public ResultModel<CanceledOrder> Cancel([FromBody] CancelOrder model)
+        public IActionResult Cancel([FromBody] CancelOrder model)
         {
             var result = _orderService.Cancel(model);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
+
         //get history of all orders.
         [HttpPost("History")]
-        public ResultModel<AllOrderReport> AllSortedOrder([FromBody] AllOrderCustomFilter filter)
+        public IActionResult AllSortedOrder([FromBody] AllOrderCustomFilter filter)
         {
             var result = _orderService.AllSortedOrder(filter);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 

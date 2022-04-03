@@ -44,47 +44,79 @@ namespace Iz.Online.API.Controllers
         #endregion
         
         [HttpPost("login")]
-        public ActionResult login(CustomerHub model)
+        public IActionResult login(CustomerHub model)
         {
             return Ok(new ResultModel<List<AppConfigs>>(null));
 
         }
 
         [HttpPost("logOut")]
-        public ResultModel<bool> logOut()
+        public IActionResult logOut()
         {
-            return _userService.LogOut();
+            var result = _userService.LogOut();
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         [HttpGet("captcha")]
-        public ResultModel<Captcha> Captcha()
+        public IActionResult Captcha()
         {
-            var res = _userService.Captcha();
-            return res;
+            var result = _userService.Captcha();
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         [HttpPost("SendOtp")]
-        public ResultModel<OtpResult> SendOtp([FromBody] Credentials credentials)
+        public IActionResult SendOtp([FromBody] Credentials credentials)
         {
-            var res = _userService.SendOtp(credentials);
-            return res;
+            var result = _userService.SendOtp(credentials);
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         [HttpPost("CheckOtp")]
-        public ResultModel<CheckedOtp> CheckOtp([FromBody] Otp otp)
+        public IActionResult CheckOtp([FromBody] Otp otp)
         {
-            var res = _userService.CheckOtp(otp);
-            return res;
+            var result = _userService.CheckOtp(otp);
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 
         [HttpGet("CustomerInfo")]
-        public ResultModel<CustomerData> CustomerInfo()
+        public IActionResult CustomerInfo()
         {
-            return _userService.GetCustomerInfo();
+            var result =  _userService.GetCustomerInfo();
+                        return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
         [HttpGet("Config")]
         public ResultModel<List<AppConfigs>> Config()
@@ -128,35 +160,61 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("SetHubId")]
-        public ResultModel<bool> SetHubId([FromBody] CustomerHub model)
+        public IActionResult SetHubId([FromBody] CustomerHub model)
         {
             var result = _userService.SetUserHub(_token_, model.HubId);
-            return result;
-
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
+
+    
 
         //get customer wallet.
         [HttpGet("Wallet")]
-        public ResultModel<Wallet> Wallet()
+        public IActionResult Wallet()
         {
 
             var result = _userService.Wallet();
-            return result;
-        }
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
+        
+    }
 
         //get customer portfolio
         [HttpGet("portfolio")]
-        public ResultModel<List<Asset>> AllAssets()
+        public IActionResult AllAssets()
         {
             var result = _userService.AllAssets();
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
         [HttpGet("portfolioPaged")]
-        public ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter)
+        public IActionResult AllAssetsPaged(PortfoFilter filter)
         {
             var result = _userService.AllAssetsPaged(filter);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
        
     }

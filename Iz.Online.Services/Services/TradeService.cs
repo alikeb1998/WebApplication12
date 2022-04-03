@@ -54,7 +54,7 @@ namespace Iz.Online.Services.Services
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
-                return new ResultModel<List<Trade>>(null, false, 400);
+                return new ResultModel<List<Trade>>(null, 400);
             }
             var trades = _externalTradeService.Trades();
             if (!trades.IsSuccess || trades.Model.Trades == null)
@@ -82,7 +82,7 @@ namespace Iz.Online.Services.Services
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
-                return new ResultModel<TradeHistoryReport>(null, false, 400);
+                return new ResultModel<TradeHistoryReport>(null,  400);
             }
 
             var list = _externalTradeService.Trades();

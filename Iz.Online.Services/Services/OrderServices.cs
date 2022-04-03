@@ -161,8 +161,7 @@ namespace Iz.Online.Services.Services
         public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
         {
             var activeOrders = _externalOrderService.GetAllActives();
-            //if (activeOrders.StatusCode != 1)
-            //    return new ResultModel<List<ActiveOrder>>(null, false, activeOrders.Message, activeOrders.StatusCode);
+            
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<OrderReport>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
@@ -210,10 +209,10 @@ namespace Iz.Online.Services.Services
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
-                return new ResultModel<AllOrderReport>(null, false, 400);
+                return new ResultModel<AllOrderReport>(null, 400);
             }
             var allOrders = _externalOrderService.GetAll();
-            if (allOrders.IsSuccess && allOrders.Model != null && allOrders.Model.orders.Count > 0)
+            if (allOrders.IsSuccess && allOrders.Model.orders != null && allOrders.Model.orders.Count > 0)
             {
                 var result = allOrders.Model.orders.Select(x => new AllOrder()
                 {
@@ -241,10 +240,13 @@ namespace Iz.Online.Services.Services
 
                 }).ToList();
                 var a = AllOrdersFilter(result, filter);
+                if (a != null)
+                {
+                    a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
+                    return new ResultModel<AllOrderReport>(a);
 
-                a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
-                return new ResultModel<AllOrderReport>(a);
-
+                }
+                return new ResultModel<AllOrderReport>(null , 200, "لیست خالی است");
             }
             return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
         }
@@ -361,38 +363,25 @@ namespace Iz.Online.Services.Services
 
 
             list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.CreatedAt) >= 0).ToList();
-
-
-            //list = list.Where
-            //(x => x.CreatedAt.Ticks - DateTime.MinValue.Ticks >= filter.From.Ticks - DateTime.MinValue.Ticks && x.CreatedAt.Ticks - DateTime.MinValue.Ticks <= filter.To.Ticks - DateTime.MinValue.Ticks)
-            //.OrderByDescending(x => x.CreatedAt).ToList();
+            if (list.Count == 0)
+            {
+                return null;
+            }
 
             var instrumentList = new List<AllOrder>();
-            // var t = _cacheService.GetLocalInstrumentIdFromOmsId(658);
             foreach (var f in filter.InstrumentId)
             {
                 if (f != 0)
                 {
-
-                    // var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
                     var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
-                    // var a = list.Where(x => x.InstrumentId == f).ToList();
                     instrumentList.AddRange(a);
                 }
-                //else
-                //{
-                //    instrumentList.AddRange(list);
-                //}
             }
             if (instrumentList.Count == 0)
             {
-                instrumentList.AddRange(list);
+                return null;
             }
 
-            //if (filter.InstrumentId != 0)
-            //{
-            //    list = list.Where(x=>x.InstrumentId==filter.InstrumentId).ToList();
-            //}
 
             if (filter.OrderSide != 0)
             {

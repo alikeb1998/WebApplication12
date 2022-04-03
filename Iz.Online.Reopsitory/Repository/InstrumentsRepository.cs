@@ -260,7 +260,8 @@ namespace Iz.Online.Reopsitory.Repository
         {
             try
             {
-                _cache.Remove("");
+                // _cache.Remove("");
+                
                 var allInstrument = _redis.Keys(pattern: "Instrument*");
                 List<InstrumentList> result = new List<InstrumentList>();
                 foreach (var instrument in allInstrument)

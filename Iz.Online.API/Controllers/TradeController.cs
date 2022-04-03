@@ -33,25 +33,43 @@ namespace Iz.Online.API.Controllers
 
         // show a list of customer today trades.
         [HttpGet("dailyTrades")]
-        public ResultModel<List<model.Trade>> Trades()
+        public IActionResult Trades()
         {
             var result = _tradeServices.Trades();
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
       
         [HttpPost("dailyTradesPaged")]
-        public ResultModel<List<model.Trade>> TradesPaged([FromBody] TradeFilter filter)
+        public IActionResult TradesPaged([FromBody] TradeFilter filter)
         {
             var result = _tradeServices.TradesPaged(filter);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
         //get history of all trades.
         [HttpPost("History")]
-        public ResultModel<TradeHistoryReport> History([FromBody] TradeHistoryFilter filter)
+        public IActionResult History([FromBody] TradeHistoryFilter filter)
         {
             var result = _tradeServices.History(filter);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
 
         }
 

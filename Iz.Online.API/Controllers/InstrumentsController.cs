@@ -37,51 +37,80 @@ namespace Iz.Online.API.Controllers
         [HttpGet("UpdateInstrumentsDb")]
         public ResultModel<bool> UpdateInstrumentsDb()
         {
-            var updateResult = _instrumentsService.UpdateInstrumentsDb();
-            return new ResultModel<bool>(updateResult, updateResult);
+            var result = _instrumentsService.UpdateInstrumentsDb();
+            return new ResultModel<bool>(result, result);
         }
 
         //get instruments list.
         [HttpGet("List")]
-        public ResultModel<List<InstrumentList>> List()
+        public IActionResult List()
         {
-            var instruments = _instrumentsService.InstrumentList();
-            return instruments;
+            var result = _instrumentsService.InstrumentList();
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
 
 
         [HttpPost("BestLimits")]
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits([FromBody]  SelectedInstrument model)
+        public IActionResult BestLimits([FromBody]  SelectedInstrument model)
         {
             //model.InstrumentId = "IRO1FOLD0001";
             var result = _instrumentsService.BestLimits(model.InstrumentId , model.HubId);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
 
         //get instrument details as prices or states and so on.
         [HttpPost("Detail")]
-        public ResultModel<InstrumentDetail> Detail([FromBody] SelectedInstrument model)
+        public IActionResult Detail([FromBody] SelectedInstrument model)
         {
             //model.InstrumentId = 658;
             //model.NscCode = "IRO1FOLD0001";
             var result = _instrumentsService.Detail(model.InstrumentId , model.HubId);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
         // گذاشتن یادداشت برای  نماد
         [HttpPost("AddComment")]
-        public ResultModel<bool> AddComment([FromBody] AddCommentForInstrument model)
+        public IActionResult AddComment([FromBody] AddCommentForInstrument model)
         {
             var result = _instrumentsService.AddCommentToInstrument(model);
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
         // مشاهده یادداشت یک  نماد
         [HttpPost("GetComment")]
-        public ResultModel<string> GetComment([FromBody] GetInstrumentComment model)
+        public IActionResult GetComment([FromBody] GetInstrumentComment model)
         {
             var result = _instrumentsService.GetInstrumentComment(model);
-            var a = result.ToString();
-            return result;
+            return result.StatusCode switch
+            {
+                200 => Ok(result),
+                401 => Unauthorized(result),
+                404 => NotFound(result),
+                _ => BadRequest(result),
+            };
         }
     }
 }
