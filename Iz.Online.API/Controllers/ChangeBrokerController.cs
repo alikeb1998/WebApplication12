@@ -7,67 +7,68 @@ using Microsoft.AspNetCore.Mvc;
 namespace Iz.Online.API.Controllers
 {
 
-    [Produces("application/json")]
-    [Route("V1/[controller]")]
+    //[Produces("application/json")]
+    //[Route("V1/[controller]")]
 
-    public class ChangeBrokerController : BaseApiController
-    {
-        private readonly IChangeBrokerService _changeBrokerService;
-        public ChangeBrokerController(IHttpContextAccessor httpContextAccessor, IChangeBrokerService brokerService) : base(httpContextAccessor)
-        {
-            _changeBrokerService = brokerService;
-        }
+    //public class ChangeBrokerController : BaseApiController
+    //{
+    //    private readonly IChangeBrokerService _changeBrokerService;
+    //    public ChangeBrokerController(IHttpContextAccessor httpContextAccessor, IChangeBrokerService brokerService) : base(httpContextAccessor)
+    //    {
+    //        _changeBrokerService = brokerService;
+    //    }
        
-        [HttpGet("AllRequests")]
-        public ResultModel<List<Request>> AllRequests()
-        {
-            var updateResult = _changeBrokerService.AllRequests();
-            return new ResultModel<List<Request>>(updateResult);
-        } 
-        [HttpPost("RequestDetails")]
-        public ResultModel<Request> RequestDetails(long RequestId)
-        {
-            var updateResult = _changeBrokerService.RequestDetails(RequestId);
-            return new ResultModel<Request>(updateResult);
-        }
+    //    [HttpGet("AllRequests")]
+    //    public async Task<IActionResult> AllRequests()
+    //    {
+    //        var result = await _changeBrokerService.AllRequests();
+    //        return new Respond<List<Request>>().ActionRespond(result);
+    //    } 
+    //    [HttpPost("RequestDetails")]
+    //    public async Task<IActionResult> RequestDetails(long RequestId)
+    //    {
+    //        var result = await _changeBrokerService.RequestDetails(RequestId);
+    //        return new Respond<Request>().ActionRespond(result);
+    //    }
 
-        [HttpPost("GetDoc")]
-        public ActionResult GetDoc([FromBody] long DocumentId)
-        {
-            byte[] byteArray = _changeBrokerService.GetDocument(DocumentId);
-            return new FileContentResult(byteArray, "application/octet-stream");
+    //    [HttpPost("GetDoc")]
+    //    public async Task<IActionResult> GetDoc([FromBody] long DocumentId)
+    //    {
+    //        var result = await _changeBrokerService.GetDocument(DocumentId);
+    //        //return new FileContentResult(byteArray, "application/octet-stream");
+    //        return new Respond<byte[]>().ActionRespond(result);
 
-        }
+    //    }
 
-        [HttpPost("AddRequest")]
-        public ResultModel<long> AddRequest([FromBody] NewRequest model)
-        {
-            var result = _changeBrokerService.AddRequest(model);
-            return new ResultModel<long>(result);
-        }
+    //    [HttpPost("AddRequest")]
+    //    public async Task<IActionResult> AddRequest([FromBody] NewRequest model)
+    //    {
+    //        var result = await _changeBrokerService.AddRequest(model);
+    //        return new Respond<long>().ActionRespond(result);
+    //    }
       
-        [HttpPost("EditRequest")]
-        public ResultModel<bool> EditRequest([FromBody] NewRequest model)
-        {
-            var result = _changeBrokerService.EditRequest(model);
-            return new ResultModel<bool>(result);
-        }
+    //    [HttpPost("EditRequest")]
+    //    public async Task<IActionResult> EditRequest([FromBody] NewRequest model)
+    //    {
+    //        var result = await _changeBrokerService.EditRequest(model);
+    //        return new Respond<bool>().ActionRespond(result);
+    //    }
       
-        [HttpPost("DeleteRequest")]
-        public ResultModel<bool> DeleteRequest([FromBody] long RequestId)
-        {
-            var result = _changeBrokerService.DeleteRequest(RequestId);
-            return new ResultModel<bool>(result);
-        }
+    //    [HttpPost("DeleteRequest")]
+    //    public async Task<IActionResult> DeleteRequest([FromBody] long RequestId)
+    //    {
+    //        var result = await _changeBrokerService.DeleteRequest(RequestId);
+    //        return new Respond<bool>().ActionRespond(result);
+    //    }
       
         
-        [HttpPost("RequestHistory")]
-        public ResultModel<List<RequestsHistory>> RequestHistory([FromBody] long RequestId)
-        {
-            var result = _changeBrokerService.RequestHistory(RequestId);
-            return new ResultModel<List<RequestsHistory>>(result);
-        }
+    //    [HttpPost("RequestHistory")]
+    //    public async Task<IActionResult> RequestHistory([FromBody] long RequestId)
+    //    {
+    //        var result = await _changeBrokerService.RequestHistory(RequestId);
+    //        return new Respond<List<RequestsHistory>>().ActionRespond(result);
+    //    }
       
 
-    }
+    //}
 }

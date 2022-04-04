@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Izi.Online.ViewModels.ChangeBroker;
+using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.Services.IServices
 {
-    public  interface  IChangeBrokerService
-    {
-        List<Request> AllRequests();
-        Request RequestDetails(long requestId);
-        byte[] GetDocument(long documentId);
-        long AddRequest(NewRequest model);
-        bool EditRequest(NewRequest model);
-        bool DeleteRequest(long requestId);
-        List<RequestsHistory> RequestHistory(long requestId);
-    }
+    //public  interface  IChangeBrokerService
+    //{
+    //    Task<ResultModel<List<Request>>> AllRequests();
+    //    Task<ResultModel<Request>> RequestDetails(long requestId);
+    //    Task<ResultModel<byte[]>> GetDocument(long documentId);
+    //    Task<ResultModel<long>> AddRequest(NewRequest model);
+    //    Task<ResultModel<bool>> EditRequest(NewRequest model);
+    //    Task<ResultModel<bool>> DeleteRequest(long requestId);
+    //    Task<ResultModel<List<RequestsHistory>>> RequestHistory(long requestId);
+    //}
 }

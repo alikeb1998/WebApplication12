@@ -363,6 +363,10 @@ namespace Iz.Online.Services.Services
             var instrumentList = new List<AllOrder>();
             foreach (var f in filter.InstrumentId)
             {
+                if (filter.InstrumentId.Count==0 && f == 0)
+                {
+                    instrumentList.AddRange(list);
+                }
                 if (f != 0)
                 {
                     var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();

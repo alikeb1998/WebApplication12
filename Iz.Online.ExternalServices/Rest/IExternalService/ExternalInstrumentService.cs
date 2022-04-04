@@ -44,7 +44,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
 
             var instruments = await HttpGetRequest<Instruments>("order/instruments");
-
+            
             try
             {
                 var receivedSector = instruments.instruments.Select(x => x.sector).DistinctBy(x => x.id).ToList();
@@ -133,7 +133,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            await Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
+             Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
 
             var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
@@ -236,7 +236,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public async Task<ResultModel<InstrumentPriceDetails>> Price(string NscCode)
         {
-            await Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
+             Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
             var result = await HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
 
 

@@ -18,6 +18,6 @@ namespace Iz.Online.HubConnectionHandler.IServices
 
         CustomerInfo UserHubsList(string userId);
         void DeleteConnectionId(string connectionId);
-        List<string> GetInstrumentHubs(string NscCode);
+        Task<List<string>> GetInstrumentHubs(string NscCode);
     }
 }

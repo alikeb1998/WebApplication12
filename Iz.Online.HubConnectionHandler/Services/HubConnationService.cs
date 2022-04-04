@@ -38,9 +38,9 @@ namespace Iz.Online.HubConnectionHandler.Services
             _userRepository.DeleteConnectionId( connectionId);
         }
 
-        public List<string> GetInstrumentHubs(string NscCode)
+        public async Task<List<string>> GetInstrumentHubs(string NscCode)
         {
-          return  _instrumentsRepository.GetInstrumentHubs(NscCode);
+          return  await _instrumentsRepository.GetInstrumentHubs(NscCode);
         }
 
 

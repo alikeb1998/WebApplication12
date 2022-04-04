@@ -18,10 +18,10 @@ namespace Iz.Online.Services.Services
         private readonly IExternalInstrumentService _externalInstrumentsService;
         private readonly ICacheService _cache;
 
-      public  IExternalInstrumentService _externalInstrumentsServices  {get;}
-      public  IExternalOrderService _externalOrderService {get;}
+        public IExternalInstrumentService _externalInstrumentsServices { get; }
+        public IExternalOrderService _externalOrderService { get; }
 
-        public WatchListsService(IWatchListsRepository watchListsRepository,IExternalInstrumentService externalInstrumentsService, IExternalOrderService externalOrderService , ICacheService cacheService)
+        public WatchListsService(IWatchListsRepository watchListsRepository, IExternalInstrumentService externalInstrumentsService, IExternalOrderService externalOrderService, ICacheService cacheService)
         {
             _watchListsRepository = watchListsRepository;
             _externalInstrumentsService = externalInstrumentsService;
@@ -37,7 +37,7 @@ namespace Iz.Online.Services.Services
 
             foreach (var ins in wl.Model.Instruments)
             {
-               var instrumentDetails =  await _cache.InstrumentData((int) ins.Id);
+                var instrumentDetails = await _cache.InstrumentData((int)ins.Id);
                 var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
                 var price = await _externalInstrumentsService.Price(instrumentDetails.NscCode);
 
@@ -76,69 +76,75 @@ namespace Iz.Online.Services.Services
         public async Task<ResultModel<WatchListDetails>> NewWatchList(NewWatchList model)
         {
             model.WatchListName = model.WatchListName.Trim();
+            var res = await ValidateWatchList(model/*, out var resultModel*/);
+            if (res.IsValidated)
+                return res.Model;
 
-            if (await ValidateWatchList(model, out var resultModel))
-                return resultModel;
-
-            return  await _watchListsRepository.NewWatchList(model);
+            return await _watchListsRepository.NewWatchList(model);
         }
 
-        private async Task<bool> ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
+        private async Task<ValidatedWatchList> ValidateWatchList(NewWatchList model /*, out ResultModel<WatchListDetails> resultModel*/)
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
-
+            /////
+            ResultModel<WatchListDetails> resultModel;
+            /////
             var oldWl = await _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
-                if (oldWl.Model!=null && oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
+            {
+                if (oldWl.Model != null && oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
-                    resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
-                    return true;
+                    resultModel = new(null, false, "نام دیده بان تکراری است");
+                    return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
                 }
+            }
 
             if (model.Id.Count() > maxLen)
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
-                return true;
+                resultModel = new(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (model.WatchListName.Length >
                 Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
-                return true;
+                resultModel = new(null, false, "محدودیت در طول حروف نام دیده بان");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (string.IsNullOrEmpty(model.TradingId))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
-                return true;
+                resultModel = new(null, false, "مالک دیده بان مشخص نیست");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (string.IsNullOrEmpty(model.WatchListName))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
-                return true;
+                resultModel = new(null, false, "نام دیده بان اجباری است");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
-
             if (model.Id.Distinct().Count() != model.Id.Count())
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
-                return true;
+                resultModel = new(null, false, "وجود نماد تکراری در یک دیده بان");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
-            resultModel = new ResultModel<WatchListDetails>(null);
-            return false;
+            resultModel = new(null);
+            return new ValidatedWatchList() { IsValidated = false, Model = resultModel };
+
         }
-        private async Task<bool> ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
+        private async Task<ValidatedWatchList> ValidateWatchList(EditWatchList model/*, out ResultModel<WatchListDetails> resultModel*/)
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
-
+            /////
+            ResultModel<WatchListDetails> resultModel;
+            /////
             var oldWl = await _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model.Where(x => x.Id != model.WatchListId).Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
-                    resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان تکراری است");
-                    return true;
+                    resultModel = new(null, false, "نام دیده بان تکراری است");
+                    return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
                 }
 
             var entity = await _watchListsRepository.GetWatchListDetails(new SearchWatchList()
@@ -150,42 +156,42 @@ namespace Iz.Online.Services.Services
 
             if (!entity.IsSuccess)
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "دیده بان یافت نشد");
-                return true;
+                resultModel = new(null, false, "دیده بان یافت نشد");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
             if (model.Id.Count() > maxLen)
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
-                return true;
+                resultModel = new(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (model.WatchListName.Length >
                 Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "محدودیت در طول حروف نام دیده بان");
-                return true;
+                resultModel = new(null, false, "محدودیت در طول حروف نام دیده بان");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (string.IsNullOrEmpty(model.TradingId))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "مالک دیده بان مشخص نیست");
-                return true;
+                resultModel = new(null, false, "مالک دیده بان مشخص نیست");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (string.IsNullOrEmpty(model.WatchListName))
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "نام دیده بان اجباری است");
-                return true;
+                resultModel = new(null, false, "نام دیده بان اجباری است");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
             if (model.Id.Distinct().Count() != model.Id.Count())
             {
-                resultModel = new ResultModel<WatchListDetails>(null, false, "وجود نماد تکراری در یک دیده بان");
-                return true;
+                resultModel = new(null, false, "وجود نماد تکراری در یک دیده بان");
+                return new ValidatedWatchList() { IsValidated = true, Model = resultModel };
             }
 
-            resultModel = new ResultModel<WatchListDetails>(null);
-            return false;
+            resultModel = new(null);
+            return  new ValidatedWatchList() { IsValidated = false, Model = resultModel };
         }
 
         public async Task<ResultModel<WatchListDetails>> AddInstrumentToWatchList(EditEathListItems model)
@@ -214,18 +220,18 @@ namespace Iz.Online.Services.Services
         }
         public async Task<ResultModel<WatchListDetails>> UpdateWatchList(EditWatchList model)
         {
-           //var a = _cache.GetOmsIdFromLocalInstrumentId((int)model.Id[0]);
+            //var a = _cache.GetOmsIdFromLocalInstrumentId((int)model.Id[0]);
 
             model.WatchListName = model.WatchListName.Trim();
+            var res = await ValidateWatchList(model);
+            if (res.IsValidated)
+                return res.Model;
 
-            if (await ValidateWatchList(model, out var resultModel))
-                return resultModel;
-            
             return await _watchListsRepository.UpdateWatchList(model);
 
         }
 
-        
+
 
         public async Task<ResultModel<List<WatchList>>> UserWatchLists(string customerId)
         {

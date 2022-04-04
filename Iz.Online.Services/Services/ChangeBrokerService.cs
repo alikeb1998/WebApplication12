@@ -10,50 +10,50 @@ using Izi.Online.ViewModels.ChangeBroker;
 
 namespace Iz.Online.Services.Services
 {
-    public class ChangeBrokerService : IChangeBrokerService
-    {
-        public IExternalChangeBrokerService _externalService { get; }
-        private readonly ICacheService _cacheService;
-        public ChangeBrokerService(IExternalChangeBrokerService externalChangeBrokerService, ICacheService cacheService)
-        {
-            _externalService = externalChangeBrokerService;
-            _cacheService = cacheService;
-        }
+    //public class ChangeBrokerService : IChangeBrokerService
+    //{
+    //    public IExternalChangeBrokerService _externalService { get; }
+    //    private readonly ICacheService _cacheService;
+    //    public ChangeBrokerService(IExternalChangeBrokerService externalChangeBrokerService, ICacheService cacheService)
+    //    {
+    //        _externalService = externalChangeBrokerService;
+    //        _cacheService = cacheService;
+    //    }
 
 
-        public List<Request> AllRequests()
-        {
-            return _externalService.AllRequests();
-        }
+    //    public async Task<ResultModel<List<Request>>> AllRequests()
+    //    {
+    //        return await _externalService.AllRequests();
+    //    }
+        
+    //    public async Task<ResultModel<Request>> RequestDetails(long requestId)
+    //    {
+    //        return await _externalService.RequestDetails(requestId);
+    //    }
 
-        public Request RequestDetails(long requestId)
-        {
-            return _externalService.RequestDetails(requestId);
-        }
+    //    public async Task<ResultModel<byte[]>> GetDocument(long documentId)
+    //    {
+    //        return await _externalService.GetDocument(documentId);
+    //    }
 
-        public byte[] GetDocument(long documentId)
-        {
-            return _externalService.GetDocument(documentId);
-        }
+    //    public async Task<ResultModel<long>> AddRequest(NewRequest model)
+    //    {
+    //        return await _externalService.AddRequest(model);
+    //    }
 
-        public long AddRequest(NewRequest model)
-        {
-            return _externalService.AddRequest(model);
-        }
+    //    public async Task<ResultModel<bool>> EditRequest(NewRequest model)
+    //    {
+    //        return await _externalService.EditRequest(model);
+    //    }
 
-        public bool EditRequest(NewRequest model)
-        {
-            return _externalService.EditRequest(model);
-        }
+    //    public async Task<ResultModel<bool>> DeleteRequest(long requestId)
+    //    {
+    //        return await _externalService.DeleteRequest(requestId);
+    //    }
 
-        public bool DeleteRequest(long requestId)
-        {
-            return _externalService.DeleteRequest(requestId);
-        }
-
-        public List<RequestsHistory> RequestHistory(long requestId)
-        {
-            return _externalService.RequestHistory(requestId);
-        }
-    }
+    //    public async Task<ResultModel<List<RequestsHistory>>> RequestHistory(long requestId)
+    //    {
+    //        return await _externalService.RequestHistory(requestId);
+    //    }
+    //}
 }

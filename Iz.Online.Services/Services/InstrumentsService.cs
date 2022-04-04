@@ -30,7 +30,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<InstrumentList>>> InstrumentList()
         {
-            var result =  (await _cacheService.InstrumentData()).Select(x => new InstrumentList()
+            var result = (await _cacheService.InstrumentData()).Select(x => new InstrumentList()
             {
                 Bourse = x.Bourse,
                 BuyCommissionRate = x.BuyCommissionRate,
@@ -129,19 +129,23 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<BestLimits>> BestLimits(int InstrumentId, string hubId)
         {
-            var instrumentDetails =  await _cacheService.InstrumentData(InstrumentId);
+            if (InstrumentId == 0)
+            {
+                return new ResultModel<BestLimits>(null, 400,"خطا در پارامتر های ورودی");
+            }
+            var instrumentDetails = await _cacheService.InstrumentData(InstrumentId);
 
-             _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
-           
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
+
             return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }
 
         public async Task<bool> UpdateInstrumentsDb()
         {
-             _cacheService.CleareCache();
+            _cacheService.CleareCache();
 
             return await _externalInstrumentsService.UpdateInstrumentList();
-            
+
         }
     }
 

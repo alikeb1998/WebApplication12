@@ -79,7 +79,7 @@ namespace Iz.Online.HubHandler.Services
 
                     //TODO cast to Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
 
-                    var hubs = _hubConnationService.GetInstrumentHubs(InstrumentId);
+                    var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                     if (hubs != null)
                         await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, InstrumentId, " " });
                 }
@@ -128,7 +128,7 @@ namespace Iz.Online.HubHandler.Services
 
                         }
 
-                        var hubs = _hubConnationService.GetInstrumentHubs(InstrumentId);
+                        var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                         if (hubs != null)
                             await _hubContext.Clients.Clients(hubs).SendCoreAsync($"{InstrumentId}-price", new object[] { res, InstrumentId, " " });
 
