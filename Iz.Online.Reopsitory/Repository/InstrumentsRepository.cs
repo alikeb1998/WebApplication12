@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Izi.Online.ViewModels.Users;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -428,6 +429,26 @@ namespace Iz.Online.Reopsitory.Repository
 
         #region instrulentTopics
 
+        public List<string> GetHubsByCustomer(UserHub model)
+        {
+            var allHubs = _cache.Get("KafkaUserId_"+model.CustomerId);
+            List<string> res = new();
+            //foreach (var hub in allHubs)
+           // {
+                //TODO
+                //var data = _cache.Get(hub);
+                var h = JsonConvert.DeserializeObject<UserHubResult>(Encoding.Default.GetString(allHubs));
+                res.AddRange(h.Hubs);
+                //if (h.HubId == model.HubId)
+                //    _cache.Remove(hub);
+
+           // }
+            // var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model));
+            //_cache.Set("pushNotificationByInstrument" + model.NscCode, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+
+            return res;
+        }
+
         public void CustomerSelectInstrument(CustomerSelectInstrumentModel model)
         {
             var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument*" );
@@ -436,8 +457,9 @@ namespace Iz.Online.Reopsitory.Repository
                 //TODO
                 var data = _cache.Get(hub);
                 var h = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
-                if(h.HubId == model.HubId                    )
-                    _cache.Remove(hub);
+
+                model.HubId.AddRange(h.HubId);
+                model.HubId = (List<string>)model.HubId.Distinct().ToList();
 
             }
             var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model));
@@ -453,11 +475,13 @@ namespace Iz.Online.Reopsitory.Repository
             List<string> result = new List<string>();
             foreach (var hub in allHubs)
             {
-                var data = await _cache.GetAsync(hub);
+                var data =  await _cache.GetAsync(hub);
                 var ins = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
-                result.Add(ins.HubId);
+                result.AddRange(ins.HubId);
             }
 
+            
+            result = result.Distinct().ToList();
             return result;
         }
         #endregion

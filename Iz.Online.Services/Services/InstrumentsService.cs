@@ -51,7 +51,7 @@ namespace Iz.Online.Services.Services
 
             var result = new InstrumentDetail();
             var instrumentDetails = await _cacheService.InstrumentData(instrumentId);
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = HubId, NscCode = instrumentDetails.NscCode });
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { HubId }, NscCode = instrumentDetails.NscCode });
 
 
             var detail = await _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
@@ -135,7 +135,7 @@ namespace Iz.Online.Services.Services
             }
             var instrumentDetails = await _cacheService.InstrumentData(InstrumentId);
 
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
+            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { hubId }, NscCode = instrumentDetails.NscCode });
 
             return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }

@@ -40,9 +40,12 @@ namespace Iz.Online.HubConnectionHandler.Services
 
         public async Task<List<string>> GetInstrumentHubs(string NscCode)
         {
-          return  await _instrumentsRepository.GetInstrumentHubs(NscCode);
+          return await _instrumentsRepository.GetInstrumentHubs(NscCode);
         }
 
-
+        public Task<List<string>> GetHubsByCustomer(string CustomerId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

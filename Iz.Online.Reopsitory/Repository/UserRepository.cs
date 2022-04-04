@@ -126,10 +126,12 @@ namespace Iz.Online.Reopsitory.Repository
                 else
                 {
                     oldData.Hubs = new List<string>();
+                   
                     oldData.Token = model.Token;
                     oldData.KafkaId = model.KafkaId;
                 }
-                oldData.Hubs.Add(model.Hubs.FirstOrDefault());
+               // oldData.Hubs.Add(model.Hubs.FirstOrDefault());
+                oldData.Hubs.AddRange(model.Hubs);
                 oldData.Hubs = oldData.Hubs.Distinct().ToList();
                 var serialized = JsonConvert.SerializeObject(oldData);
                 var content = Encoding.UTF8.GetBytes(serialized);

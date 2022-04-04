@@ -10,7 +10,7 @@ namespace Izi.Online.ViewModels.Instruments
     {
         //int instrumentId, string token, string kafkaUserId
         public string NscCode { get; set; }
-        public string HubId { get; set; }
+        public List<string> HubId { get; set; }
         public string KafkaUserId { get; set; }
 
     }
