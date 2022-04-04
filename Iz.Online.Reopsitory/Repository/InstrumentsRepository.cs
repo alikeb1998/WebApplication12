@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -24,11 +25,11 @@ namespace Iz.Online.Reopsitory.Repository
             _cache = cache;
         }
 
-        public ResultModel<List<Instruments>> GetInstrumentsList()
+        public async Task<ResultModel<List<Instruments>>> GetInstrumentsList()
         {
             try
             {
-                var ins = _db.Instruments.Select(x => new Instruments()
+                var ins =  await  _db.Instruments.Select(x => new Instruments()
                 {
                     CompanyName = x.CompanyName,
                     Id = x.Id,
@@ -44,7 +45,7 @@ namespace Iz.Online.Reopsitory.Repository
                     BuyCommisionRate = x.BuyCommisionRate,
                     SellCommisionRate = x.SellCommisionRate,
 
-                }).ToList();
+                }).ToListAsync();
 
                 return new ResultModel<List<Instruments>>(ins);
             }
@@ -55,11 +56,11 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<InstrumentBourse>> GetInstrumentBourse()
+        public async Task<ResultModel<List<InstrumentBourse>>> GetInstrumentBourse()
         {
             try
             {
-                var result = _db.InstrumentBourses.ToList();
+                var result =  await _db.InstrumentBourses.ToListAsync();
                 return new ResultModel<List<InstrumentBourse>>(result);
 
             }
@@ -70,12 +71,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<InstrumentSector>> GetInstrumentSector()
+        public async Task<ResultModel<List<InstrumentSector>>> GetInstrumentSector()
         {
             try
             {
 
-                return new ResultModel<List<InstrumentSector>>(_db.InstrumentSectors.ToList());
+                return new ResultModel<List<InstrumentSector>>(await _db.InstrumentSectors.ToListAsync());
             }
 
             catch (Exception)
@@ -85,12 +86,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<InstrumentSubSector>> GetInstrumentSubSectors()
+        public async Task<ResultModel<List<InstrumentSubSector>>> GetInstrumentSubSectors()
         {
             try
             {
 
-                return new ResultModel<List<InstrumentSubSector>>(_db.InstrumentSubSectors.ToList());
+                return new ResultModel<List<InstrumentSubSector>>(await _db.InstrumentSubSectors.ToListAsync());
             }
 
             catch (Exception)
@@ -100,13 +101,13 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrumentBourse(InstrumentBourse model)
+        public async Task<ResultModel<bool>> AddInstrumentBourse(InstrumentBourse model)
         {
             try
             {
 
                 _db.InstrumentBourses.Add(model);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return new ResultModel<bool>(true);
 
             }
@@ -118,12 +119,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrumentSector(InstrumentSector model)
+        public async Task<ResultModel<bool>> AddInstrumentSector(InstrumentSector model)
         {
             try
             {
                 _db.InstrumentSectors.Add(model);
-                _db.SaveChanges();
+               await _db.SaveChangesAsync();
                 return new ResultModel<bool>(true);
 
             }
@@ -134,12 +135,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model)
+        public async Task<ResultModel<bool>> AddInstrumentSubSectors(InstrumentSubSector model)
         {
             try
             {
                 _db.InstrumentSubSectors.Add(model);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return new ResultModel<bool>(true);
 
             }
@@ -150,7 +151,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
+        public async Task<ResultModel<bool>> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
         {
             try
 
@@ -160,7 +161,7 @@ namespace Iz.Online.Reopsitory.Repository
                 model.BourseId = bourseId;
 
                 _db.Instruments.Add(model);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return new ResultModel<bool>(true);
 
             }
@@ -170,11 +171,11 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        public ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
+        public async Task<ResultModel<bool>> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float BuyCommissionRate, float SellCommissionRate)
         {
             try
             {
-                var entity = _db.Instruments.FirstOrDefault(x => x.InstrumentId == model.InstrumentId);
+                var entity =  _db.Instruments.FirstOrDefault(x => x.InstrumentId == model.InstrumentId);
 
 
                 entity.SubSectorId = subSectorId;
@@ -185,7 +186,7 @@ namespace Iz.Online.Reopsitory.Repository
                 entity.BuyCommisionRate = BuyCommissionRate;
                 entity.SellCommisionRate = SellCommissionRate;
                 //////
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return new ResultModel<bool>(true);
 
             }
@@ -198,7 +199,7 @@ namespace Iz.Online.Reopsitory.Repository
         }
 
 
-        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        public async Task<ResultModel<bool>> AddCommentToInstrument(AddCommentForInstrument model)
         {
             try
             {
@@ -208,7 +209,7 @@ namespace Iz.Online.Reopsitory.Repository
                 if (entity != null)
                 {
                     entity.CommentText = model.Comment;
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     return new ResultModel<bool>(true);
                 }
                 else
@@ -220,7 +221,7 @@ namespace Iz.Online.Reopsitory.Repository
                         Id = Guid.NewGuid().ToString(),
                         CustomerId = model.TradingId
                     });
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                 }
 
                 return new ResultModel<bool>(true);
@@ -232,9 +233,9 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        public async Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model)
         {
-            var entity = _db.InstrumentComments.FirstOrDefault(x =>
+            var entity = await _db.InstrumentComments.FirstOrDefaultAsync(x =>
                 x.CustomerId == model.TradingId && x.InstrumentId == model.InstrumentId);
 
             if (entity != null)
@@ -256,7 +257,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        public List<InstrumentList> InstrumentData()
+        public async Task<List<InstrumentList>> InstrumentData()
         {
             try
             {
@@ -266,7 +267,7 @@ namespace Iz.Online.Reopsitory.Repository
                 List<InstrumentList> result = new List<InstrumentList>();
                 foreach (var instrument in allInstrument)
                 {
-                    var data = _cache.Get(instrument);
+                    var data = await _cache.GetAsync(instrument);
                     var ins = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(data));
                     result.Add(ins);
                 }
@@ -287,7 +288,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public InstrumentList InstrumentData(int instrumentId)
+        public async Task<InstrumentList> InstrumentData(int instrumentId)
         {
             try
             {
@@ -295,7 +296,7 @@ namespace Iz.Online.Reopsitory.Repository
                 if (dataBytes == null)
                     CacheInstrumentsData();
 
-                dataBytes = _cache.Get("Instrument" + instrumentId);
+                dataBytes = await _cache.GetAsync("Instrument" + instrumentId);
                 var result = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(dataBytes));
                 if (result != null)
                     return result;
@@ -445,14 +446,14 @@ namespace Iz.Online.Reopsitory.Repository
 
         }
 
-        public List<string> GetInstrumentHubs(string NscCode)
+        public async Task<List<string>> GetInstrumentHubs(string NscCode)
         {
 
             var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument" + NscCode);
             List<string> result = new List<string>();
             foreach (var hub in allHubs)
             {
-                var data = _cache.Get(hub);
+                var data = await _cache.GetAsync(hub);
                 var ins = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
                 result.Add(ins.HubId);
             }

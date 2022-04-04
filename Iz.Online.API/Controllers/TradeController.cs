@@ -34,24 +34,24 @@ namespace Iz.Online.API.Controllers
 
         // show a list of customer today trades.
         [HttpGet("dailyTrades")]
-        public IActionResult Trades()
+        public async Task<IActionResult> Trades()
         {
-            var result = _tradeServices.Trades();
+            var result =  await _tradeServices.Trades();
             return new Respond<List<Trade>>().ActionRespond(result);
         }
       
         [HttpPost("dailyTradesPaged")]
-        public IActionResult TradesPaged([FromBody] TradeFilter filter)
+        public async Task<IActionResult> TradesPaged([FromBody] TradeFilter filter)
         {
-            var result = _tradeServices.TradesPaged(filter);
+            var result = await _tradeServices.TradesPaged(filter);
             return new Respond<List<Trade>>().ActionRespond(result);
         }
 
         //get history of all trades.
         [HttpPost("History")]
-        public IActionResult History([FromBody] TradeHistoryFilter filter)
+        public async Task<IActionResult> History([FromBody] TradeHistoryFilter filter)
         {
-            var result = _tradeServices.History(filter);
+            var result = await _tradeServices.History(filter);
             return new Respond<TradeHistoryReport>().ActionRespond(result);
 
         }
@@ -59,14 +59,11 @@ namespace Iz.Online.API.Controllers
         [HttpGet("TradeState")]
         public ResultModel<List<OrderStates>> TradeStates()
         {
-
             var states = new List<OrderStates>();
             states.Add(new OrderStates { Code = 1, Key = "Cancelled", Value = "لغو شده" });
             states.Add(new OrderStates { Code = 2, Key = "Executed", Value = "معامله شده" });
             states.Add(new OrderStates { Code = 3, Key = "ExternallyCreated", Value = "معامله توسط ناظر بازار" });
          
-
-
             return new ResultModel<List<OrderStates>>(states);
         }
     }

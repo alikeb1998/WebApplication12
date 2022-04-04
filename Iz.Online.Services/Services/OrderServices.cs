@@ -33,22 +33,19 @@ namespace Iz.Online.Services.Services
         public IExternalOrderService _externalOrderService { get; }
         public ICacheService _cacheService { get; }
 
-
-        //private readonly IPushService _pushService;
         public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, ICacheService cacheService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
-            //_pushService = pushService;
             _cacheService = cacheService;
         }
 
 
         #endregion
 
-        public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
+        public async Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel)
         {
-            var instrumentData = _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
+            var instrumentData = await _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
 
             //09:00
             var dbEntity = new db.Orders()
@@ -68,7 +65,7 @@ namespace Iz.Online.Services.Services
             };
             addOrderModel.InstrumentId = instrumentData.InstrumentId;
 
-            var addOrderResult = _externalOrderService.Add(addOrderModel);
+            var addOrderResult = await _externalOrderService.Add(addOrderModel);
 
             if (!addOrderResult.IsSuccess)
                 return new ResultModel<AddOrderResult>(null, addOrderResult.StatusCode == 200, addOrderResult.Message, addOrderResult.StatusCode);
@@ -78,25 +75,18 @@ namespace Iz.Online.Services.Services
             dbEntity.Isr = addOrderResult.Model.order.isr;
             dbEntity.StatusCode = addOrderResult.Model.statusCode;
 
-            var allOrders = _externalOrderService.GetAll();
+            var allOrders = await _externalOrderService.GetAll();
             if (!allOrders.IsSuccess)
                 return new ResultModel<AddOrderResult>(null, allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
-            //09:02
 
             var result =
                  allOrders.Model.orders.FirstOrDefault(x =>
                       x.id == addOrderResult.Model.order.id && x.isr == addOrderResult.Model.order.isr);
 
-
             dbEntity.OmsQty = result.quantity;
             dbEntity.OmsPrice = result.price;
 
-            //Task.Run(async () => _pushService
-            //    .PushOrderAdded(new List<string>() { "as", "as" }, new ActiveOrder()));//TODO
-
-            _orderRepository.Add(dbEntity);
-
-
+              _orderRepository.Add(dbEntity);
 
             return new ResultModel<AddOrderResult>(new AddOrderResult()
             {
@@ -105,11 +95,11 @@ namespace Iz.Online.Services.Services
             });
         }
 
-        public ResultModel<List<ActiveOrder>> AllActive()
+        public async Task<ResultModel<List<ActiveOrder>>> AllActive()
         {
-            var instruments = _cacheService.InstrumentData();
+            var instruments = await _cacheService.InstrumentData();
 
-            var activeOrders = _externalOrderService.GetAllActives();
+            var activeOrders = await  _externalOrderService.GetAllActives();
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<List<ActiveOrder>>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
@@ -158,9 +148,9 @@ namespace Iz.Online.Services.Services
 
             return new ResultModel<List<ActiveOrder>>(result.ToList());
         }
-        public ResultModel<OrderReport> AllActivePaged(OrderFilter filter)
+        public async Task<ResultModel<OrderReport>> AllActivePaged(OrderFilter filter)
         {
-            var activeOrders = _externalOrderService.GetAllActives();
+            var activeOrders = await _externalOrderService.GetAllActives();
             
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<OrderReport>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
@@ -205,13 +195,13 @@ namespace Iz.Online.Services.Services
             return new ResultModel<OrderReport>(res);
         }
 
-        public ResultModel<AllOrderReport> AllSortedOrder(AllOrderCustomFilter filter)
+        public async Task< ResultModel<AllOrderReport>> AllSortedOrder(AllOrderCustomFilter filter)
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
                 return new ResultModel<AllOrderReport>(null, 400);
             }
-            var allOrders = _externalOrderService.GetAll();
+            var allOrders = await _externalOrderService.GetAll();
             if (allOrders.IsSuccess && allOrders.Model.orders != null && allOrders.Model.orders.Count > 0)
             {
                 var result = allOrders.Model.orders.Select(x => new AllOrder()
@@ -251,11 +241,11 @@ namespace Iz.Online.Services.Services
             return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
         }
 
-        public ResultModel<UpdatedOrder> Update(UpdateOrder model)
+        public async Task<ResultModel<UpdatedOrder>> Update(UpdateOrder model)
         {
             var dbEntity = new db.Orders() { };
 
-            var respond = _externalOrderService.Update(new OmsModels.InputModels.Order.UpdateOrder()
+            var respond = await _externalOrderService.Update(new OmsModels.InputModels.Order.UpdateOrder()
             {
                 InstrumentId = model.InstrumentId,
                 Price = model.Price,
@@ -271,11 +261,11 @@ namespace Iz.Online.Services.Services
             return new ResultModel<UpdatedOrder>(result);
         }
 
-        public ResultModel<CanceledOrder> Cancel(CancelOrderModel model)
+        public async Task<ResultModel<CanceledOrder>> Cancel(CancelOrderModel model)
         {
             var dbEntity = new db.Orders();
 
-            var respond = _externalOrderService.Cancel(new CancelOrder()
+            var respond = await _externalOrderService.Cancel(new CancelOrder()
             {
                 InstrumentId = model.InstrumentId
 
@@ -288,6 +278,8 @@ namespace Iz.Online.Services.Services
             return new ResultModel<CanceledOrder>(result);
 
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         private List<ActiveOrder> ActiveOrdersFilter(List<ActiveOrder> list, OrderFilter filter)
         {
             var report = new OrderReport()

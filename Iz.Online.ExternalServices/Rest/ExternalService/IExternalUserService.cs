@@ -13,12 +13,12 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalUserService
     {
         string Token { get; set; }
-        ResultModel<Wallet> Wallet();
-        ResultModel<AssetsList>  GetAllAssets();
-        ResultModel<Login> Captcha();
-        ResultModel<OtpResult> SendOtp(Credentials credentials);
-        ResultModel<CheckOtp> CheckOtp(Otp otp);
-        ResultModel<LogOut> LogOut();
-        ResultModel<CustomerInfo> CustomerInfo();
+        Task<ResultModel<Wallet>> Wallet();
+        Task<ResultModel<AssetsList>> GetAllAssets();
+        Task<ResultModel<Login>> Captcha();
+        Task<ResultModel<OtpResult>> SendOtp(Credentials credentials);
+        Task<ResultModel<CheckOtp>> CheckOtp(Otp otp);
+        Task<ResultModel<LogOut>> LogOut();
+        Task<ResultModel<CustomerInfo>> CustomerInfo();
     }
 }

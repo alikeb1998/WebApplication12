@@ -19,18 +19,18 @@ namespace Iz.Online.Reopsitory.Repository
         public WatchListsRepository(OnlineBackendDbContext dataBase) : base(dataBase)
         {
         }
-        public ResultModel<List<WatchList>> GetUserWatchLists(string CustomerId)
+        public async Task<ResultModel<List<WatchList>>> GetUserWatchLists(string CustomerId)
         {
             try
             {
-                var wl = _db.WathLists
+                var wl = await _db.WathLists
                 .Where(x => x.CustomerId == CustomerId)
                 .Select(x => new WatchList()
                 {
                     Id = x.Id,
                     WatchListName = x.WatchListName,
                     
-                }).ToList();
+                }).ToListAsync();
 
                 if (wl == null || wl.Count == 0)
                     return new ResultModel<List<WatchList>>(null, true, "دیده بان برای این مشتری تعریف نشده است", -1);
@@ -45,12 +45,12 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<WatchListDetails> GetWatchListDetails(SearchWatchList model)
+        public async Task<ResultModel<WatchListDetails>> GetWatchListDetails(SearchWatchList model)
         {
             try
             {
 
-                var wl = _db.WathLists
+                var wl = await _db.WathLists
                     .Where(x => x.Id == model.WatchListId)
                     .Select(x => new WatchListDetails
                     {
@@ -74,7 +74,7 @@ namespace Iz.Online.Reopsitory.Repository
                                 Code = x.Instrument.Code
 
                             }).ToList()
-                    }).FirstOrDefault();
+                    }).FirstOrDefaultAsync();
                 if (wl == null)
                     return new ResultModel<WatchListDetails>(null, true, "دیده بان یافت نشد", -1);
 
@@ -88,7 +88,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model)
+        public async Task<ResultModel<List<WatchList>>> DeleteWatchList(SearchWatchList model)
         {
             try
             {
@@ -98,9 +98,9 @@ namespace Iz.Online.Reopsitory.Repository
                     return new ResultModel<List<WatchList>>(null, false, "دیده بان یافت نشد", -1);
 
                 _db.WathLists.Remove(entity);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
-                return GetUserWatchLists(model.TradingId);
+                return await GetUserWatchLists(model.TradingId);
 
             }
             catch (Exception)
@@ -110,7 +110,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
+        public async Task<ResultModel<WatchListDetails>> NewWatchList(NewWatchList model)
         {
             try
             {
@@ -124,10 +124,10 @@ namespace Iz.Online.Reopsitory.Repository
 
                 var c = $"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}')";
 
-                _db.Database.ExecuteSqlRaw($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}');{query}");
+                 await _db.Database.ExecuteSqlRawAsync($"INSERT   INTO  WathLists VALUES ( '{wlId}'  , N'{model.WatchListName}','{model.TradingId}');{query}");
 
 
-                return GetWatchListDetails(new SearchWatchList()
+                return await GetWatchListDetails(new SearchWatchList()
                 {
                     TradingId = model.TradingId,
                     WatchListId = wlId
@@ -140,15 +140,15 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
+        public async Task<ResultModel<WatchListDetails>> AddInstrumentToWatchList(EditEathListItems model)
         {
             try
             {
 
-                _db.Database.ExecuteSqlRaw(
+                 await _db.Database.ExecuteSqlRawAsync(
                     $"INSERT  into WatchListsInstruments (InstrumentId,WatchListId) values  ('{model.Id}','{model.WatchListId}')");
 
-                return GetWatchListDetails(new SearchWatchList()
+                return await GetWatchListDetails(new SearchWatchList()
                 {
                     TradingId = model.TradingId,
                     WatchListId = model.WatchListId
@@ -162,14 +162,14 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model)
+        public async Task<ResultModel<WatchListDetails>> RemoveInstrumentFromWatchList(EditEathListItems model)
         {
             try
             {
-                _db.Database.ExecuteSqlRaw(
+                await _db.Database.ExecuteSqlRawAsync(
                 $"DELETE FROM WatchListsInstruments WHERE InstrumentId={model.Id} AND WatchListId='{model.WatchListId}'");
 
-                return GetWatchListDetails(new SearchWatchList()
+                return await GetWatchListDetails(new SearchWatchList()
                 {
                     TradingId = model.TradingId,
                     WatchListId = model.WatchListId
@@ -182,19 +182,19 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
+        public async Task<ResultModel<List<WatchList>>> InstrumentWatchLists(InstrumentWatchLists model)
         {
             try
             {
 
-                var wl = _db.WathLists
+                var wl = await _db.WathLists
                      .Where(w => w.CustomerId == model.TradingId && w.WatchListsInstruments.Select(x => x.InstrumentId).Contains(model.Id))
                      .SelectMany(c => c.WatchListsInstruments, (c, w) =>
                           new WatchList
                           {
                               WatchListName = w.WatchList.WatchListName,
                               Id = w.WatchList.Id
-                          }).Distinct().ToList();
+                          }).Distinct().ToListAsync();
 
                 if (wl == null || wl.Count == 0)
                     return new ResultModel<List<WatchList>>(null, true, "دیده بان یافت نشد", -1);
@@ -209,7 +209,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
+        public async Task<ResultModel<WatchListDetails>> UpdateWatchList(EditWatchList model)
         {
             
             var entity = _db.WathLists.FirstOrDefault(x => x.Id == model.WatchListId);
@@ -217,19 +217,19 @@ namespace Iz.Online.Reopsitory.Repository
             entity.WatchListName = model.WatchListName;
             
            // _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.Id}'");
-            _db.SaveChanges();
+             _db.SaveChanges();
             string query = $"INSERT  into WatchListsInstruments  values ";
             foreach (var id in model.Id)
             {
                 _db.Database.ExecuteSqlRaw(@$"delete from WatchListsInstruments where WatchListId='{model.WatchListId}'");
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 query += $" ({id},'{model.WatchListId}') ,";
             }
             query = query.Substring(0, query.Length - 1);
 
-            _db.Database.ExecuteSqlRaw(query);
+            await _db.Database.ExecuteSqlRawAsync(query);
 
-            return GetWatchListDetails(new SearchWatchList()
+            return await GetWatchListDetails(new SearchWatchList()
             {
                 TradingId = model.TradingId,
                 WatchListId = model.WatchListId

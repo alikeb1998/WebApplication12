@@ -24,26 +24,26 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly IExternalOrderService _externalOrderService;
         //private readonly IPushService _pushService;
         private IHubUserService _hubUserService;
-        
 
-        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService  
-            , IHubUserService hubUserService ) : base(instrumentsRepository, ServiceProvider.Oms)
+
+        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService
+            , IHubUserService hubUserService) : base(instrumentsRepository, ServiceProvider.Oms)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _hubUserService = hubUserService;
-            
+
         }
 
-        public bool UpdateInstrumentList()
+        public async Task<bool> UpdateInstrumentList()
         {
-            var onDbInstrumentsList = _instrumentsRepository.GetInstrumentsList().Model.Select(x => x.InstrumentId).ToList();
-            var onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
-            var onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
-            var onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
+            var onDbInstrumentsList = (await _instrumentsRepository.GetInstrumentsList()).Model.Select(x => x.InstrumentId).ToList();
+            var onDbInstrumentSector = (await _instrumentsRepository.GetInstrumentSector()).Model.ToList();
+            var onDbInstrumentSubSectors = (await _instrumentsRepository.GetInstrumentSubSectors()).Model.ToList();
+            var onDbInstrumentBourse = (await _instrumentsRepository.GetInstrumentBourse()).Model.ToList();
 
 
-            var instruments = HttpGetRequest<Instruments>("order/instruments");
+            var instruments = await HttpGetRequest<Instruments>("order/instruments");
 
             try
             {
@@ -79,9 +79,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                     }
                 }
 
-                onDbInstrumentSector = _instrumentsRepository.GetInstrumentSector().Model.ToList();
-                onDbInstrumentSubSectors = _instrumentsRepository.GetInstrumentSubSectors().Model.ToList();
-                onDbInstrumentBourse = _instrumentsRepository.GetInstrumentBourse().Model.ToList();
+                onDbInstrumentSector = (await _instrumentsRepository.GetInstrumentSector()).Model.ToList();
+                onDbInstrumentSubSectors = (await _instrumentsRepository.GetInstrumentSubSectors()).Model.ToList();
+                onDbInstrumentBourse = (await _instrumentsRepository.GetInstrumentBourse()).Model.ToList();
 
 
 
@@ -90,27 +90,27 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                     if (!onDbInstrumentsList.Contains(instrument.Id))
                     {
                         onDbInstrumentsList.Add(instrument.Id);
-                        _instrumentsRepository.AddInstrument(instrument
-                            , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
-                            , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
-                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
-                            , instrument.tick
-                            , 0.003712f
-                            , 0.0038f
-                            );
+                        await _instrumentsRepository.AddInstrument(instrument
+                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
+                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
+                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
+                             , instrument.tick
+                             , 0.003712f
+                             , 0.0038f
+                             );
 
                     }
                     else
                     {
 
-                        _instrumentsRepository.UpdateInstruments(instrument
-                            , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
-                            , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
-                            , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
-                            , instrument.tick
-                            , 0.003712f
-                            , 0.0038f
-                            );
+                        await _instrumentsRepository.UpdateInstruments(instrument
+                             , onDbInstrumentSector.FirstOrDefault(x => x.SectorId == instrument.sector.id).Id
+                             , onDbInstrumentSubSectors.FirstOrDefault(x => x.SubSectorId == instrument.subSector.id).Id
+                             , onDbInstrumentBourse.FirstOrDefault(x => x.BourseId == instrument.group.id).Id
+                             , instrument.tick
+                             , 0.003712f
+                             , 0.0038f
+                             );
                     }
 
                 }
@@ -122,30 +122,30 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 _instrumentsRepository.LogException(e);
                 return false;
             }
-            
+
         }
-        public void StartConsume()
+        public async Task StartConsume()
         {
-            _hubUserService.CreateAllConsumers();
+            await _hubUserService.CreateAllConsumers();
         }
 
-        public ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits> BestLimits(string NscCode , long InstrumentId)
+        public async Task<ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>> BestLimits(string NscCode, long InstrumentId)
         {
             //model.InstrumentId = "IRO1FOLD0001";
 
-            Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
+            await Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
 
-            var bestLimit = HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
+            var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
 
-            var detail = Details(InstrumentId);
+            var detail = await Details(InstrumentId);
             if (detail.Model == null || detail.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
 
 
 
-            var activeOrders = _externalOrderService.GetAllActives();
+            var activeOrders = await _externalOrderService.GetAllActives();
             if (activeOrders.Model.Orders == null || activeOrders.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -234,19 +234,19 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 
-        public ResultModel<InstrumentPriceDetails> Price(string NscCode)
+        public async Task<ResultModel<InstrumentPriceDetails>> Price(string NscCode)
         {
-            Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
-            var result = HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
+            await Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
+            var result = await HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
 
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<Details> Details(long InstrumentId)
+        public async Task<ResultModel<Details>> Details(long InstrumentId)
         {
-           
-            var result = HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
+
+            var result = await HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
 
 
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);

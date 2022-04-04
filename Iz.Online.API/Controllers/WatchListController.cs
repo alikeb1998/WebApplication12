@@ -24,62 +24,62 @@ namespace Iz.Online.API.Controllers
         // get watchlist.
       
         [HttpGet("WatchLists")]
-        public IActionResult WatchLists(string TradingId)
+        public async Task<IActionResult> WatchLists(string TradingId)
         {
-            var result = _watchListsServices.UserWatchLists(TradingId);
+            var result = await _watchListsServices.UserWatchLists(TradingId);
             return new Respond<List<WatchList>>().ActionRespond(result);
         }
 
         //get watchlist details.
         [HttpPost("WatchListsDetails")]
-        public IActionResult WatchListsDetails([FromBody] SearchWatchList model)
+        public async Task<IActionResult> WatchListsDetails([FromBody] SearchWatchList model)
         {
-            var result = _watchListsServices.WatchListDetails(model);
+            var result = await _watchListsServices.WatchListDetails(model);
             return new Respond<WatchListDetails>().ActionRespond(result);
         }
 
         //delete watchlist
         [HttpPost("DeleteWatchList")]
-        public IActionResult DeleteWatchList([FromBody] SearchWatchList model)
+        public async Task<IActionResult> DeleteWatchList([FromBody] SearchWatchList model)
         {
-            var result = _watchListsServices.DeleteWatchList(model);
+            var result = await _watchListsServices.DeleteWatchList(model);
             return new Respond<List<WatchList>>().ActionRespond(result);
         }
         
         //add new watchlist.
         [HttpPost("NewWatchList")]
-        public IActionResult NewWatchList([FromBody] NewWatchList model)
+        public async Task<IActionResult> NewWatchList([FromBody] NewWatchList model)
         {
-            var result = _watchListsServices.NewWatchList(model);
+            var result = await _watchListsServices.NewWatchList(model);
             return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //add new watchlist.
         [HttpPost("UpdateWatchList")]
-        public IActionResult UpdateWatchList([FromBody] EditWatchList model)
+        public async Task<IActionResult> UpdateWatchList([FromBody] EditWatchList model)
         {
-            var result = _watchListsServices.UpdateWatchList(model);
+            var result = await _watchListsServices.UpdateWatchList(model);
             return new Respond<WatchListDetails>().ActionRespond(result);
         }
 
         //add an instrument to watchlists.
         [HttpPost("AddInstrumentToWatchList")]
-        public IActionResult AddInstrumentToWatchList([FromBody] EditEathListItems model)
+        public async Task<IActionResult> AddInstrumentToWatchList([FromBody] EditEathListItems model)
         {
-            var result = _watchListsServices.AddInstrumentToWatchList(model);
+            var result = await _watchListsServices.AddInstrumentToWatchList(model);
             return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //remove an instrument from watchlist.
         [HttpPost("RemoveInstrumentFromWatchList")]
-        public IActionResult RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
+        public async Task<IActionResult> RemoveInstrumentFromWatchList([FromBody] EditEathListItems model)
         {
-            var result = _watchListsServices.RemoveInstrumentFromWatchList(model);
+            var result = await _watchListsServices.RemoveInstrumentFromWatchList(model);
             return new Respond<WatchListDetails>().ActionRespond(result);
         }
         //یک نماد در چکدام دیده بان ها است ؟
         [HttpPost("InstrumentWatchLists")]
-        public IActionResult InstrumentWatchLists([FromBody] InstrumentWatchLists model)
+        public async Task<IActionResult> InstrumentWatchLists([FromBody] InstrumentWatchLists model)
         {
-            var result = _watchListsServices.InstrumentWatchLists(model);
+            var result = await _watchListsServices.InstrumentWatchLists(model);
             return new Respond<List<WatchList>>().ActionRespond(result);
         }
 

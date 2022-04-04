@@ -13,14 +13,14 @@ namespace Iz.Online.Services.IServices
     {
         IExternalInstrumentService _externalInstrumentsServices { get; }
         IExternalOrderService _externalOrderService { get; }
-        ResultModel<List<WatchList>> UserWatchLists(string customerId);
-        ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model);
-        ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model);
-        ResultModel<WatchListDetails> NewWatchList(NewWatchList model);
-        ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model);
-        ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model);
-        ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model);
-        ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model);
-  
+        Task<ResultModel<List<WatchList>>> UserWatchLists(string customerId);
+        Task<ResultModel<WatchListDetails>> WatchListDetails(SearchWatchList model);
+        Task<ResultModel<List<WatchList>>> DeleteWatchList(SearchWatchList model);
+        Task<ResultModel<WatchListDetails>> NewWatchList(NewWatchList model);
+        Task<ResultModel<WatchListDetails>> AddInstrumentToWatchList(EditEathListItems model);
+        Task<ResultModel<WatchListDetails>> RemoveInstrumentFromWatchList(EditEathListItems model);
+        Task<ResultModel<List<WatchList>>> InstrumentWatchLists(InstrumentWatchLists model);
+        Task<ResultModel<WatchListDetails>> UpdateWatchList(EditWatchList model);
+
     }
 }

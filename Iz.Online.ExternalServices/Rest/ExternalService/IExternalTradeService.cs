@@ -12,6 +12,6 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     {
          string Token { get; set; }
 
-        ResultModel<TradesList> Trades();
+        Task<ResultModel<TradesList>> Trades();
     }
 }

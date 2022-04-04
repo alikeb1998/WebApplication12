@@ -17,12 +17,12 @@ namespace Iz.Online.Services.IServices
     public interface IOrderServices
     {
         IExternalOrderService _externalOrderService { get; }
-        ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
-        ResultModel<List<ActiveOrder>> AllActive();
-        ResultModel<OrderReport> AllActivePaged(OrderFilter filter);
-        ResultModel<AllOrderReport> AllSortedOrder(AllOrderCustomFilter filter);
-        ResultModel<UpdatedOrder> Update(UpdateOrder model);
-        ResultModel<CanceledOrder> Cancel(CancelOrder model);
-        
+        Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel);
+        Task<ResultModel<List<ActiveOrder>>> AllActive();
+        Task<ResultModel<OrderReport>> AllActivePaged(OrderFilter filter);
+        Task<ResultModel<AllOrderReport>> AllSortedOrder(AllOrderCustomFilter filter);
+        Task<ResultModel<UpdatedOrder>> Update(UpdateOrder model);
+        Task<ResultModel<CanceledOrder>> Cancel(CancelOrder model);
+
     }
 }

@@ -25,9 +25,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         
 
-        public ResultModel<TradesList> Trades()
+        public async Task<ResultModel<TradesList>> Trades()
         {
-            var list = HttpGetRequest<TradesList>("trade/all");
+            var list = await HttpGetRequest<TradesList>("trade/all");
           
                 return new ResultModel<TradesList>(list, list.statusCode == 200, list.clientMessage, list.statusCode);
             

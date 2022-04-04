@@ -22,48 +22,48 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
         }
 
-        public ResultModel<Wallet> Wallet()
+        public async Task<ResultModel<Wallet>> Wallet()
         {
-            var result = HttpGetRequest<Wallet>("user/wallet");
+            var result = await HttpGetRequest<Wallet>("user/wallet");
 
             return new ResultModel<Wallet>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<AssetsList> GetAllAssets()
+        public async Task<ResultModel<AssetsList>> GetAllAssets()
         {
-            var result = HttpGetRequest<AssetsList>("order/asset/all");
+            var result = await HttpGetRequest<AssetsList>("order/asset/all");
 
             return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }
-        public ResultModel<Login> Captcha()
+        public async Task<ResultModel<Login>> Captcha()
         {
-            var result = HttpGetRequest<Login>("user/captcha");
+            var result = await HttpGetRequest<Login>("user/captcha");
             return new ResultModel<Login>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<OtpResult> SendOtp(Credentials credentials)
+        public async Task<ResultModel<OtpResult>> SendOtp(Credentials credentials)
         {
-            var result = HttpPostRequest<OtpResult>("user/login/send-otp", JsonConvert.SerializeObject(credentials));
+            var result = await HttpPostRequest<OtpResult>("user/login/send-otp", JsonConvert.SerializeObject(credentials));
             return new ResultModel<OtpResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<CheckOtp> CheckOtp(Otp otp)
+        public async Task<ResultModel<CheckOtp>> CheckOtp(Otp otp)
         {
-            var result = HttpPostRequest<CheckOtp>("user/login/check-otp", JsonConvert.SerializeObject(otp));
+            var result = await HttpPostRequest<CheckOtp>("user/login/check-otp", JsonConvert.SerializeObject(otp));
             return new ResultModel<CheckOtp>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
-        public ResultModel<LogOut> LogOut()
+        public async Task<ResultModel<LogOut>> LogOut()
         {
-            var result = HttpDeleteRequest<LogOut>("user/logout",null);
+            var result = await HttpDeleteRequest<LogOut>("user/logout",null);
 
             return new ResultModel<LogOut>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<model.CustomerInfo> CustomerInfo()
+        public async Task<ResultModel<model.CustomerInfo>> CustomerInfo()
         {
           
-            var result = HttpGetRequest<model.CustomerInfo>("Customer/GetCustomerInfo");
+            var result = await HttpGetRequest<model.CustomerInfo>("Customer/GetCustomerInfo");
 
             return new ResultModel<model.CustomerInfo>(result);
         }

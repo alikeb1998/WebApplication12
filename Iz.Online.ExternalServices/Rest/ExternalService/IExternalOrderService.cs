@@ -14,12 +14,10 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
     public interface IExternalOrderService
     {
         string Token { get; set; }
-        ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel);
-        ResultModel<AllOrders> GetAll();
-        ResultModel<ActiveOrdersResult> GetAllActives();
-        ResultModel<UpdatedOrder> Update(UpdateOrder model);
-        ResultModel<CanceledOrder> Cancel(CancelOrder model);
-
-        // AssetsList GetAllAssets(ViewBaseModel baseModel);
+        Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel);
+        Task<ResultModel<AllOrders>> GetAll();
+        Task<ResultModel<ActiveOrdersResult>> GetAllActives();
+        Task<ResultModel<UpdatedOrder>> Update(UpdateOrder model);
+        Task<ResultModel<CanceledOrder>> Cancel(CancelOrder model);
     }
 }

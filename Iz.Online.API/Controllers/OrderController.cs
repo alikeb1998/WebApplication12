@@ -58,51 +58,52 @@ namespace Iz.Online.API.Controllers
 
             return Ok(states);
         }
+
         // add order
         [HttpPost("add")]
-        public IActionResult Add([FromBody] AddOrderModel addOrderModel)
+        public async Task<IActionResult> Add([FromBody] AddOrderModel addOrderModel)
         {
-            var result = _orderService.Add(addOrderModel);
+            var result = await _orderService.Add(addOrderModel);
             return new Respond<AddOrderResult>().ActionRespond(result);
         }
 
         //get a list of all active orders.
         [HttpGet("all/active")]
-        public IActionResult AllActive()
+        public async Task<IActionResult> AllActive()
         {
-            var result = _orderService.AllActive();
+            var result = await _orderService.AllActive();
             return new Respond<List<ActiveOrder>>().ActionRespond(result);
         }
 
         //get a list of all active orders.
         [HttpPost("all/activePaged")]
-        public IActionResult AllActivePaged([FromBody] OrderFilter filter)
+        public async Task<IActionResult> AllActivePaged([FromBody] OrderFilter filter)
         {
-            var result = _orderService.AllActivePaged(filter);
+            var result = await _orderService.AllActivePaged(filter);
             return new Respond<OrderReport>().ActionRespond(result);
         }
 
         //update & edit an order.
         [HttpPost("update")]
-        public IActionResult Update([FromBody] UpdateOrder model)
+        public async Task<IActionResult> Update([FromBody] UpdateOrder model)
         {
-            var result = _orderService.Update(model);
+            var result = await _orderService.Update(model);
             return new Respond<UpdatedOrder>().ActionRespond(result);
         }
 
         //cancel an order.
         [HttpPost("cancel")]
-        public IActionResult Cancel([FromBody] CancelOrder model)
+        public async Task<IActionResult> Cancel([FromBody] CancelOrder model)
         {
-            var result = _orderService.Cancel(model);
+            var result = await _orderService.Cancel(model);
             return new Respond<CanceledOrder>().ActionRespond(result);
         }
 
         //get history of all orders.
         [HttpPost("History")]
-        public IActionResult AllSortedOrder([FromBody] AllOrderCustomFilter filter)
+        public async Task<IActionResult> AllSortedOrder([FromBody] AllOrderCustomFilter filter)
         {
-            var result = _orderService.AllSortedOrder(filter);
+            var result = await _orderService.AllSortedOrder(filter);
             return new Respond<AllOrderReport>().ActionRespond(result);
 
         }

@@ -18,17 +18,17 @@ namespace Iz.Online.Services.IServices
     public interface IUserService
     {
         IExternalUserService _externalUserService { get; }
-        ResultModel<bool> SetUserHub(string token, string hubId);
-        ResultModel<List<Asset>> AllAssets();
-        ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter);
-        ResultModel<Wallet>  Wallet();
+        Task<ResultModel<bool>> SetUserHub(string token, string hubId);
+        Task<ResultModel<List<Asset>>> AllAssets();
+        Task<ResultModel<List<Asset>>> AllAssetsPaged(PortfoFilter filter);
+        Task<ResultModel<Wallet>> Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();
         ResultModel<string> GetUserLocalToken(string  omsId);
-        ResultModel<Captcha> Captcha();
-        ResultModel<OtpResult> SendOtp(Credentials credentials);
-        ResultModel<CheckedOtp> CheckOtp(Otp otp);
-        ResultModel<bool> LogOut();
-        ResultModel<CustomerData> GetCustomerInfo();
+        Task<ResultModel<Captcha>> Captcha();
+        Task<ResultModel<OtpResult>> SendOtp(Credentials credentials);
+        Task<ResultModel<CheckedOtp>> CheckOtp(Otp otp);
+        Task<ResultModel<bool>> LogOut();
+        Task<ResultModel<CustomerData>> GetCustomerInfo();
 
     }
 }

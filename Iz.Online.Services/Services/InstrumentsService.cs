@@ -28,9 +28,9 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public ResultModel<List<InstrumentList>> InstrumentList()
+        public async Task<ResultModel<List<InstrumentList>>> InstrumentList()
         {
-            var result = _cacheService.InstrumentData().Select(x => new InstrumentList()
+            var result =  (await _cacheService.InstrumentData()).Select(x => new InstrumentList()
             {
                 Bourse = x.Bourse,
                 BuyCommissionRate = x.BuyCommissionRate,
@@ -45,24 +45,24 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public ResultModel<InstrumentDetail> Detail(int instrumentId, string HubId)
+        public async Task<ResultModel<InstrumentDetail>> Detail(int instrumentId, string HubId)
         {
 
 
             var result = new InstrumentDetail();
-            var instrumentDetails = _cacheService.InstrumentData(instrumentId);
+            var instrumentDetails = await _cacheService.InstrumentData(instrumentId);
             _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = HubId, NscCode = instrumentDetails.NscCode });
 
 
-            var detail = _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
+            var detail = await _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
             if (!detail.IsSuccess || detail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
 
-            var priceDetail = _externalInstrumentsService.Price(instrumentDetails.NscCode);
+            var priceDetail = await _externalInstrumentsService.Price(instrumentDetails.NscCode);
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
 
-            var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+            var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
             if (!bestLimit.IsSuccess || bestLimit.Model == null)
                 return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode == 200, bestLimit.Message, bestLimit.StatusCode);
 
@@ -112,35 +112,35 @@ namespace Iz.Online.Services.Services
             return new ResultModel<InstrumentDetail>(result);
         }
 
-        public ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model)
+        public async Task<ResultModel<bool>> AddCommentToInstrument(AddCommentForInstrument model)
         {
-            return _instrumentsRepository.AddCommentToInstrument(model);
+            return await _instrumentsRepository.AddCommentToInstrument(model);
         }
 
-        public ResultModel<string> GetInstrumentComment(GetInstrumentComment model)
+        public async Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model)
         {
-            return _instrumentsRepository.GetInstrumentComment(model);
+            return await _instrumentsRepository.GetInstrumentComment(model);
         }
 
-        public void StartConsume()
+        public async Task StartConsume()
         {
-            _externalInstrumentsService.StartConsume();
+            await _externalInstrumentsService.StartConsume();
         }
 
-        public ResultModel<BestLimits> BestLimits(int InstrumentId, string hubId)
+        public async Task<ResultModel<BestLimits>> BestLimits(int InstrumentId, string hubId)
         {
-            var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
+            var instrumentDetails =  await _cacheService.InstrumentData(InstrumentId);
 
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
+             _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = hubId, NscCode = instrumentDetails.NscCode });
            
-            return _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+            return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
         }
 
-        public bool UpdateInstrumentsDb()
+        public async Task<bool> UpdateInstrumentsDb()
         {
-            _cacheService.CleareCache();
+             _cacheService.CleareCache();
 
-            return _externalInstrumentsService.UpdateInstrumentList();
+            return await _externalInstrumentsService.UpdateInstrumentList();
             
         }
     }

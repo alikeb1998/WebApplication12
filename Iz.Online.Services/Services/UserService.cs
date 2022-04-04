@@ -35,10 +35,10 @@ namespace Iz.Online.Services.Services
             _cacheService = cacheService;
         }
 
-        public ResultModel<List<Asset>> AllAssets()
+        public async Task<ResultModel<List<Asset>>> AllAssets()
         {
-            var assets = _externalUserService.GetAllAssets();
-            var instruments = _cacheService.InstrumentData();
+            var assets = await _externalUserService.GetAllAssets();
+            var instruments = await _cacheService.InstrumentData();
 
             if (!assets.IsSuccess || assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
@@ -61,9 +61,9 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public ResultModel<List<Asset>> AllAssetsPaged(PortfoFilter filter)
+        public async Task<ResultModel<List<Asset>>> AllAssetsPaged(PortfoFilter filter)
         {
-            var assets = _externalUserService.GetAllAssets();
+            var assets = await _externalUserService.GetAllAssets();
 
             if (!assets.IsSuccess || assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
@@ -88,10 +88,10 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<Asset>>(res);
 
         }
-        public ResultModel<Wallet> Wallet()
+        public async Task<ResultModel<Wallet>> Wallet()
         {
 
-            var respond = _externalUserService.Wallet();
+            var respond = await _externalUserService.Wallet();
 
             if (!respond.IsSuccess || respond.Model.wallet == null)
                 return new ResultModel<Wallet>(null, respond.StatusCode == 200, respond.Message, respond.StatusCode);
@@ -118,7 +118,7 @@ namespace Iz.Online.Services.Services
             var deserializedToken = CastJwtSecurityTokenHandler(token);
             var omsId = ((JwtSecurityToken)deserializedToken).Claims.FirstOrDefault(x => x.Type == "Id").Value;
 
-            string localToken = _userRepository.GetUserLocalToken(omsId, token);
+            string localToken =  _userRepository.GetUserLocalToken(omsId, token);
 
             return new ResultModel<string>(localToken);
         }
@@ -132,9 +132,9 @@ namespace Iz.Online.Services.Services
             return jsonToken;
         }
 
-        public ResultModel<bool> SetUserHub(string token, string hubId)
+        public  async Task<ResultModel<bool>> SetUserHub(string token, string hubId)
         {
-            var CustomerInfo = _externalUserService.CustomerInfo();
+            var CustomerInfo = await _externalUserService.CustomerInfo();
 
             if (CustomerInfo.StatusCode == 200 || CustomerInfo.Model.tradingID != null)
             {
@@ -154,9 +154,9 @@ namespace Iz.Online.Services.Services
 
         }
 
-        public ResultModel<Captcha> Captcha()
+        public async Task<ResultModel<Captcha>> Captcha()
         {
-            var res = _externalUserService.Captcha();
+            var res = await _externalUserService.Captcha();
             if (res.Model != null && res.IsSuccess)
             {
                 var captcha = new Captcha()
@@ -171,9 +171,9 @@ namespace Iz.Online.Services.Services
             return new ResultModel<Captcha>(null, false, res.Message, res.StatusCode);
         }
 
-        public ResultModel<OtpResult> SendOtp(Credentials credentials)
+        public async Task<ResultModel<OtpResult>> SendOtp(Credentials credentials)
         {
-            var result = _externalUserService.SendOtp(credentials);
+            var result = await _externalUserService.SendOtp(credentials);
             if (result.Model != null && result.IsSuccess)
             {
                 
@@ -187,9 +187,9 @@ namespace Iz.Online.Services.Services
             return new ResultModel<OtpResult>(null, false, result.Message, result.StatusCode);
         }
 
-        public ResultModel<CheckedOtp> CheckOtp(Otp otp)
+        public async Task<ResultModel<CheckedOtp>> CheckOtp(Otp otp)
         {
-            var result = _externalUserService.CheckOtp(otp);
+            var result = await _externalUserService.CheckOtp(otp);
             if (result.Model != null && result.IsSuccess)
             {
                 var checkOtp = new CheckedOtp()
@@ -202,9 +202,9 @@ namespace Iz.Online.Services.Services
             }
             return new ResultModel<CheckedOtp>(null, false, result.Message, result.StatusCode);
         }
-        public ResultModel<bool> LogOut()
+        public async Task<ResultModel<bool>> LogOut()
         {
-            var res = _externalUserService.LogOut();
+            var res = await _externalUserService.LogOut();
             if (res.StatusCode == 200)
             {
                 return new ResultModel<bool>(true);
@@ -213,9 +213,9 @@ namespace Iz.Online.Services.Services
           
         }
 
-        public ResultModel<CustomerData> GetCustomerInfo()
+        public async Task<ResultModel<CustomerData>> GetCustomerInfo()
         {
-            var result = _externalUserService.CustomerInfo();
+            var result = await _externalUserService.CustomerInfo();
 
             if (!result.IsSuccess || result.Model == null)
                 return new ResultModel<CustomerData>(null, result.IsSuccess, result.Message, result.StatusCode);

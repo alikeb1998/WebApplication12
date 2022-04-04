@@ -25,11 +25,11 @@ namespace Iz.Online.Services.Services
         }
         
 
-        public ResultModel<List<Trade>> Trades()
+        public async Task<ResultModel<List<Trade>>> Trades()
         {
-            var instruments = _cacheService.InstrumentData();
+            var instruments =  await _cacheService.InstrumentData();
 
-            var trades = _externalTradeService.Trades();
+            var trades = await _externalTradeService.Trades();
 
             if (!trades.IsSuccess || trades.Model.Trades == null)
                 return new ResultModel<List<Trade>>(null, trades.StatusCode == 200, trades.Message, trades.StatusCode);
@@ -50,13 +50,13 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<Trade>>(allTrades);
         }
 
-        public ResultModel<List<Trade>> TradesPaged(TradeFilter filter)
+        public async Task<ResultModel<List<Trade>>> TradesPaged(TradeFilter filter)
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
                 return new ResultModel<List<Trade>>(null, 400);
             }
-            var trades = _externalTradeService.Trades();
+            var trades = await _externalTradeService.Trades();
             if (!trades.IsSuccess || trades.Model.Trades == null)
                 return new ResultModel<List<Trade>>(null, trades.StatusCode == 200, trades.Message, trades.StatusCode);
 
@@ -78,14 +78,14 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<Trade>>(res);
         }
 
-        public ResultModel<TradeHistoryReport> History(TradeHistoryFilter filter)
+        public async Task<ResultModel<TradeHistoryReport>> History(TradeHistoryFilter filter)
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
                 return new ResultModel<TradeHistoryReport>(null,  400);
             }
 
-            var list = _externalTradeService.Trades();
+            var list = await _externalTradeService.Trades();
            
             if (list.IsSuccess && list.Model.Trades!=null)
             {

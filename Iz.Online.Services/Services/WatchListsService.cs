@@ -30,16 +30,16 @@ namespace Iz.Online.Services.Services
             _externalOrderService = externalOrderService;
         }
 
-        public ResultModel<WatchListDetails> WatchListDetails(SearchWatchList model)
+        public async Task<ResultModel<WatchListDetails>> WatchListDetails(SearchWatchList model)
         {
-            var wl = _watchListsRepository.GetWatchListDetails(model);
+            var wl = await _watchListsRepository.GetWatchListDetails(model);
 
 
             foreach (var ins in wl.Model.Instruments)
             {
-               var instrumentDetails =  _cache.InstrumentData((int) ins.Id);
-                var bestLimit = _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
-                var price = _externalInstrumentsService.Price(instrumentDetails.NscCode);
+               var instrumentDetails =  await _cache.InstrumentData((int) ins.Id);
+                var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+                var price = await _externalInstrumentsService.Price(instrumentDetails.NscCode);
 
                 if (!(bestLimit.IsSuccess && price.IsSuccess))
                     continue;
@@ -68,26 +68,26 @@ namespace Iz.Online.Services.Services
         }
 
 
-        public ResultModel<List<WatchList>> DeleteWatchList(SearchWatchList model)
+        public async Task<ResultModel<List<WatchList>>> DeleteWatchList(SearchWatchList model)
         {
-            return _watchListsRepository.DeleteWatchList(model);
+            return await _watchListsRepository.DeleteWatchList(model);
         }
 
-        public ResultModel<WatchListDetails> NewWatchList(NewWatchList model)
+        public async Task<ResultModel<WatchListDetails>> NewWatchList(NewWatchList model)
         {
             model.WatchListName = model.WatchListName.Trim();
 
-            if (ValidateWatchList(model, out var resultModel))
+            if (await ValidateWatchList(model, out var resultModel))
                 return resultModel;
 
-            return _watchListsRepository.NewWatchList(model);
+            return  await _watchListsRepository.NewWatchList(model);
         }
 
-        private bool ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
+        private async Task<bool> ValidateWatchList(NewWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
-            var oldWl = _watchListsRepository.GetUserWatchLists(model.TradingId);
+            var oldWl = await _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model!=null && oldWl.Model.Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
@@ -129,11 +129,11 @@ namespace Iz.Online.Services.Services
             resultModel = new ResultModel<WatchListDetails>(null);
             return false;
         }
-        private bool ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
+        private async Task<bool> ValidateWatchList(EditWatchList model, out ResultModel<WatchListDetails> resultModel)
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxLenName").Value);
 
-            var oldWl = _watchListsRepository.GetUserWatchLists(model.TradingId);
+            var oldWl = await _watchListsRepository.GetUserWatchLists(model.TradingId);
             if (oldWl.IsSuccess)
                 if (oldWl.Model.Where(x => x.Id != model.WatchListId).Select(x => x.WatchListName).Contains(model.WatchListName))
                 {
@@ -141,7 +141,7 @@ namespace Iz.Online.Services.Services
                     return true;
                 }
 
-            var entity = _watchListsRepository.GetWatchListDetails(new SearchWatchList()
+            var entity = await _watchListsRepository.GetWatchListDetails(new SearchWatchList()
             {
                 TradingId = model.TradingId,
                 WatchListId = model.WatchListId
@@ -188,48 +188,48 @@ namespace Iz.Online.Services.Services
             return false;
         }
 
-        public ResultModel<WatchListDetails> AddInstrumentToWatchList(EditEathListItems model)
+        public async Task<ResultModel<WatchListDetails>> AddInstrumentToWatchList(EditEathListItems model)
         {
             var maxLen = Convert.ToInt32(_cache.ConfigData("WatchListMaxInstruments").Value);
 
-            var old = _watchListsRepository.GetWatchListDetails(new SearchWatchList() { WatchListId = model.WatchListId });
+            var old = await _watchListsRepository.GetWatchListDetails(new SearchWatchList() { WatchListId = model.WatchListId });
             if (old.Model.Instruments.Count() >= maxLen)
                 return new ResultModel<WatchListDetails>(null, false, "حداکثر تعداد نماد در دیده بان" + maxLen + "است");
 
-            return _watchListsRepository.AddInstrumentToWatchList(model);
+            return await _watchListsRepository.AddInstrumentToWatchList(model);
 
         }
 
-        public ResultModel<WatchListDetails> RemoveInstrumentFromWatchList(EditEathListItems model)
+        public async Task<ResultModel<WatchListDetails>> RemoveInstrumentFromWatchList(EditEathListItems model)
         {
-            return _watchListsRepository.RemoveInstrumentFromWatchList(model);
+            return await _watchListsRepository.RemoveInstrumentFromWatchList(model);
 
         }
 
-        public ResultModel<List<WatchList>> InstrumentWatchLists(InstrumentWatchLists model)
+        public async Task<ResultModel<List<WatchList>>> InstrumentWatchLists(InstrumentWatchLists model)
         {
 
-            return _watchListsRepository.InstrumentWatchLists(model);
+            return await _watchListsRepository.InstrumentWatchLists(model);
 
         }
-        public ResultModel<WatchListDetails> UpdateWatchList(EditWatchList model)
+        public async Task<ResultModel<WatchListDetails>> UpdateWatchList(EditWatchList model)
         {
            //var a = _cache.GetOmsIdFromLocalInstrumentId((int)model.Id[0]);
 
             model.WatchListName = model.WatchListName.Trim();
 
-            if (ValidateWatchList(model, out var resultModel))
+            if (await ValidateWatchList(model, out var resultModel))
                 return resultModel;
             
-            return _watchListsRepository.UpdateWatchList(model);
+            return await _watchListsRepository.UpdateWatchList(model);
 
         }
 
         
 
-        public ResultModel<List<WatchList>> UserWatchLists(string customerId)
+        public async Task<ResultModel<List<WatchList>>> UserWatchLists(string customerId)
         {
-            return _watchListsRepository.GetUserWatchLists(customerId);
+            return await _watchListsRepository.GetUserWatchLists(customerId);
         }
     }
 }

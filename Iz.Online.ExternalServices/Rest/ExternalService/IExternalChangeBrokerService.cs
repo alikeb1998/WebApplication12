@@ -7,14 +7,14 @@ using Izi.Online.ViewModels.ChangeBroker;
 
 namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
-    public  interface  IExternalChangeBrokerService
+    public interface IExternalChangeBrokerService
     {
-        List<Request> AllRequests();
-        Request RequestDetails(long requestId);
-        byte[] GetDocument(long documentId);
-        long AddRequest(NewRequest model);
-        bool EditRequest(NewRequest model);
-        bool DeleteRequest(long requestId);
-        List<RequestsHistory> RequestHistory(long requestId);
+        Task<List<Request>> AllRequests();
+        Task<Request> RequestDetails(long requestId);
+        Task<byte[]> GetDocument(long documentId);
+        Task<long> AddRequest(NewRequest model);
+        Task<bool> EditRequest(NewRequest model);
+        Task<bool> DeleteRequest(long requestId);
+        Task<List<RequestsHistory>> RequestHistory(long requestId);
     }
 }

@@ -7,25 +7,23 @@ namespace Iz.Online.Reopsitory.IRepository
 {
     public interface IInstrumentsRepository : IBaseRepository
     {
-        ResultModel<List<Instruments>> GetInstrumentsList();
-        ResultModel<List<InstrumentBourse>> GetInstrumentBourse();
-        ResultModel<List<InstrumentSector>> GetInstrumentSector();
-        ResultModel<List<InstrumentSubSector>> GetInstrumentSubSectors();
-        ResultModel<bool> AddInstrumentBourse(InstrumentBourse model);
-        ResultModel<bool> AddInstrumentSector(InstrumentSector model);
-        ResultModel<bool> AddInstrumentSubSectors(InstrumentSubSector model);
-        ResultModel<bool> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
-        ResultModel<bool> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
-        //ResultModel<long> GetInstrumentId(int InstrumentId);
+        Task<ResultModel<List<Instruments>>> GetInstrumentsList();
+        Task<ResultModel<List<InstrumentBourse>>> GetInstrumentBourse();
+        Task<ResultModel<List<InstrumentSector>>> GetInstrumentSector();
+        Task<ResultModel<List<InstrumentSubSector>>> GetInstrumentSubSectors();
+        Task<ResultModel<bool>> AddInstrumentBourse(InstrumentBourse model);
+        Task<ResultModel<bool>> AddInstrumentSector(InstrumentSector model);
+        Task<ResultModel<bool>> AddInstrumentSubSectors(InstrumentSubSector model);
+        Task<ResultModel<bool>> AddInstrument(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
+        Task<ResultModel<bool>> UpdateInstruments(Instrument model, int sectorId, int subSectorId, int bourseId, long tick, float buyCommissionRate, float sellCommissionRate);
+        Task<ResultModel<bool>> AddCommentToInstrument(AddCommentForInstrument model);
 
-        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
-      
-        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
-        InstrumentList InstrumentData(int instrumentId);
-        List<InstrumentList> InstrumentData();
+        Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model);
+        Task<InstrumentList> InstrumentData(int instrumentId);
+        Task<List<InstrumentList>> InstrumentData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
         void CustomerSelectInstrument(CustomerSelectInstrumentModel model);
-        List<string> GetInstrumentHubs(string NscCode);
+        Task<List<string>> GetInstrumentHubs(string NscCode);
         void CleareCache();
     }
 }

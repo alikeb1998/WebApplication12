@@ -21,53 +21,36 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _instrumentsRepository = baseRepository;
         }
 
-        public ResultModel<AddOrderResult> Add(AddOrderModel addOrderModel)
+        public async Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel)
         {
-            var result = HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
-
-          
-            return new ResultModel<AddOrderResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
+            var result = await HttpPostRequest<AddOrderResult>("order/add", JsonConvert.SerializeObject(addOrderModel));
+            return new ResultModel<AddOrderResult> (result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
         
-        public ResultModel<AllOrders> GetAll()
+        public async Task<ResultModel<AllOrders>> GetAll()
         {
-            var result = HttpGetRequest<AllOrders>("order/all");
-       
+            var result = await HttpGetRequest<AllOrders>("order/all");
             return new ResultModel<AllOrders>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
 
-        public ResultModel<ActiveOrdersResult> GetAllActives()
+        public async Task<ResultModel<ActiveOrdersResult>> GetAllActives()
         {
-            var result = HttpGetRequest<ActiveOrdersResult>("order/all/active");
-       
+            var result = await HttpGetRequest<ActiveOrdersResult>("order/all/active");
             return new ResultModel<ActiveOrdersResult>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
       
 
-        public ResultModel<UpdatedOrder> Update(UpdateOrder model)
+        public async Task<ResultModel<UpdatedOrder>> Update(UpdateOrder model)
         {
-            var result = HttpPutRequest<UpdatedOrder>($"order/update/{model.InstrumentId}", JsonConvert.SerializeObject(model));
-          
+            var result = await HttpPutRequest<UpdatedOrder>($"order/update/{model.InstrumentId}", JsonConvert.SerializeObject(model));
             return new ResultModel<UpdatedOrder>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public ResultModel<CanceledOrder> Cancel(CancelOrder model)
+        public async Task<ResultModel<CanceledOrder>> Cancel(CancelOrder model)
         {
-            var result = HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model));
-       
+            var result = await  HttpDeleteRequest<CanceledOrder>($"order/cancel/{model.InstrumentId}", JsonConvert.SerializeObject(model));
             return new ResultModel<CanceledOrder>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
-
-       
-        //public AssetsList GetAllAssets(ViewBaseModel baseModel)
-        //{
-        //    var result = HttpGetRequest<AssetsList>("order/asset/all", baseModel.Token);
-        //    if (result.statusCode != 200)
-        //    {
-        //        //TODO
-        //    }
-        //    return result;
-        //}
     }
 }

@@ -15,12 +15,12 @@ namespace Iz.Online.Reopsitory.Repository
 
         }
     
-        public void Add(Orders addOrderModel)
+        public async void Add(Orders addOrderModel)
         {
             try
             {
                 _db.Orders.Add(addOrderModel);
-                _db.SaveChanges();
+               await _db.SaveChangesAsync();
             }
             catch (Exception e)
             {
@@ -29,14 +29,14 @@ namespace Iz.Online.Reopsitory.Repository
         }
 
 
-        public void Update(Orders updateOrderModel)
+        public async void Update(Orders updateOrderModel)
         {
             try
             {
 
                 _db.Orders.Update(updateOrderModel);
 
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
             }
             catch (Exception e)
@@ -46,12 +46,12 @@ namespace Iz.Online.Reopsitory.Repository
 
         }
 
-        public void Cancel(Orders updateOrderModel)
+        public async void Cancel(Orders updateOrderModel)
         {
             try
             {
                 _db.Orders.Remove(updateOrderModel);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
             catch (Exception e)
             {

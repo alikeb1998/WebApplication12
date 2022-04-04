@@ -53,7 +53,7 @@ namespace Iz.Online.HubHandler.Services
         }
 
         #region BESTLIMIT
-       
+
 
         /// <summary>
         /// {InstrumentId}-bestLimit
@@ -122,7 +122,7 @@ namespace Iz.Online.HubHandler.Services
                             res.lastPrice = model.lastPrice;
                             res.firstPrice = model.firstPrice;
                             ///
-                            
+
 
 
 
@@ -174,7 +174,7 @@ namespace Iz.Online.HubHandler.Services
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                                 await _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { model1 });
+                                await _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { model1 });
 
 
                         var t = consumeResult.Message.Value;
@@ -213,7 +213,7 @@ namespace Iz.Online.HubHandler.Services
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                            await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1 });
+                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
 
@@ -250,15 +250,15 @@ namespace Iz.Online.HubHandler.Services
                         #region comment
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
-                        
+
 
                         var customerData = _hubConnationService.UserHubsList(model1.Customer);
 
                         if (customerData != null)
-                           if (customerData.Hubs.Count > 0)
-                              await  _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnUpdateCustomerWallet", new object[] {JsonConvert.SerializeObject(model1) });
+                            if (customerData.Hubs.Count > 0)
+                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
 
-                        var t = consumeResult.Message.Value; 
+                        var t = consumeResult.Message.Value;
                         #endregion
                     }
                     catch (Exception e)
@@ -297,7 +297,7 @@ namespace Iz.Online.HubHandler.Services
                         var hubs = _hubConnationService.UserHubsList(model1.NationalId);
 
                         if (hubs != null)
-                           await  _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+                            await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
                     }
@@ -318,10 +318,10 @@ namespace Iz.Online.HubHandler.Services
             if (ConsumerIsStar)
                 return;
 
-            Task.Run(() => PushTradeState_Original());
-            Task.Run(() => PushOrderAdded_Original());
-            Task.Run(() => PushCustomerPortfolio_Original());
-            Task.Run(() => PushCustomerWallet_Original());
+            await Task.Run(() => PushTradeState_Original());
+            await Task.Run(() => PushOrderAdded_Original());
+            await Task.Run(() => PushCustomerPortfolio_Original());
+            await Task.Run(() => PushCustomerWallet_Original());
 
 
             ConsumerIsStar = true;

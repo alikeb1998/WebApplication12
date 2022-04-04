@@ -15,9 +15,9 @@ namespace Iz.Online.Services.IServices
     {
         string Token { get; set; }
 
-        ResultModel<List<Trade>> Trades();
-        ResultModel<List<Trade>> TradesPaged(TradeFilter filter);
-        ResultModel<TradeHistoryReport> History(TradeHistoryFilter filter);
+        Task<ResultModel<List<Trade>>> Trades();
+        Task<ResultModel<List<Trade>>> TradesPaged(TradeFilter filter);
+        Task<ResultModel<TradeHistoryReport>> History(TradeHistoryFilter filter);
 
         IExternalTradeService _externalTradeService { get;  }
     }

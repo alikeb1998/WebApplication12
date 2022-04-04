@@ -51,40 +51,40 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("logOut")]
-        public IActionResult logOut()
+        public async Task<IActionResult> logOut()
         {
-            var result = _userService.LogOut();
+            var result = await _userService.LogOut();
             return new Respond<bool>().ActionRespond(result);
 
         }
 
         [HttpGet("captcha")]
-        public IActionResult Captcha()
+        public async Task<IActionResult> Captcha()
         {
-            var result = _userService.Captcha();
+            var result = await _userService.Captcha();
             return new Respond<Captcha>().ActionRespond(result);
 
         }
 
         [HttpPost("SendOtp")]
-        public IActionResult SendOtp([FromBody] Credentials credentials)
+        public async Task<IActionResult> SendOtp([FromBody] Credentials credentials)
         {
-            var result = _userService.SendOtp(credentials);
+            var result = await _userService.SendOtp(credentials);
             return new Respond<OtpResult>().ActionRespond(result);
         }
 
         [HttpPost("CheckOtp")]
-        public IActionResult CheckOtp([FromBody] Otp otp)
+        public async Task<IActionResult> CheckOtp([FromBody] Otp otp)
         {
-            var result = _userService.CheckOtp(otp);
+            var result = await _userService.CheckOtp(otp);
             return new Respond<CheckedOtp>().ActionRespond(result);
 
         }
 
         [HttpGet("CustomerInfo")]
-        public IActionResult CustomerInfo()
+        public async Task<IActionResult> CustomerInfo()
         {
-            var result =  _userService.GetCustomerInfo();
+            var result = await _userService.GetCustomerInfo();
             return new Respond<CustomerData>().ActionRespond(result);
         }
         [HttpGet("Config")]
@@ -129,9 +129,9 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("SetHubId")]
-        public IActionResult SetHubId([FromBody] CustomerHub model)
+        public async Task<IActionResult> SetHubId([FromBody] CustomerHub model)
         {
-            var result = _userService.SetUserHub(_token_, model.HubId);
+            var result =  await _userService.SetUserHub(_token_, model.HubId);
             return new Respond<bool>().ActionRespond(result);
         }
 
@@ -139,26 +139,26 @@ namespace Iz.Online.API.Controllers
 
         //get customer wallet.
         [HttpGet("Wallet")]
-        public IActionResult Wallet()
+        public async Task<IActionResult> Wallet()
         {
 
-            var result = _userService.Wallet();
+            var result = await _userService.Wallet();
             return new Respond<Wallet>().ActionRespond(result);
 
         }
 
         //get customer portfolio
         [HttpGet("portfolio")]
-        public IActionResult AllAssets()
+        public async Task<IActionResult> AllAssets()
         {
-            var result = _userService.AllAssets();
+            var result = await _userService.AllAssets();
             return new Respond<List<Asset>>().ActionRespond(result);
         }
 
         [HttpGet("portfolioPaged")]
-        public IActionResult AllAssetsPaged(PortfoFilter filter)
+        public async Task<IActionResult> AllAssetsPaged(PortfoFilter filter)
         {
-            var result = _userService.AllAssetsPaged(filter);
+            var result = await _userService.AllAssetsPaged(filter);
             return new Respond<List<Asset>>().ActionRespond(result);
         }
        

@@ -17,39 +17,39 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         }
 
-        public List<Request> AllRequests()
+        public async Task<List<Request>> AllRequests()
         {
-           return HttpGetRequest<List<Request>>("");
+           return await HttpGetRequest<List<Request>>("");
         }
 
-        public Request RequestDetails(long requestId)
+        public async Task<Request> RequestDetails(long requestId)
         {
-            return HttpGetRequest<Request>("");
+            return await HttpGetRequest<Request>("");
         }
 
-        public byte[] GetDocument(long documentId)
+        public async Task<byte[]> GetDocument(long documentId)
         {
-            return HttpGetRequest<byte[]>("");
+            return await HttpGetRequest<byte[]>("");
         }
 
-        public long AddRequest(NewRequest model)
+        public async Task<long> AddRequest(NewRequest model)
         {
-            return HttpGetRequest<long>("");
+            return await HttpGetRequest<long>("");
         }
 
-        public bool EditRequest(NewRequest model)
+        public async Task<bool> EditRequest(NewRequest model)
         {
-            return HttpGetRequest<bool>("");
+            return await HttpGetRequest<bool>("");
         }
 
-        public bool DeleteRequest(long requestId)
+        public async Task<bool> DeleteRequest(long requestId)
         {
-            return HttpGetRequest<bool>("");
+            return await HttpGetRequest<bool>("");
         }
 
-        public List<RequestsHistory> RequestHistory(long requestId)
+        public async Task<List<RequestsHistory>> RequestHistory(long requestId)
         {
-            return HttpGetRequest<List<RequestsHistory>>("");
+            return await HttpGetRequest<List<RequestsHistory>>("");
         }
     }
 }

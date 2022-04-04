@@ -16,13 +16,13 @@ namespace Iz.Online.Services.IServices
         IExternalInstrumentService _externalInstrumentsService { get;  }
         IExternalOrderService _externalOrderService { get;  }
 
-        ResultModel<List<InstrumentList>> InstrumentList();
-        ResultModel<InstrumentDetail> Detail(int instrumentId , string HubId);
-        ResultModel<bool> AddCommentToInstrument(AddCommentForInstrument model);
-        ResultModel<string> GetInstrumentComment(GetInstrumentComment model);
+        Task<ResultModel<List<InstrumentList>>> InstrumentList();
+        Task<ResultModel<InstrumentDetail>> Detail(int instrumentId , string HubId);
+        Task<ResultModel<bool>> AddCommentToInstrument(AddCommentForInstrument model);
+        Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model);
 
-        void StartConsume();
-        ResultModel<BestLimits> BestLimits(int InstrumentIdint , string hubId);
-        bool UpdateInstrumentsDb();
+        Task StartConsume();
+        Task<ResultModel<BestLimits>> BestLimits(int InstrumentIdint , string hubId);
+        Task<bool> UpdateInstrumentsDb();
     }
 }
