@@ -355,10 +355,6 @@ namespace Iz.Online.Services.Services
 
 
             list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.CreatedAt) >= 0).ToList();
-            if (list.Count == 0)
-            {
-                return null;
-            }
 
             var instrumentList = new List<AllOrder>();
             foreach (var f in filter.InstrumentId)

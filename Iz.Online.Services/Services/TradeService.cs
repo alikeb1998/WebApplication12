@@ -18,16 +18,16 @@ namespace Iz.Online.Services.Services
         public IExternalTradeService _externalTradeService { get; }
         public string Token { get; set; }
         private readonly ICacheService _cacheService;
-        public TradeService(IExternalTradeService externalTradeService,ICacheService cacheService)
+        public TradeService(IExternalTradeService externalTradeService, ICacheService cacheService)
         {
             _externalTradeService = externalTradeService;
             _cacheService = cacheService;
         }
-        
+
 
         public async Task<ResultModel<List<Trade>>> Trades()
         {
-            var instruments =  await _cacheService.InstrumentData();
+            var instruments = await _cacheService.InstrumentData();
 
             var trades = await _externalTradeService.Trades();
 
@@ -45,7 +45,7 @@ namespace Iz.Online.Services.Services
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Order.instrument.id),
                 //NscCode = x.Order.instrument.code
             }).ToList();
-            
+
 
             return new ResultModel<List<Trade>>(allTrades);
         }
@@ -82,38 +82,37 @@ namespace Iz.Online.Services.Services
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
-                return new ResultModel<TradeHistoryReport>(null,  400);
+                return new ResultModel<TradeHistoryReport>(null, 400);
             }
 
             var list = await _externalTradeService.Trades();
-           
-            if (list.IsSuccess && list.Model.Trades!=null)
+
+            if (list.IsSuccess && list.Model.Trades != null)
             {
 
-            var result = list.Model.Trades.Select(x => new Trade()
-            {
-                Price = x.Price,
-                TradedAt = x.TradedAt,
-                Name = x.Order.instrument.name,
-                OrderSide = x.Order.orderSide,
-                Quantity = x.Order.quantity,
-                TradeValue = x.Order.executedQ * x.Order.price,
-                TradeId = x.Order.id,
-                State = x.Order.state,
-                InstrumentId = x.Order.instrument.id
-            }).ToList();
+                var result = list.Model.Trades.Select(x => new Trade()
+                {
+                    Price = x.Price,
+                    TradedAt = x.TradedAt,
+                    Name = x.Order.instrument.name,
+                    OrderSide = x.Order.orderSide,
+                    Quantity = x.Order.quantity,
+                    TradeValue = x.Order.executedQ * x.Order.price,
+                    TradeId = x.Order.id,
+                    State = x.Order.state,
+                    InstrumentId = x.Order.instrument.id
+                }).ToList();
 
-            var a = TradeHistoryFilter(result, filter);
+                var a = TradeHistoryFilter(result, filter);
+                if (a != null)
+                {
+                    a.Model = a.Model.OrderBy(x => x.TradedAt).ToList();
+                    return new ResultModel<TradeHistoryReport>(a);
 
-            var res = new TradeHistoryReport()
-            {
-                Model = a,
-                OrderType = filter.OrderType,
-                PageNumber = filter.PageNumber,
-                PageSize = filter.PageSize,
-                TotalCount = result.Count,
-            };
-            return new ResultModel<TradeHistoryReport>(res);
+                }
+
+
+                return new ResultModel<TradeHistoryReport>(null, 200, "لیست خالی است.");
             }
             return new ResultModel<TradeHistoryReport>(null, false, list.Message, list.StatusCode);
         }
@@ -172,7 +171,7 @@ namespace Iz.Online.Services.Services
             }
             return report.Model.OrderByDescending(x => x.TradedAt).ToList();
         }
-        private List<Trade> TradeHistoryFilter(List<Trade> list, TradeHistoryFilter filter)
+        private TradeHistoryReport TradeHistoryFilter(List<Trade> list, TradeHistoryFilter filter)
         {
 
 
@@ -192,21 +191,27 @@ namespace Iz.Online.Services.Services
             //(x => x.TradedAt - DateTime.MinValue >= filter.From - DateTime.MinValue && x.TradedAt - DateTime.MinValue <= filter.To - DateTime.MinValue)
             //.OrderByDescending(x => x.TradedAt).ToList();
 
-            list = list.Where(x => DateTime.Compare(x.TradedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.TradedAt) >= 0).ToList(); 
+            list = list.Where(x => DateTime.Compare(x.TradedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.TradedAt) >= 0).ToList();
 
             var tradeList = new List<Trade>();
-            
+
             foreach (var f in filter.InstrumentId)
             {
+                if (filter.InstrumentId.Count == 1 && f == 0)
+                {
+                    tradeList.AddRange(list);
+                    //var a = list.Where(x => x.InstrumentId == f).ToList();
+                    //tradeList.AddRange(a);
+                }
                 if (f != 0)
                 {
-                    var a = list.Where(x => x.InstrumentId == f).ToList();
+                    var a = list.Where(x => _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId) == f).ToList();
                     tradeList.AddRange(a);
                 }
             }
-            if (tradeList.Count==0)
+            if (tradeList.Count == 0)
             {
-                tradeList.AddRange(list);
+                return null;
             }
 
             if (filter.OrderSide != 0)
@@ -220,22 +225,35 @@ namespace Iz.Online.Services.Services
                     case 2:
                         tradeList = tradeList.Where(x => x.OrderSide == 2).ToList();
                         break;
-                    default:
-                        return tradeList;
                 }
             }
 
-            if (!string.IsNullOrEmpty(filter.State))
+            //if (!string.IsNullOrEmpty(filter.State))
+            //{
+            //    switch (filter.State)
+            //    { 
+            //        case "لغو شده":
+            //            tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
+            //            break;
+            //        case "معامله شده":
+            //            tradeList = tradeList.Where(x => x.State == "معامله شده").ToList();
+            //            break;
+            //        case "معامله توسط ناظر بازار":
+            //            tradeList = tradeList.Where(x => x.State == "معامله توسط ناظر بازار").ToList();
+            //            break;
+            //    }
+            //}
+            if (filter.State != 0)
             {
                 switch (filter.State)
-                { 
-                    case "لغو شده":
+                {
+                    case 1:
                         tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
                         break;
-                    case "معامله شده":
+                    case 2:
                         tradeList = tradeList.Where(x => x.State == "معامله شده").ToList();
                         break;
-                    case "معامله توسط ناظر بازار":
+                    case 3:
                         tradeList = tradeList.Where(x => x.State == "معامله توسط ناظر بازار").ToList();
                         break;
                 }
@@ -248,7 +266,7 @@ namespace Iz.Online.Services.Services
                 TotalCount = list.Count,
                 OrderType = filter.OrderType,
             };
-            return report.Model.OrderBy(x => x.TradedAt).ToList();
+            return report;
         }
     }
 }
