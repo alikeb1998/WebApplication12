@@ -133,6 +133,7 @@ namespace Iz.Online.API.Controllers
         {
             var result =  await _userService.SetUserHub(_token_, model.HubId);
             return new Respond<bool>().ActionRespond(result);
+
         }
 
     

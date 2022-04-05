@@ -48,10 +48,10 @@ namespace Iz.Online.Services.Services
                     continue;
 
                 ins.ClosePrice = price.Model.closingPrice.Value;
-                ins.AskPrice = bestLimit.Model.orderRow1.priceBestBuy;
-                ins.BidPrice = bestLimit.Model.orderRow1.priceBestSale;
-                ins.BuyVolume = bestLimit.Model.orderRow1.volumeBestBuy;
-                ins.SellVolume = bestLimit.Model.orderRow1.volumeBestSale;
+                ins.AskPrice = bestLimit.Model.orderRow1 == null ? 0 : bestLimit.Model.orderRow1.priceBestBuy;
+                ins.BidPrice = bestLimit.Model.orderRow1 == null ? 0 : bestLimit.Model.orderRow1.priceBestSale;
+                ins.BuyVolume = bestLimit.Model.orderRow1 == null ? 0 : bestLimit.Model.orderRow1.volumeBestBuy;
+                ins.SellVolume = bestLimit.Model.orderRow1 == null ? 0 : bestLimit.Model.orderRow1.volumeBestSale;
                 var lastPrice = price.Model.lastPrice.Value;
                 var yesterdayPrice = price.Model.yesterdayPrice;
 
@@ -191,7 +191,7 @@ namespace Iz.Online.Services.Services
             }
 
             resultModel = new(null);
-            return  new ValidatedWatchList() { IsValidated = false, Model = resultModel };
+            return new ValidatedWatchList() { IsValidated = false, Model = resultModel };
         }
 
         public async Task<ResultModel<WatchListDetails>> AddInstrumentToWatchList(EditEathListItems model)

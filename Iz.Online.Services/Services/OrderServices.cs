@@ -363,7 +363,7 @@ namespace Iz.Online.Services.Services
             var instrumentList = new List<AllOrder>();
             foreach (var f in filter.InstrumentId)
             {
-                if (filter.InstrumentId.Count==0 && f == 0)
+                if (filter.InstrumentId.Count==1 && f == 0)
                 {
                     instrumentList.AddRange(list);
                 }

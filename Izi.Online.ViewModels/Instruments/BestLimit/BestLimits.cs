@@ -22,5 +22,7 @@ namespace Izi.Online.ViewModels.Instruments.BestLimit
         public bool changeRow4 { get; set; }
         public bool changeRow5 { get; set; }
         public bool changeRow6 { get; set; }
+
+       
     }
 }

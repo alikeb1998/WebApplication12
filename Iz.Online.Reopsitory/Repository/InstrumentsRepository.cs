@@ -480,7 +480,6 @@ namespace Iz.Online.Reopsitory.Repository
                 result.AddRange(ins.HubId);
             }
 
-            
             result = result.Distinct().ToList();
             return result;
         }

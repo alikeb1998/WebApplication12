@@ -44,7 +44,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
 
             var instruments = await HttpGetRequest<Instruments>("order/instruments");
-            
+
             try
             {
                 var receivedSector = instruments.instruments.Select(x => x.sector).DistinctBy(x => x.id).ToList();
@@ -153,57 +153,57 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             {
                 orderRow1 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow1.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow1.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow1.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow1.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow1.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow1.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow1 == null ? 0 : bestLimit.bestLimit.orderRow1.volumeBestSale
                 },
                 orderRow2 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow2.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow2.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow2.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow2.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow2.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow2.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow2 == null ? 0 : bestLimit.bestLimit.orderRow2.volumeBestSale
                 },
                 orderRow3 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow3.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow3.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow3.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow3.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow3.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow3.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow3 == null ? 0 : bestLimit.bestLimit.orderRow3.volumeBestSale
                 },
                 orderRow4 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow4.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow4.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow4.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow4.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow4.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow4.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow4 == null ? 0 : bestLimit.bestLimit.orderRow4.volumeBestSale
                 },
                 orderRow5 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow5.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow5.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow5.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow5.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow5.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow5.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow5 == null ? 0 : bestLimit.bestLimit.orderRow5.volumeBestSale
                 },
                 orderRow6 = new OrderRow()
                 {
-                    countBestBuy = bestLimit.bestLimit.orderRow6.countBestBuy,
-                    countBestSale = bestLimit.bestLimit.orderRow6.countBestSale,
-                    priceBestBuy = bestLimit.bestLimit.orderRow6.priceBestBuy,
-                    priceBestSale = bestLimit.bestLimit.orderRow6.priceBestSale,
-                    volumeBestBuy = bestLimit.bestLimit.orderRow6.volumeBestBuy,
-                    volumeBestSale = bestLimit.bestLimit.orderRow6.volumeBestSale
+                    countBestBuy = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.countBestBuy,
+                    countBestSale = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.countBestSale,
+                    priceBestBuy = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.priceBestBuy,
+                    priceBestSale = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.priceBestSale,
+                    volumeBestBuy = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.volumeBestBuy,
+                    volumeBestSale = bestLimit.bestLimit.orderRow6 == null ? 0 : bestLimit.bestLimit.orderRow6.volumeBestSale
                 },
 
             };

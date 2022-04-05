@@ -102,7 +102,8 @@ namespace Iz.Online.Services.Services
                 result.PriceMin = detail.Model.PriceMin;
 
 
-
+                result.BuyCommissionRate = instrumentDetails.BuyCommissionRate;
+                result.SellCommissionRate = instrumentDetails.SellCommissionRate;
                 result.Tick = detail.Model.Tick;
             }
 

@@ -16,6 +16,8 @@ using Detail = Iz.Online.OmsModels.ResponsModels.Kafka.InstrumentDetail;
 using PushDetail = Izi.Online.ViewModels.SignalR.InstrumentDetail;
 using BestLimitResult = Izi.Online.ViewModels.SignalR.BestLimit;
 using Iz.Online.OmsModels.ResponsModels.Kafka;
+using bestLimitView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
+using Microsoft.Extensions.Logging;
 
 namespace Iz.Online.HubHandler.Services
 {
@@ -36,9 +38,11 @@ namespace Iz.Online.HubHandler.Services
         public static bool isFakeData = false;
         private readonly IHubConnationService _hubConnationService;
         private readonly IHubContext<CustomersHub> _hubContext;
+        private readonly ILogger<HubUserService> _logger;
+
         private readonly ConsumerConfig _consumerConfig;
         private static bool ConsumerIsStar = false;
-        public HubUserService(IHubConnationService hubConnationService, IHubContext<CustomersHub> hubContext)
+        public HubUserService(IHubConnationService hubConnationService, IHubContext<CustomersHub> hubContext, ILogger<HubUserService> logger)
         {
 
             _hubConnationService = hubConnationService;
@@ -50,6 +54,8 @@ namespace Iz.Online.HubHandler.Services
                 GroupId = "foo",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
+            _logger = logger;
+
         }
 
         #region BESTLIMIT
@@ -65,24 +71,99 @@ namespace Iz.Online.HubHandler.Services
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
                 consumer.Subscribe($"{InstrumentId}-bestLimit");
+               
                 while (true)
                 {
                     //Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
                     var consumeResult = consumer.Consume();
-                    var prices = new BestLimitResult();
+                    var bestLimit = new BestLimitResult();
+                    _logger.LogError("bestLimit init :" + DateTime.Now.ToString());
+
+                    bestLimitView result = new bestLimitView();
                     if (consumeResult.Message.Value != null)
                     {
-                        prices = JsonConvert.DeserializeObject<BestLimitResult>(consumeResult.Message.Value);
-
+                        bestLimit = JsonConvert.DeserializeObject<BestLimitResult>(consumeResult.Message.Value);
+                       result =new bestLimitView()
+                        {
+                            changeRow1 = bestLimit.changeRow1,
+                            changeRow2 = bestLimit.changeRow2,
+                            changeRow3 = bestLimit.changeRow3,
+                            changeRow4 = bestLimit.changeRow4,
+                            changeRow5 = bestLimit.changeRow5,
+                            changeRow6 = bestLimit.changeRow6,
+                            orderRow1 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.countBestBuy,
+                                countBestSale = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.countBestSale,
+                                priceBestBuy = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow1 == null ? 0 : bestLimit.orderRow1.volumeBestSale
+                            },
+                            orderRow2 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.countBestBuy,
+                                countBestSale = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.countBestSale,
+                                priceBestBuy = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow2 == null ? 0 : bestLimit.orderRow2.volumeBestSale
+                            },
+                            orderRow3 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.countBestBuy,
+                                countBestSale = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.countBestSale,
+                                priceBestBuy = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow3 == null ? 0 : bestLimit.orderRow3.volumeBestSale
+                            },
+                            orderRow4 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.countBestBuy,
+                                countBestSale = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.countBestSale,
+                                priceBestBuy = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow4 == null ? 0 : bestLimit.orderRow4.volumeBestSale
+                            },
+                            orderRow5 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.countBestBuy,
+                                countBestSale = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.countBestSale,
+                                priceBestBuy = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow5 == null ? 0 : bestLimit.orderRow5.volumeBestSale
+                            },
+                            orderRow6 = new Izi.Online.ViewModels.Instruments.BestLimit.OrderRow()
+                            {
+                                countBestBuy = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.countBestBuy,
+                                countBestSale = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.countBestSale,
+                                priceBestBuy = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.priceBestBuy,
+                                priceBestSale = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.priceBestSale,
+                                volumeBestBuy = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.volumeBestBuy,
+                                volumeBestSale = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.volumeBestSale
+                            },
+                        };
+                         result = Izi.Online.ViewModels.Instruments.BestLimit.VolumeProccessor.ProccessVolume(result);
 
                     }
 
-                    //TODO cast to Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
-
-                    var hubs =  await _hubConnationService.GetInstrumentHubs(InstrumentId);
-                   // Console.WriteLine("fsd");
+                    var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                     if (hubs != null)
-                       await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { prices, InstrumentId, " " });
+                    {
+                        try
+                        {
+                            await _hubContext.Clients.Clients(hubs).SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw;
+                        }
+                    }
                 }
                 consumer.Close();
             }
@@ -124,16 +205,11 @@ namespace Iz.Online.HubHandler.Services
                             res.firstPrice = model.firstPrice;
                             ///
 
-
-
-
                         }
 
                         var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                         if (hubs != null)
                             await _hubContext.Clients.Clients(hubs).SendCoreAsync($"{InstrumentId}-price", new object[] { res, InstrumentId, " " });
-
-
 
                         //var t = consumeResult.Message.Value;
 
@@ -175,7 +251,7 @@ namespace Iz.Online.HubHandler.Services
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.All.SendCoreAsync("OnOrderAdded", new object[] { model1 });
+                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnOrderAdded", new object[] { model1 });
 
 
                         var t = consumeResult.Message.Value;
@@ -319,10 +395,10 @@ namespace Iz.Online.HubHandler.Services
             if (ConsumerIsStar)
                 return;
 
-            await Task.Run(() => PushTradeState_Original());
-            await Task.Run(() => PushOrderAdded_Original());
-            await Task.Run(() => PushCustomerPortfolio_Original());
-            await Task.Run(() => PushCustomerWallet_Original());
+            Task.Run(() => PushTradeState_Original());
+            Task.Run(() => PushOrderAdded_Original());
+            Task.Run(() => PushCustomerPortfolio_Original());
+            Task.Run(() => PushCustomerWallet_Original());
 
 
             ConsumerIsStar = true;
