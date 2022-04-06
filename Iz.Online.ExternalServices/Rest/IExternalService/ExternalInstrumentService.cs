@@ -43,7 +43,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var onDbInstrumentBourse = (await _instrumentsRepository.GetInstrumentBourse()).Model.ToList();
 
 
-            var instruments = await HttpGetRequest<Instruments>("order/instruments");
+            var instruments =  HttpGetRequest<Instruments>("order/instruments");
 
             try
             {
@@ -135,7 +135,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
              Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
 
-            var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
+            var bestLimit =  HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
 
@@ -237,7 +237,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public async Task<ResultModel<InstrumentPriceDetails>> Price(string NscCode)
         {
              Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
-            var result = await HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
+            var result =  HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
 
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
@@ -246,7 +246,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public async Task<ResultModel<Details>> Details(long InstrumentId)
         {
 
-            var result = await HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
+            var result =  HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
 
 
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);

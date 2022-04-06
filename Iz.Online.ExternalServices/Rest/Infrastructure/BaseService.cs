@@ -26,7 +26,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 apiBaseAddress = "oms api address ... ";
         }
 
-        public async Task<T> HttpGetRequest<T>(string RequestAddress)
+        public  T HttpGetRequest<T>(string RequestAddress)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("Authorization", Token);
-                IRestResponse response = await client.ExecuteAsync(request);
+                IRestResponse response =  client.Execute(request);
 
                 if (string.IsNullOrEmpty(response.Content))
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
@@ -64,7 +64,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public async Task<T> HttpPostRequest<T>(string RequestAddress, string SerializedObject)
+        public  T HttpPostRequest<T>(string RequestAddress, string SerializedObject)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public async Task<T> HttpPutRequest<T>(string RequestAddress, string SerializedObject)
+        public T HttpPutRequest<T>(string RequestAddress, string SerializedObject)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public async Task<T> HttpDeleteRequest<T>(string RequestAddress, string SerializedObject)
+        public T HttpDeleteRequest<T>(string RequestAddress, string SerializedObject)
         {
             try
             {
