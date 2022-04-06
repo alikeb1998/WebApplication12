@@ -30,7 +30,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<InstrumentList>>> InstrumentList()
         {
-            var result = (await _cacheService.InstrumentData()).Select(x => new InstrumentList()
+            var result =  _cacheService.InstrumentData().Select(x => new InstrumentList()
             {
                 Bourse = x.Bourse,
                 BuyCommissionRate = x.BuyCommissionRate,
@@ -50,7 +50,7 @@ namespace Iz.Online.Services.Services
 
 
             var result = new InstrumentDetail();
-            var instrumentDetails = await _cacheService.InstrumentData(instrumentId);
+            var instrumentDetails =  _cacheService.InstrumentData(instrumentId);
             _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { HubId }, NscCode = instrumentDetails.NscCode });
 
 
@@ -134,7 +134,7 @@ namespace Iz.Online.Services.Services
             {
                 return new ResultModel<BestLimits>(null, 400,"خطا در پارامتر های ورودی");
             }
-            var instrumentDetails = await _cacheService.InstrumentData(InstrumentId);
+            var instrumentDetails =  _cacheService.InstrumentData(InstrumentId);
 
             _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { hubId }, NscCode = instrumentDetails.NscCode });
 

@@ -45,7 +45,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel)
         {
-            var instrumentData = await _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
+            var instrumentData =  _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
 
             //09:00
             var dbEntity = new db.Orders()
@@ -97,7 +97,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<ActiveOrder>>> AllActive()
         {
-            var instruments = await _cacheService.InstrumentData();
+            var instruments =  _cacheService.InstrumentData();
 
             var activeOrders = await  _externalOrderService.GetAllActives();
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)

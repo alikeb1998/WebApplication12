@@ -19,8 +19,8 @@ namespace Iz.Online.Reopsitory.IRepository
         Task<ResultModel<bool>> AddCommentToInstrument(AddCommentForInstrument model);
 
         Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model);
-        Task<InstrumentList> InstrumentData(int instrumentId);
-        Task<List<InstrumentList>> InstrumentData();
+        InstrumentList InstrumentData(int instrumentId);
+        List<InstrumentList> InstrumentData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
         void CustomerSelectInstrument(CustomerSelectInstrumentModel model);
         Task<List<string>> GetInstrumentHubs(string NscCode);

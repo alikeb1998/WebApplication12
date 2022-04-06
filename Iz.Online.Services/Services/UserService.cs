@@ -38,7 +38,7 @@ namespace Iz.Online.Services.Services
         public async Task<ResultModel<List<Asset>>> AllAssets()
         {
             var assets = await _externalUserService.GetAllAssets();
-            var instruments = await _cacheService.InstrumentData();
+            var instruments =  _cacheService.InstrumentData();
 
             if (!assets.IsSuccess || assets.Model.Assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);

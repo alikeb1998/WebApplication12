@@ -10,9 +10,9 @@ namespace Iz.Online.Services.IServices
 {
    public interface ICacheService
     {
-        Task<InstrumentList> InstrumentData(int instrumentId);
+        InstrumentList InstrumentData(int instrumentId);
         Izi.Online.ViewModels.AppConfigs ConfigData(string key);
-        Task<List<InstrumentList>> InstrumentData();
+        List<InstrumentList> InstrumentData();
         List<Izi.Online.ViewModels.AppConfigs> ConfigData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
 

@@ -30,14 +30,14 @@ namespace Iz.Online.Services.Services
         {
             _instrumentsRepository.CleareCache();
         }
-        public async Task<InstrumentList> InstrumentData(int instrumentId)
+        public InstrumentList InstrumentData(int instrumentId)
         {
-            return await _instrumentsRepository.InstrumentData(instrumentId);
+            return  _instrumentsRepository.InstrumentData(instrumentId);
         }
         
-        public async Task<List<InstrumentList>> InstrumentData()
+        public  List<InstrumentList> InstrumentData()
         {
-            return await _instrumentsRepository.InstrumentData();
+            return  _instrumentsRepository.InstrumentData();
         }
 
         public List<Izi.Online.ViewModels.AppConfigs> ConfigData()

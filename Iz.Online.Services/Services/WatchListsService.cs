@@ -37,7 +37,7 @@ namespace Iz.Online.Services.Services
 
             foreach (var ins in wl.Model.Instruments)
             {
-                var instrumentDetails = await _cache.InstrumentData((int)ins.Id);
+                var instrumentDetails =  _cache.InstrumentData((int)ins.Id);
                 var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
                 var price = await _externalInstrumentsService.Price(instrumentDetails.NscCode);
 

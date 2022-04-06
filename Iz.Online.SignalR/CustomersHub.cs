@@ -26,6 +26,10 @@ namespace Iz.Online.SignalR
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+        public async Task SendMessageClients(string methodName, List<string> clients, Object[] o)
+        {
+            await Clients.Clients(clients).SendAsync(methodName, o);
+        }
         public async Task ReceiveMessage(string user, string message)
         {
             //await Clients.All.SendAsync("ReceiveMessage", user, message);

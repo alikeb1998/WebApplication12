@@ -258,7 +258,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        public async Task<List<InstrumentList>> InstrumentData()
+        public  List<InstrumentList> InstrumentData()
         {
             try
             {
@@ -268,7 +268,7 @@ namespace Iz.Online.Reopsitory.Repository
                 List<InstrumentList> result = new List<InstrumentList>();
                 foreach (var instrument in allInstrument)
                 {
-                    var data = await _cache.GetAsync(instrument);
+                    var data =  _cache.Get(instrument);
                     var ins = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(data));
                     result.Add(ins);
                 }
@@ -289,7 +289,7 @@ namespace Iz.Online.Reopsitory.Repository
             }
         }
 
-        public async Task<InstrumentList> InstrumentData(int instrumentId)
+        public  InstrumentList InstrumentData(int instrumentId)
         {
             try
             {
@@ -297,7 +297,7 @@ namespace Iz.Online.Reopsitory.Repository
                 if (dataBytes == null)
                     CacheInstrumentsData();
 
-                dataBytes = await _cache.GetAsync("Instrument" + instrumentId);
+                dataBytes =  _cache.Get("Instrument" + instrumentId);
                 var result = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(dataBytes));
                 if (result != null)
                     return result;

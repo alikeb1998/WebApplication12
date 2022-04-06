@@ -18,6 +18,8 @@ using BestLimitResult = Izi.Online.ViewModels.SignalR.BestLimit;
 using Iz.Online.OmsModels.ResponsModels.Kafka;
 using bestLimitView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace Iz.Online.HubHandler.Services
 {
@@ -37,12 +39,13 @@ namespace Iz.Online.HubHandler.Services
     {
         public static bool isFakeData = false;
         private readonly IHubConnationService _hubConnationService;
-        private readonly IHubContext<CustomersHub> _hubContext;
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<CustomersHub> _hubContext;
         private readonly ILogger<HubUserService> _logger;
-
+        
+      
         private readonly ConsumerConfig _consumerConfig;
         private static bool ConsumerIsStar = false;
-        public HubUserService(IHubConnationService hubConnationService, IHubContext<CustomersHub> hubContext, ILogger<HubUserService> logger)
+        public HubUserService(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<CustomersHub> hubContext, ILogger<HubUserService> logger)
         {
 
             _hubConnationService = hubConnationService;

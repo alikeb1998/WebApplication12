@@ -27,7 +27,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<Trade>>> Trades()
         {
-            var instruments = await _cacheService.InstrumentData();
+            var instruments =  _cacheService.InstrumentData();
 
             var trades = await _externalTradeService.Trades();
 
