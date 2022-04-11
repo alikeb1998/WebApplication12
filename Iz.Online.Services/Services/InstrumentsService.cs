@@ -9,6 +9,7 @@ using Instrument = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using DateHelper = Iz.Online.Files.DateHelper;
 using Iz.Online.Files;
 using Izi.Online.ViewModels.Instruments.BestLimit;
+using Izi.Online.ViewModels.SignalR;
 
 namespace Iz.Online.Services.Services
 {
@@ -30,7 +31,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<InstrumentList>>> InstrumentList()
         {
-            var result =  _cacheService.InstrumentData().Select(x => new InstrumentList()
+            var result = _cacheService.InstrumentData().Select(x => new InstrumentList()
             {
                 Bourse = x.Bourse,
                 BuyCommissionRate = x.BuyCommissionRate,
@@ -50,11 +51,12 @@ namespace Iz.Online.Services.Services
 
 
             var result = new InstrumentDetail();
-            var instrumentDetails =  _cacheService.InstrumentData(instrumentId);
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { HubId }, NscCode = instrumentDetails.NscCode });
+            
+            var instrumentDetails = _cacheService.InstrumentData(instrumentId);
+           
 
-
-            var detail = await _externalInstrumentsService.Details(instrumentDetails.InstrumentId);
+            var ins = _cacheService.InstrumentData(instrumentId);
+            var detail = await _externalInstrumentsService.Details(instrumentDetails.InstrumentId, ins.NscCode, HubId);
             if (!detail.IsSuccess || detail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
 
@@ -62,7 +64,7 @@ namespace Iz.Online.Services.Services
             if (!priceDetail.IsSuccess || priceDetail.Model == null)
                 return new ResultModel<InstrumentDetail>(null, false, priceDetail.Message, priceDetail.StatusCode);
 
-            var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+            var bestLimit = await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId, HubId);
             if (!bestLimit.IsSuccess || bestLimit.Model == null)
                 return new ResultModel<InstrumentDetail>(null, bestLimit.StatusCode == 200, bestLimit.Message, bestLimit.StatusCode);
 
@@ -132,13 +134,23 @@ namespace Iz.Online.Services.Services
         {
             if (InstrumentId == 0)
             {
-                return new ResultModel<BestLimits>(null, 400,"خطا در پارامتر های ورودی");
+                return new ResultModel<BestLimits>(null, 400, "خطا در پارامتر های ورودی");
             }
-            var instrumentDetails =  _cacheService.InstrumentData(InstrumentId);
-
-            _instrumentsRepository.CustomerSelectInstrument(new CustomerSelectInstrumentModel() { HubId = new List<string>() { hubId }, NscCode = instrumentDetails.NscCode });
-
-            return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId);
+            var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
+           
+            //_instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
+            //{
+            //    NscCode = instrumentDetails.NscCode,
+            //    Person = new Persons()
+            //    {
+            //        NationalCode = "!2,34",
+            //        Hubs = new List<string>()
+            //        {
+            //            hubId
+            //        }
+            //    }
+            //});
+            return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId, hubId);
         }
 
         public async Task<bool> UpdateInstrumentsDb()

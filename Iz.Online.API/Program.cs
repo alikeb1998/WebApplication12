@@ -11,6 +11,8 @@ using StackExchange.Redis;
 using Iz.Online.Services.IServices;
 using NLog.Web;
 using NLog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -42,6 +44,7 @@ try
 
     InjectionHandler.InjectServices(builder.Services);
     builder.Services.AddScoped<IHubUserService, HubUserService>();
+    builder.Services.AddScoped<UserInfo>();
 
     #endregion
     //builder.Services.AddDistributedMemoryCache();
@@ -50,16 +53,41 @@ try
     //);
 
     builder.Services.AddAuthentication()
-        .AddCookie(options =>
-        {
-            options.LoginPath = "/Account/Unauthorized/";
-            options.AccessDeniedPath = "/Account/Forbidden/";
-        })
-        .AddJwtBearer(options =>
-        {
-            options.Audience = "http://localhost:5001/";
-            options.Authority = "http://localhost:5000/";
-        });
+        //.AddJwtBearer("token", options =>
+        //{
+        //    options.Authority = "http://192.168.72.54:8080/";
+        //    options.Audience = "resource1";
+
+        //    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+
+        //    // if token does not contain a dot, it is a reference token
+        //    //options.ForwardDefaultSelector = Selector.ForwardReferenceToken("introspection");
+        //});
+
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Unauthorized/";
+        options.AccessDeniedPath = "/Account/Forbidden/";
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Audience = "http://localhost:5001/";
+        options.Authority = "http://localhost:5000/";//http://192.168.72.54:8080/
+    });
+
+    //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+    //{
+    //    options.TokenValidationParameters = new TokenValidationParameters
+    //    {
+    //        ValidateIssuer = true,
+    //        ValidateAudience = true,
+    //        ValidateLifetime = true,
+    //        ValidateIssuerSigningKey = true,
+    //        ValidIssuer = Configuration["Jwt:Issuer"],
+    //        ValidAudience = Configuration["Jwt:Issuer"],
+    //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+    //    };
+    //});
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();

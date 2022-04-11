@@ -15,6 +15,9 @@ using InstrumentDetails = Iz.Online.OmsModels.ResponsModels.Instruments.Instrume
 using InstrumentModel = Iz.Online.OmsModels.InputModels.Instruments.Instrument;
 using InstrumentPrice = Iz.Online.OmsModels.ResponsModels.Instruments.InstrumentPrice;
 using BestLimitsView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
+using Izi.Online.ViewModels.SignalR;
+using Iz.Online.OmsModels.ResponsModels.User;
+using Microsoft.Extensions.Logging;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -22,17 +25,20 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     {
         private readonly IInstrumentsRepository _instrumentsRepository;
         private readonly IExternalOrderService _externalOrderService;
+        private readonly IExternalUserService _externalUserService;
+        private readonly ILogger<ExternalInstrumentService> _logger;
         //private readonly IPushService _pushService;
         private IHubUserService _hubUserService;
 
 
-        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService
-            , IHubUserService hubUserService) : base(instrumentsRepository, ServiceProvider.Oms)
+        public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalUserService externalUserService
+            , IHubUserService hubUserService, ILogger<ExternalInstrumentService> logger) : base(instrumentsRepository, ServiceProvider.Oms)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _hubUserService = hubUserService;
-
+            _externalUserService = externalUserService;
+            _logger = logger;
         }
 
         public async Task<bool> UpdateInstrumentList()
@@ -129,26 +135,49 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             await _hubUserService.CreateAllConsumers();
         }
 
-        public async Task<ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>> BestLimits(string NscCode, long InstrumentId)
+        public async Task<ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>> BestLimits(string NscCode, long InstrumentId, string hubId)
         {
             //model.InstrumentId = "IRO1FOLD0001";
+            //var timer = new System.Timers.Timer();
+            //timer.Interval = 3 * 60 * 60 * 1000;
+            //timer.Tick += new EventHandler(1);
+            //timer.Enabled = true;
 
-             Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode));
 
+            //_logger.LogDebug("before callng CustomerInfo" + timer);
+            //_logger.LogDebug("after callng CustomerInfo" + timer);
+            var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
+
+             Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode, nationalCode.nationalID));
+
+            // _instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
+            //{
+            //    NscCode = NscCode,
+            //    Person = new Persons()
+            //    {
+            //        NationalCode = nationalCode.nationalID,
+            //        Hubs = new List<string>()
+            //        {
+            //             hubId
+            //        }
+            //    }
+            //});
+            //_logger.LogError("before callng bestlimit" + timer);
             var bestLimit =  HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
-
-            var detail = await Details(InstrumentId);
+            //_logger.LogError("after callng bestlimit" + timer.ToString());
+            //_logger.LogError("before callng detail" + timer.ToString());
+            var detail = await Details(InstrumentId, NscCode, hubId);
             if (detail.Model == null || detail.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
+            //_logger.LogError("after callng detail" + timer.ToString());
 
-
-
+            //_logger.LogError("before callng actives" + timer.ToString());
             var activeOrders = await _externalOrderService.GetAllActives();
             if (activeOrders.Model.Orders == null || activeOrders.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
-
+           // _logger.LogError("after callng actives" + timer.ToString());
             var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
@@ -243,12 +272,24 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
         }
 
-        public async Task<ResultModel<Details>> Details(long InstrumentId)
+        public async Task<ResultModel<Details>> Details(long InstrumentId, string nscCode, string hubId)
         {
 
             var result =  HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
-
-
+            
+            var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
+            _instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
+            {
+                NscCode = nscCode,
+                Person = new Persons()
+                {
+                    NationalCode = nationalCode.nationalID,
+                    Hubs = new List<string>()
+                   {
+                        hubId
+                   }
+                }
+            });
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }

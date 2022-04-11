@@ -5,55 +5,67 @@ using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
+using Iz.Online.OmsModels.InputModels.SuperVisory;
+using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.ChangeBroker;
 using Izi.Online.ViewModels.ShareModels;
+using Newtonsoft.Json;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
-    //public class ExternalChangeBrokerService : BaseService, IExternalChangeBrokerService
-    //{
-    //    public ExternalChangeBrokerService(IBaseRepository baseRepository) : base(baseRepository, ServiceProvider.BackOffice)
-    //    {
+    public class ExternalChangeBrokerService : BaseService, IExternalChangeBrokerService
+    {
+        private readonly IExternalChangeBrokerService _externalChangeBrokerService;
+        private readonly int APIPORT= 2;
+       public ExternalChangeBrokerService(IBaseRepository baseRepository) : base(baseRepository, ServiceProvider.BackOffice)
+        {
 
-    //    }
+        }
 
-    //    public async Task<ResultModel<List<Request>>> AllRequests()
-    //    {
-    //        var res = await HttpGetRequest<List<Request>>("");
-    //        return new ResultModel<List<Request>>(res, res.stat;
-    //    }
+        public async Task<ResultModel<Requests>> AllRequests(GetAllnput model)
+        {
+            var result =  HttpPostRequest<Requests>("api/v1/RQ/Requests/GetAll", JsonConvert.SerializeObject(model));
+            return new ResultModel<Requests>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+        }
 
-    //    public async Task<Request> RequestDetails(long requestId)
-    //    {
-    //        var res = await HttpGetRequest<Request>("");
-    //        return 
-            
-    //    }
+        public async Task<ResultModel<DocData>> GetDoc(BaseInput model)
+        {
+            var result =  HttpPostRequest<DocData>("api/v1/RQ/Requests/Online/GetDoc", JsonConvert.SerializeObject(model));
+            return new ResultModel<DocData>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
 
-    //    public async Task<byte[]> GetDocument(long documentId)
-    //    {
-    //        return await HttpGetRequest<byte[]>("");
-    //    }
 
-    //    public async Task<long> AddRequest(NewRequest model)
-    //    {
-    //        return await HttpGetRequest<long>("");
-    //    }
+        }
+        public async Task<ResultModel<GetOneData>> GetOne(BaseInput model)
+        {
+            var result = HttpPostRequest<GetOneData>("api/v1/RQ/Requests/Online/GetOne", JsonConvert.SerializeObject(model));
+            return new ResultModel<GetOneData>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
 
-    //    public async Task<bool> EditRequest(NewRequest model)
-    //    {
-    //        return await HttpGetRequest<bool>("");
-    //    }
 
-    //    public async Task<bool> DeleteRequest(long requestId)
-    //    {
-    //        return await HttpGetRequest<bool>("");
-    //    }
+        }
+        public async Task<ResultModel<AddReq>> AddRequest(OmsModels.InputModels.SuperVisory.NewRequest model)
+        {
+            var result =   HttpPostRequest<AddReq>("api/v1/RQ/Requests/Online/AddOne", JsonConvert.SerializeObject(model));
+            return new ResultModel<AddReq>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+        }
 
-    //    public async Task<List<RequestsHistory>> RequestHistory(long requestId)
-    //    {
-    //        return await HttpGetRequest<List<RequestsHistory>>("");
-    //    }
-    //}
+        public async Task<ResultModel<EditReq>> EditRequest(EditModel model)
+        {
+           
+                var result = HttpPostRequest<EditReq>("api/v1/RQ/Requests/Online/Edit", JsonConvert.SerializeObject(model));
+            return new ResultModel<EditReq>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+        }
+
+        public async Task<ResultModel<DeleteReq>> DeleteRequest(BaseInput model)
+        {
+            var result = HttpPostRequest<DeleteReq>("api/v1/RQ/Requests/Online/Delete", JsonConvert.SerializeObject(model));
+            return new ResultModel<DeleteReq>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+        }
+
+        public async Task<ResultModel<RequestHistories>> RequestHistory(BaseInput model)
+        {
+             var result =  HttpGetRequest<RequestHistories>("Requests/Online/History");
+            return new ResultModel<RequestHistories>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+        }
+    }
 }

@@ -10,6 +10,8 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Izi.Online.ViewModels.Users;
+using Persons = Izi.Online.ViewModels.SignalR.Persons;
+using Izi.Online.ViewModels.SignalR;
 
 namespace Iz.Online.Reopsitory.Repository
 {
@@ -449,20 +451,36 @@ namespace Iz.Online.Reopsitory.Repository
             return res;
         }
 
-        public void CustomerSelectInstrument(CustomerSelectInstrumentModel model)
+        public void CustomerSelectInstrument(SelectInstrumentInput model)
         {
-            var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument*" );
-            foreach (var hub in allHubs)
+           // var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument*" );
+            var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument" +model.NscCode);
+            CustomerSelectInstrumentModel h = new();
+            
+            if (allHubs != null)
             {
-                //TODO
-                var data = _cache.Get(hub);
-                var h = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
+                foreach (var hub in allHubs)
+                {
+                    //TODO
+                     var data = _cache.Get(hub);
+                    h = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
+                    // model.Persons = (List<string>)model.Persons.Distinct().ToList();
 
-                model.HubId.AddRange(h.HubId);
-                model.HubId = (List<string>)model.HubId.Distinct().ToList();
-
+                }
+                if (h.Persons != null)
+                {
+                    h.Persons.Add(model.Person);
+                }
+                else
+                {
+                    h.NscCode = model.NscCode;
+                    h.Persons = new List<Persons> { model.Person };
+                }
             }
-            var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model));
+            
+                
+            
+            var content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(h));
             _cache.Set("pushNotificationByInstrument" + model.NscCode, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
            
 
@@ -472,16 +490,19 @@ namespace Iz.Online.Reopsitory.Repository
         {
 
             var allHubs = _redis.Keys(pattern: "pushNotificationByInstrument" + NscCode);
-            List<string> result = new List<string>();
+            List<Persons> result = new ();
             foreach (var hub in allHubs)
             {
                 var data =  await _cache.GetAsync(hub);
                 var ins = JsonConvert.DeserializeObject<CustomerSelectInstrumentModel>(Encoding.Default.GetString(data));
-                result.AddRange(ins.HubId);
+                result.AddRange(ins.Persons.ToList());
+                
             }
 
-            result = result.Distinct().ToList();
-            return result;
+
+            //result = result.Distinct().ToList();
+            var a = (List<string>)result.Select(x => x.Hubs);
+            return a;
         }
         #endregion
     }

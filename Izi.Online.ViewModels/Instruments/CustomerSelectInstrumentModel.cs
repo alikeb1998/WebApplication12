@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Izi.Online.ViewModels.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Izi.Online.ViewModels.Instruments
     {
         //int instrumentId, string token, string kafkaUserId
         public string NscCode { get; set; }
-        public List<string> HubId { get; set; }
+        public List<Persons> Persons { get; set; }
         public string KafkaUserId { get; set; }
 
     }

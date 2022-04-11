@@ -1,15 +1,13 @@
-﻿using Iz.Online.OmsModels.ResponsModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Izi.Online.ViewModels.ChangeBroker
+namespace Iz.Online.OmsModels.ResponsModels.SuperVisory
 {
-    public class Request
+    public  class Request
     {
-
         public long RequestId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CustomerName { get; set; }
@@ -19,3 +17,4 @@ namespace Izi.Online.ViewModels.ChangeBroker
         public string LastDescription { get; set; }
     }
 }
+

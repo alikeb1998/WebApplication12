@@ -14,7 +14,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
     {
         public string Token { get; set; }
 
-        private readonly string apiBaseAddress = "http://192.168.72.54:8080/";
+        private readonly string ApiBaseAddress = "http://192.168.72.54:8080/";
+        
 
         private readonly IBaseRepository _baseRepository;
         private readonly ServiceProvider provider;
@@ -23,14 +24,16 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             _baseRepository = baseRepository;
             if (provider == ServiceProvider.BackOffice)
-                apiBaseAddress = "oms api address ... ";
+                ApiBaseAddress = "http://localhost:5069/";
         }
 
-        public  T HttpGetRequest<T>(string RequestAddress)
+        public  T HttpGetRequest<T>(string RequestAddress, int port = 1)
         {
             try
             {
-                var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
+                var client = new RestClient($"{ApiBaseAddress}{RequestAddress}");
+             
+                
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("Authorization", Token);
@@ -68,7 +71,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             try
             {
-                var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
+                var client = new RestClient($"{ApiBaseAddress}{RequestAddress}");
+
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("Authorization", Token);
@@ -104,11 +108,11 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public T HttpPutRequest<T>(string RequestAddress, string SerializedObject)
+        public T HttpPutRequest<T>(string RequestAddress, string SerializedObject,  int port = 1)
         {
             try
             {
-                var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
+                var client = new RestClient($"{ApiBaseAddress}{RequestAddress}");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.PUT);
                 request.AddHeader("Authorization", Token);
@@ -144,11 +148,12 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public T HttpDeleteRequest<T>(string RequestAddress, string SerializedObject)
+        public T HttpDeleteRequest<T>(string RequestAddress, string SerializedObject, int port = 1)
         {
             try
             {
-                var client = new RestClient($"{apiBaseAddress}{RequestAddress}");
+                var client = new RestClient($"{ApiBaseAddress}{RequestAddress}");
+ 
                 client.Timeout = -1;
                 var request = new RestRequest(Method.DELETE);
                 request.AddHeader("Authorization", Token);

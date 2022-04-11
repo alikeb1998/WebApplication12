@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Iz.Online.OmsModels.InputModels.SuperVisory;
+using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using Izi.Online.ViewModels.ChangeBroker;
+using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.ExternalServices.Rest.ExternalService
 {
     public interface IExternalChangeBrokerService
     {
-        Task<List<Request>> AllRequests();
-        Task<Request> RequestDetails(long requestId);
-        Task<byte[]> GetDocument(long documentId);
-        Task<long> AddRequest(NewRequest model);
-        Task<bool> EditRequest(NewRequest model);
-        Task<bool> DeleteRequest(long requestId);
-        Task<List<RequestsHistory>> RequestHistory(long requestId);
+        Task<ResultModel<Requests>> AllRequests(GetAllnput model);
+        Task<ResultModel<DocData>> GetDoc(BaseInput model);
+        Task<ResultModel<GetOneData>> GetOne(BaseInput model);
+        Task<ResultModel<AddReq>> AddRequest(OmsModels.InputModels.SuperVisory.NewRequest model);
+        Task<ResultModel<EditReq>> EditRequest(EditModel model);
+        Task<ResultModel<DeleteReq>> DeleteRequest(BaseInput model);
+        Task<ResultModel<RequestHistories>> RequestHistory(BaseInput model);
+
     }
 }

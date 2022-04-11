@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Izi.Online.ViewModels.ChangeBroker
+namespace Iz.Online.OmsModels.ResponsModels.SuperVisory
 {
-    public class RequestsHistory
+    public class RequestHistory
     {
         public string UserName { get; set; }
         public DateTime ChangeAt { get; set; }

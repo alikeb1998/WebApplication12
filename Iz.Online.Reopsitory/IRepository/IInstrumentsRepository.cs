@@ -1,6 +1,7 @@
 ﻿using Iz.Online.Entities;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
+using Izi.Online.ViewModels.SignalR;
 using WatchList = Izi.Online.ViewModels.Instruments.WatchList;
 
 namespace Iz.Online.Reopsitory.IRepository
@@ -22,7 +23,7 @@ namespace Iz.Online.Reopsitory.IRepository
         InstrumentList InstrumentData(int instrumentId);
         List<InstrumentList> InstrumentData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
-        void CustomerSelectInstrument(CustomerSelectInstrumentModel model);
+        void CustomerSelectInstrument(SelectInstrumentInput model);
         Task<List<string>> GetInstrumentHubs(string NscCode);
         void CleareCache();
     }

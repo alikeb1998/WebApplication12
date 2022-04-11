@@ -1,34 +1,20 @@
-﻿using System;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Iz.Online.HubConnectionHandler.IServices;
+using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Iz.Online.HubConnectionHandler.IServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 
-namespace Iz.Online.SignalR
+namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
-    public class UserInfo
+    public class MainHub : Hub
     {
-        public string NatCode { get; set; }
-    }
-    //[Authorize]
-    public class CustomersHub : Hub//Hub<IClientCustomerHub>
-    {
-        
         private readonly IHubConnationService _hubConnationService;
-        private readonly UserInfo _userInfo;
-        private readonly ILogger<CustomersHub> _logger;
-        //public IExternalUserService _externalUserService { get; }
-        public CustomersHub(IHubConnationService userService, ILogger<CustomersHub> logger,UserInfo userInfo)
+        public MainHub(IHubConnationService userService)
         {
             _hubConnationService = userService;
-            _logger=logger;
-            _logger.LogError("CustomersHub init :" + DateTime.Now.ToString());
-            _userInfo=userInfo;
-
         }
         //[Resource("AddToUserGroup")]
         public async Task AddToUserGroup(string nationalCode)
@@ -48,18 +34,18 @@ namespace Iz.Online.SignalR
         {
             //await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
-        public override  Task OnConnectedAsync()
+        public override Task OnConnectedAsync()
         {
             var a = Context;
             //await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments{userInfo.nationalCode}");
-            _logger.LogError("OnConnectedAsync :" + DateTime.Now.ToString());
+           
             return base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             //_hubConnationService.DeleteConnectionId(Context.ConnectionId);
-            _logger.LogError("OnDisconnectedAsync :"+DateTime.Now.ToString());
+          
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
         }

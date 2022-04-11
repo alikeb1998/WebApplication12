@@ -16,7 +16,7 @@ namespace Iz.Online.HubHandler.IServices
     public  interface IHubUserService
     {
     
-        Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId);
+        Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId, string nationalCode);
         Task PushOrderAdded_Original();
         Task PushPrice_Original(string InstrumentId);
         Task CreateAllConsumers();

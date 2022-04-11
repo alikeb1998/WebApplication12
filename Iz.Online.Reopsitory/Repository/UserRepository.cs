@@ -111,43 +111,7 @@ namespace Iz.Online.Reopsitory.Repository
 
             }
         }
-        public bool SetTokenInTokenPool(string token)
-        {
-            try
-            {
-                var oldData = _cache.Get(token);
-                if (oldData != null)
-                {
-                    return true;
-                }
-                var serialized = JsonConvert.SerializeObject(new TokenPool() { Token = token });
-                var content = Encoding.UTF8.GetBytes(serialized);
-                _cache.Set(token, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
-                return true;
-            }catch (Exception e)
-            {
-                return false;
-            }
-        }
-        public bool SetHubInHubPool(string token)
-        {
-            try
-            {
-                var oldData = _cache.Get(token);
-                if (oldData != null)
-                {
-                    return true;
-                }
-                var serialized = JsonConvert.SerializeObject(new TokenPool() { Token = token });
-                var content = Encoding.UTF8.GetBytes(serialized);
-                _cache.Set(token, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
+      
         public bool SetUserInfo(CustomerInfo model)
         {
 

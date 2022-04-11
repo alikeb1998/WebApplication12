@@ -47,9 +47,9 @@ namespace Iz.Online.API.Infrastructure
         
    
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddScoped<IExternalChangeBrokerService, ExternalChangeBrokerService>();
+            services.AddScoped<IExternalChangeBrokerService, ExternalChangeBrokerService>();
             services.AddScoped<ICacheService, CacheService>();
-           // services.AddScoped<IChangeBrokerService, ChangeBrokerService>();
+            services.AddScoped<IChangeBrokerService, ChangeBrokerService>();
             
 
             return services;
