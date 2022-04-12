@@ -92,16 +92,15 @@ namespace Iz.Online.Services.Services
         public async Task<ResultModel<List<RequestsHistory>>> RequestHistory(BaseInput model)
         {
             var req = await _externalService.RequestHistory(model);
-            var res = req.Model.RequestHistoriesList.Select(history => new List<RequestsHistory>()
+            var res = req.Model.Data.Select(history => new RequestsHistory()
             {
-                new RequestsHistory()
-            {
+               
                 ChangeAt = history.ChangeAt,
                 Description = history.Description,
                 Status = history.Status,
                 UserName = history.UserName
-            }
-        });
+            
+        }).ToList();
 
 
 

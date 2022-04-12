@@ -64,7 +64,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public async Task<ResultModel<RequestHistories>> RequestHistory(BaseInput model)
         {
-             var result =  HttpGetRequest<RequestHistories>("Requests/Online/History");
+             var result =  HttpPostRequest<RequestHistories>("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
             return new ResultModel<RequestHistories>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
         }
     }

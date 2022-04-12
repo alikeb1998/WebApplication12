@@ -8,6 +8,6 @@ namespace Iz.Online.OmsModels.ResponsModels.SuperVisory
 {
     public class RequestHistories:BoResponseBaseModel
     {
-        public List<RequestHistory> RequestHistoriesList { get; set; }
+        public List<RequestHistory> Data { get; set; }
     }
 }
