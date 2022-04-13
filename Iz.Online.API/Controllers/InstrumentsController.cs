@@ -50,8 +50,6 @@ namespace Iz.Online.API.Controllers
             
         }
 
-
-
         [HttpPost("BestLimits")]
         public async Task<IActionResult> BestLimits([FromBody]  SelectedInstrument model)
         {

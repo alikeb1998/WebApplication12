@@ -17,9 +17,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     {
     
         Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId, string nationalCode);
-        Task PushOrderAdded_Original();
+        Task PushOrderAdded_Original(string nationalCode);
         Task PushPrice_Original(string InstrumentId);
-        Task CreateAllConsumers();
+        Task CreateAllConsumers(string nationalCode);
+        Task PushCustomerWallet_Original(string nationalCode);
 
     }
 }

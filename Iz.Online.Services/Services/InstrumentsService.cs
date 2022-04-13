@@ -11,6 +11,7 @@ using Iz.Online.Files;
 using Izi.Online.ViewModels.Instruments.BestLimit;
 using Izi.Online.ViewModels.SignalR;
 using Microsoft.Extensions.Logging;
+using Iz.Online.OmsModels.ResponsModels.User;
 
 namespace Iz.Online.Services.Services
 {
@@ -142,18 +143,8 @@ namespace Iz.Online.Services.Services
             _logger.LogError("before get redis");
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
             _logger.LogError("after get redis");
-            //_instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
-            //{
-            //    NscCode = instrumentDetails.NscCode,
-            //    Person = new Persons()
-            //    {
-            //        NationalCode = "!2,34",
-            //        Hubs = new List<string>()
-            //        {
-            //            hubId
-            //        }
-            //    }
-            //});
+            var info = await _externalInstrumentsService.GetNationalCode();
+            _externalInstrumentsService.SetNationalCode(info.Model.nationalID);
             return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId, hubId);
         }
 

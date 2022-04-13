@@ -27,6 +27,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         public async Task AddToInstrumentsGroup(int instrumentId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"{instrumentId}/{NatCode}");
+        }    
+        public async Task AddToNewOrderGroup(string instrumentId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"NewOrder{NatCode}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"Order/{instrumentId}/{NatCode}");
         }
         public async Task AddToOnlineUserGroup(string nationalCode)
         {
@@ -46,12 +51,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public override Task OnConnectedAsync()
         {
-
+             AddToOnlineUserGroup(NatCode);
             return base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+           
             //_hubConnationService.DeleteConnectionId(Context.ConnectionId);
             _logger.LogError("OnDisconnectedAsync :" + DateTime.Now.ToString());
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");

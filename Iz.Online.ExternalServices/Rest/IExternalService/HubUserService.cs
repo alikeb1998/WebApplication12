@@ -238,7 +238,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// topic => OrderTrade
         /// </summary>
 
-        public async Task PushOrderAdded_Original()
+        public async Task PushOrderAdded_Original(string nationalId)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -255,7 +255,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnOrderAdded", new object[] { model1 });
+                                await _hubContext.Clients.Group($"NewOrder{nationalId}").SendCoreAsync("OnOrderAdded", new object[] { model1 });
 
 
                         var t = consumeResult.Message.Value;
@@ -278,7 +278,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// topic=> OrderChange
         /// </summary>
 
-        public async Task PushTradeState_Original()
+        public async Task PushTradeState_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -294,7 +294,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnChangeTrades", new object[] { model1 });
+                                await _hubContext.Clients.Group($"Order/{nationalCode}").SendCoreAsync("OnChangeTrades", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
 
@@ -316,37 +316,44 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// </summary>
         /// <returns></returns>
 
-        public async Task PushCustomerWallet_Original()
+        public async Task PushCustomerWallet_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
 
-                consumer.Subscribe($"CustomerWallet");
-                while (true)
-                {
+                //consumer.Subscribe($"CustomerWallet");
+                //while (true)
+                //{
 
                     try
                     {
 
-                        #region comment
-                        var consumeResult = consumer.Consume();
-                        var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
+                        
+//var consumeResult = consumer.Consume();
+                        //var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
+                        var model1 = new CustomerWallet()
+                        {
+                            BlockedValue = 1234,
+                            BuyingPower = 1234,
+                            Withdrawable = 3434,
+                            LendedCredit = 2341,
+                            NonWithdrawable = 34343,
+                        };
 
+                       // var customerData = _hubConnationService.UserHubsList(model1.Customer);
 
-                        var customerData = _hubConnationService.UserHubsList(model1.Customer);
+                        //if (customerData != null)
+                        //    if (customerData.Hubs.Count > 0)
+                                await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
 
-                        if (customerData != null)
-                            if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Clients(customerData.Hubs).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
-
-                        var t = consumeResult.Message.Value;
-                        #endregion
+                        //var t = consumeResult.Message.Value;
+                       
                     }
                     catch (Exception e)
                     {
 
                     }
-                }
+                //}
                 consumer.Close();
 
             }
@@ -360,7 +367,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// </summary>
         /// <returns></returns>
 
-        public async Task PushCustomerPortfolio_Original()
+        public async Task PushCustomerPortfolio_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -378,7 +385,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                         var hubs = _hubConnationService.UserHubsList(model1.NationalId);
 
                         if (hubs != null)
-                            await _hubContext.Clients.Clients(hubs.Hubs).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+                            await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
                     }
@@ -394,20 +401,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         #endregion
 
-        //public async Task Register()
-        //{
-            
-        //}
 
-        public async Task CreateAllConsumers()
+
+        public async Task CreateAllConsumers(string nationalCode)
         {
             if (ConsumerIsStar)
                 return;
 
-            Task.Run(() => PushTradeState_Original());
-            Task.Run(() => PushOrderAdded_Original());
-            Task.Run(() => PushCustomerPortfolio_Original());
-            Task.Run(() => PushCustomerWallet_Original());
+            Task.Run(() => PushTradeState_Original(nationalCode));
+            Task.Run(() => PushOrderAdded_Original(nationalCode));
+            Task.Run(() => PushCustomerPortfolio_Original(nationalCode));
+            Task.Run(() => PushCustomerWallet_Original(nationalCode));
 
 
             ConsumerIsStar = true;

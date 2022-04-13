@@ -20,7 +20,7 @@ namespace Iz.Online.Reopsitory.Repository
             try
             {
                 _db.Orders.Add(addOrderModel);
-               await _db.SaveChangesAsync();
+               //await _db.SaveChangesAsync();
             }
             catch (Exception e)
             {

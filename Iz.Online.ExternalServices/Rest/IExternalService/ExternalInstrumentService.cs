@@ -15,7 +15,7 @@ using BestLimitsView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
 using Izi.Online.ViewModels.SignalR;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Microsoft.Extensions.Logging;
-
+using Iz.Online.OmsModels.ResponsModels.Order;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
@@ -29,7 +29,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         private readonly ILogger<ExternalInstrumentService> _logger;
         //private readonly IPushService _pushService;
         private IHubUserService _hubUserService;
-
+         
+        static string NationalCode { get; set; }
+        
 
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalUserService externalUserService
             , IHubUserService hubUserService, ILogger<ExternalInstrumentService> logger, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext) : base(instrumentsRepository, ServiceProvider.Oms)
@@ -40,6 +42,8 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _externalUserService = externalUserService;
             _hubContext = hubContext;
             _logger = logger;
+          
+            
         }
 
         public async Task<bool> UpdateInstrumentList()
@@ -133,41 +137,54 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public async Task StartConsume()
         {
-            await _hubUserService.CreateAllConsumers();
+            await _hubUserService.CreateAllConsumers(NationalCode);
         }
 
         public async Task<ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>> BestLimits(string NscCode, long InstrumentId, string hubId)
         {
 
-
-
-            _logger.LogError("before get nationalCode");
-            var nationalCode =   HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
-            _logger.LogError("after get nationalCode");
-            MainHub.NatCode = nationalCode.Result.nationalID;
-            //if (nationalCode != null)
-            //{
-            //     Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode, nationalCode.Result.nationalID));
-            //}
-            _logger.LogError("before get bestlimit");
-            var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
-            _logger.LogError("after get bestlimit");
-            if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
-                return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
+            //_logger.LogError("before get nationalCode");
            
-            _logger.LogError("before get detail");
-            var detail = await Details(InstrumentId, NscCode, hubId);
-            _logger.LogError("after get detail");
-            if (detail.Model == null || detail.StatusCode != 200)
-                return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
-            
+            //_logger.LogError("after get nationalCode");
+            MainHub.NatCode = NationalCode; 
+            //if (NationalCode != null)
+            //{
+            //    Task.Run(() => _hubUserService.PushCustomerWallet_Original(NationalCode));
+            //    Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode, NationalCode));
+            //}
+           // _logger.LogError("before get bestlimit");
+            List<Task> tasks = new ();
+            BestLimits bestLimit = new();
+            ResultModel<Details> detail = new ResultModel<Details>(null);
+            ResultModel<ActiveOrdersResult> activeOrders = new ResultModel<ActiveOrdersResult>(null);
 
-            _logger.LogError("before get actives");
-            var activeOrders = await _externalOrderService.GetAllActives();
-            _logger.LogError("after get actives");
-            if (activeOrders.Model.Orders == null || activeOrders.StatusCode != 200)
-                return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
-            _logger.LogError("before proccess bestilimit");
+
+            tasks.Add(Task.Run(async () => bestLimit= await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}")));
+            //var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
+            //_logger.LogError("after get bestlimit");
+            //if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
+            //    return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
+            tasks.Add(Task.Run(async () => detail=await Details(InstrumentId, NscCode, hubId)));
+
+            //_logger.LogError("before get detail");
+            //var detail = await Details(InstrumentId, NscCode, hubId);
+            //_logger.LogError("after get detail");
+            //if (detail.Model == null || detail.StatusCode != 200)
+            //    return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
+
+            tasks.Add(Task.Run(async () => activeOrders = await _externalOrderService.GetAllActives()));
+
+            //_logger.LogError("before get actives");
+            //var activeOrders = await _externalOrderService.GetAllActives();
+            //_logger.LogError("after get actives");
+            //if (activeOrders.Model.Orders == null || activeOrders.StatusCode != 200)
+            //    return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
+            //_logger.LogError("before proccess bestilimit");
+           // _logger.LogError("before ");
+
+           await Task.WhenAll(tasks);
+          //  _logger.LogError("after ");
+
             var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
@@ -253,6 +270,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var proccessedResult = ProccessVolume(result, detail.Model);
             _logger.LogError("after proccess");
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
+           // return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null);
         }
 
         public async Task<ResultModel<InstrumentPriceDetails>> Price(string NscCode)
@@ -271,6 +289,15 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             _logger.LogError("after get detailOrder");
            // var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
+
+        }
+
+        public async Task<ResultModel<CustomerInfo>> GetNationalCode()
+        {
+
+            var result = await HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
+
+            return new ResultModel<CustomerInfo>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }
         private BestLimitsView ProccessVolume(BestLimitsView bestLimits, Details detail)
@@ -321,6 +348,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             if (a == 0) return 0;
             var res = (a - b) / a * 100;
             return 100 - res;
+        }
+        public void SetNationalCode(string nationalCode)
+        {
+            NationalCode = nationalCode;
         }
 
 
