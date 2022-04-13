@@ -8,6 +8,7 @@ using Iz.Online.OmsModels.InputModels.SuperVisory;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ChangeBroker;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.Services.Services
@@ -105,6 +106,30 @@ namespace Iz.Online.Services.Services
 
 
             return new ResultModel<List<RequestsHistory>>(res);
+        }
+
+        public async Task<ResultModel<List<SuperVisoryReport>>> Report(PagingParam<SuperVisoryFilter> filter)
+        {
+            var req = await _externalService.Report(filter);
+           var res = req.Model.Data.Select(history => new SuperVisoryReport()
+            {
+
+                ChangeAt = history.ChangeAt,
+                Description = history.Description,
+                Status = history.Status,
+                UserName = history.UserName,
+                CreatedAt = history.CreatedAt,
+                Document = history.Document,
+                InstrumentId = history.InstrumentId,
+                InstrumentName = history.InstrumentName,
+                RequestId = history.RequestId,
+                StatusText = history.StatusText,
+
+            }).ToList();
+
+
+
+            return new ResultModel<List<SuperVisoryReport>>(res);
         }
     }
 }

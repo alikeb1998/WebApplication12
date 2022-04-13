@@ -1,28 +1,50 @@
 ﻿using Confluent.Kafka;
 using Iz.Online.HubConnectionHandler.IServices;
-using Iz.Online.HubHandler.IServices;
-using Iz.Online.OmsModels.ResponsModels.Kafka;
+
+using Iz.Online.OmsModels.ResponsModels.BestLimits;
+
+using Iz.Online.Reopsitory.IRepository;
+
+using Izi.Online.ViewModels.Instruments;
+using Izi.Online.ViewModels.Orders;
+using Izi.Online.ViewModels.Trades;
+using Izi.Online.ViewModels.Users;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BestLimitResult = Izi.Online.ViewModels.SignalR.BestLimit;
-using bestLimitView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
+using OrderChanged = Iz.Online.OmsModels.ResponsModels.Order.OrderChangeTopic;
 using Detail = Iz.Online.OmsModels.ResponsModels.Kafka.InstrumentDetail;
 using PushDetail = Izi.Online.ViewModels.SignalR.InstrumentDetail;
+using BestLimitResult = Izi.Online.ViewModels.SignalR.BestLimit;
+using Iz.Online.OmsModels.ResponsModels.Kafka;
+using bestLimitView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
+
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
-    public class BroadCaster : IHubUserService
+
+    //topics =>
+    //OrderChange (active order tab ) ,\
+    //OrderTrade  (today trades tab) , \
+    //{InstrumentId}-bestLimit ,       \
+    //CustomerWallet ,                 \
+    //CustomerPortfolioL  ,            \
+    //{InstrumentId}-price (details)   \
+
+
+    
+
+    public class HubUserService : IHubUserService
     {
-
-
         private readonly IHubConnationService _hubConnationService;
         private readonly Microsoft.AspNetCore.SignalR.IHubContext<MainHub> _hubContext;
+        private readonly ILogger<HubUserService> _logger;
+        
+      
         private readonly ConsumerConfig _consumerConfig;
-        public BroadCaster(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext)
+        private static bool ConsumerIsStar = false;
+        public HubUserService(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext, ILogger<HubUserService> logger)
         {
 
             _hubConnationService = hubConnationService;
@@ -34,6 +56,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 GroupId = "foo",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
+            _logger = logger;
 
         }
 
@@ -48,23 +71,23 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             //InstrumentId = "IRO1FOLD0001"; // <= sample فولاد
 
 
-
+            
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
-                consumer.Subscribe($"{InstrumentId}-bestLimit");
-
+                 consumer.Subscribe($"{InstrumentId}-bestLimit");
+               
                 while (true)
                 {
                     //Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
-                    var consumeResult = consumer.Consume();
+                    var consumeResult =  consumer.Consume();
                     var bestLimit = new BestLimitResult();
-                   
+                    
 
                     bestLimitView result = new bestLimitView();
                     if (consumeResult.Message.Value != null)
                     {
                         bestLimit = JsonConvert.DeserializeObject<BestLimitResult>(consumeResult.Message.Value);
-                        result = new bestLimitView()
+                       result =new bestLimitView()
                         {
                             changeRow1 = bestLimit.changeRow1,
                             changeRow2 = bestLimit.changeRow2,
@@ -127,23 +150,23 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                                 volumeBestSale = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.volumeBestSale
                             },
                         };
-                        result = Izi.Online.ViewModels.Instruments.BestLimit.VolumeProccessor.ProccessVolume(result);
+                         result = Izi.Online.ViewModels.Instruments.BestLimit.VolumeProccessor.ProccessVolume(result);
 
                     }
-
+                     
                     //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                     //if (hubs != null)
                     //{
-                    try
-                    {
-                        //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
-                        await _hubContext.Clients.Group($"instruments{nationalCode}").SendAsync("OnRefreshInstrumentBestLimit", result);
-                    }
-                    catch (Exception ex)
-                    {
+                        try
+                        {
+                            //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
+                            await _hubContext.Clients.Group($"instruments{nationalCode}").SendAsync("OnRefreshInstrumentBestLimit", result);
+                        }
+                        catch (Exception ex)
+                        {
 
-                        throw;
-                    }
+                            throw;
+                        }
                     //}
                 }
                 consumer.Close();
@@ -373,25 +396,24 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         //public async Task Register()
         //{
-
+            
         //}
 
         public async Task CreateAllConsumers()
         {
-           // if (ConsumerIsStar)
-            //    return;
+            if (ConsumerIsStar)
+                return;
 
-            //Task.Run(() => PushTradeState_Original());
-            //Task.Run(() => PushOrderAdded_Original());
-            //Task.Run(() => PushCustomerPortfolio_Original());
-            //Task.Run(() => PushCustomerWallet_Original());
+            Task.Run(() => PushTradeState_Original());
+            Task.Run(() => PushOrderAdded_Original());
+            Task.Run(() => PushCustomerPortfolio_Original());
+            Task.Run(() => PushCustomerWallet_Original());
 
 
-           // ConsumerIsStar = true;
+            ConsumerIsStar = true;
         }
 
 
     }
-
 
 }

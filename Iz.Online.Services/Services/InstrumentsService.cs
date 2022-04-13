@@ -10,6 +10,7 @@ using DateHelper = Iz.Online.Files.DateHelper;
 using Iz.Online.Files;
 using Izi.Online.ViewModels.Instruments.BestLimit;
 using Izi.Online.ViewModels.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Iz.Online.Services.Services
 {
@@ -20,12 +21,14 @@ namespace Iz.Online.Services.Services
         public IExternalOrderService _externalOrderService { get; }
 
         private readonly ICacheService _cacheService;
-        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalInstrumentService externalInstrumentsService, ICacheService cacheService)
+        private readonly ILogger<InstrumentsService> _logger;
+        public InstrumentsService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalInstrumentService externalInstrumentsService, ICacheService cacheService, ILogger<InstrumentsService> logger)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalInstrumentsService = externalInstrumentsService;
             _cacheService = cacheService;
             _externalOrderService = externalOrderService;
+            _logger = logger;
         }
 
 
@@ -136,8 +139,9 @@ namespace Iz.Online.Services.Services
             {
                 return new ResultModel<BestLimits>(null, 400, "خطا در پارامتر های ورودی");
             }
+            _logger.LogError("before get redis");
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
-           
+            _logger.LogError("after get redis");
             //_instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
             //{
             //    NscCode = instrumentDetails.NscCode,

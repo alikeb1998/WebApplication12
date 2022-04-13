@@ -14,16 +14,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Login\**" />
+    <EmbeddedResource Remove="Login\**" />
+    <None Remove="Login\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.Entities\Iz.Online.Entities.csproj" />
     <ProjectReference Include="..\Iz.Online.Models\Iz.Online.OmsModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Login\" />
   </ItemGroup>
 
 </Project>

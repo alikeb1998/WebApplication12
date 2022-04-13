@@ -2,9 +2,7 @@
 using Iz.Online.API.Infrastructure;
 using Iz.Online.DataAccess;
 using Iz.Online.ExternalServices.Rest.ExternalService;
-using Iz.Online.HubHandler.IServices;
-using Iz.Online.HubHandler.Services;
-using Iz.Online.SignalR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
 using StackExchange.Redis;
@@ -13,6 +11,7 @@ using NLog.Web;
 using NLog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Iz.Online.ExternalServices.Rest.IExternalService;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -44,7 +43,7 @@ try
 
     InjectionHandler.InjectServices(builder.Services);
     builder.Services.AddScoped<IHubUserService, HubUserService>();
-    builder.Services.AddScoped<UserInfo>();
+    //builder.Services.AddScoped<UserInfo>();
 
     #endregion
     //builder.Services.AddDistributedMemoryCache();
@@ -135,7 +134,7 @@ try
 
     app.UseAuthorization();
     app.MapControllers();
-    app.MapHub<CustomersHub>("/CustomersHub");
+    app.MapHub<MainHub>("/CustomersHub");
 
 
     //var hubService = builder.Services.BuildServiceProvider().GetService<IHubUserService>();

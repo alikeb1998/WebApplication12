@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Iz.Online.API.Infrastructure;
 using Izi.Online.ViewModels.Orders;
 using Iz.Online.Services.IServices;
-using Iz.Online.SignalR;
+
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
 using ActiveOrder = Izi.Online.ViewModels.Orders.ActiveOrder;
@@ -11,7 +11,7 @@ using AddOrderResult = Izi.Online.ViewModels.Orders.AddOrderResult;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.Reports;
 using Iz.Online.ExternalServices.Rest.ExternalService;
-
+using Iz.Online.ExternalServices.Rest.IExternalService;
 
 namespace Iz.Online.API.Controllers
 {
@@ -26,9 +26,9 @@ namespace Iz.Online.API.Controllers
         private readonly IOrderServices _orderService;
         private readonly IExternalOrderService _externalOrderService;
 
-        public IHubContext<CustomersHub> _hubContext;
+        public IHubContext<MainHub> _hubContext;
 
-        public OrderController(IOrderServices orderServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public OrderController(IOrderServices orderServices, IHubContext<MainHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _orderService = orderServices;
             _hubContext = hubContext;

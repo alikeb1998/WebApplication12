@@ -11,7 +11,7 @@ using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
 
-namespace Iz.Online.HubHandler.IServices
+namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public  interface IHubUserService
     {

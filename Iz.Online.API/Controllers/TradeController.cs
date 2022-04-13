@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Iz.Online.API.Infrastructure;
 using Iz.Online.Services.IServices;
-using Iz.Online.SignalR;
+ 
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.SignalR;
 using Izi.Online.ViewModels;
 using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.Trades;
+using Iz.Online.ExternalServices.Rest.IExternalService;
 
 namespace Iz.Online.API.Controllers
 {
@@ -21,9 +22,9 @@ namespace Iz.Online.API.Controllers
         public ITradeServices _tradeServices { get; set; }
 
 
-        public IHubContext<CustomersHub> _hubContext;
+        public IHubContext<MainHub> _hubContext;
 
-        public TradeController(ITradeServices tradeServices, IHubContext<CustomersHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public TradeController(ITradeServices tradeServices, IHubContext<MainHub> hubContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _tradeServices = tradeServices; //new OrderServices();
             _hubContext = hubContext;

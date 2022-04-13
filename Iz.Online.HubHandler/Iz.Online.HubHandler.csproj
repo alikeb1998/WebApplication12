@@ -16,4 +16,9 @@
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IServices\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

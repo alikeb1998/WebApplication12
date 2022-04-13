@@ -1,9 +1,6 @@
 ﻿
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
-using Iz.Online.HubConnectionHandler.IServices;
-using Iz.Online.HubHandler.IServices;
-//using Iz.Online.HubHandler.IServices;
 using Iz.Online.OmsModels.ResponsModels.Instruments;
 using Iz.Online.Reopsitory.IRepository;
 using Izi.Online.ViewModels.Instruments;
@@ -19,10 +16,13 @@ using Izi.Online.ViewModels.SignalR;
 using Iz.Online.OmsModels.ResponsModels.User;
 using Microsoft.Extensions.Logging;
 
+
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class ExternalInstrumentService : BaseService, IExternalInstrumentService
     {
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<MainHub> _hubContext;
+
         private readonly IInstrumentsRepository _instrumentsRepository;
         private readonly IExternalOrderService _externalOrderService;
         private readonly IExternalUserService _externalUserService;
@@ -32,12 +32,13 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
 
         public ExternalInstrumentService(IInstrumentsRepository instrumentsRepository, IExternalOrderService externalOrderService, IExternalUserService externalUserService
-            , IHubUserService hubUserService, ILogger<ExternalInstrumentService> logger) : base(instrumentsRepository, ServiceProvider.Oms)
+            , IHubUserService hubUserService, ILogger<ExternalInstrumentService> logger, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext) : base(instrumentsRepository, ServiceProvider.Oms)
         {
             _instrumentsRepository = instrumentsRepository;
             _externalOrderService = externalOrderService;
             _hubUserService = hubUserService;
             _externalUserService = externalUserService;
+            _hubContext = hubContext;
             _logger = logger;
         }
 
@@ -49,7 +50,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             var onDbInstrumentBourse = (await _instrumentsRepository.GetInstrumentBourse()).Model.ToList();
 
 
-            var instruments =  HttpGetRequest<Instruments>("order/instruments");
+            var instruments = await HttpGetRequest<Instruments>("order/instruments");
 
             try
             {
@@ -137,47 +138,36 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public async Task<ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>> BestLimits(string NscCode, long InstrumentId, string hubId)
         {
-            //model.InstrumentId = "IRO1FOLD0001";
-            //var timer = new System.Timers.Timer();
-            //timer.Interval = 3 * 60 * 60 * 1000;
-            //timer.Tick += new EventHandler(1);
-            //timer.Enabled = true;
 
 
-            //_logger.LogDebug("before callng CustomerInfo" + timer);
-            //_logger.LogDebug("after callng CustomerInfo" + timer);
-            var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
 
-             Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode, nationalCode.nationalID));
-
-            // _instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
+            _logger.LogError("before get nationalCode");
+            var nationalCode =   HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
+            _logger.LogError("after get nationalCode");
+            MainHub.NatCode = nationalCode.Result.nationalID;
+            //if (nationalCode != null)
             //{
-            //    NscCode = NscCode,
-            //    Person = new Persons()
-            //    {
-            //        NationalCode = nationalCode.nationalID,
-            //        Hubs = new List<string>()
-            //        {
-            //             hubId
-            //        }
-            //    }
-            //});
-            //_logger.LogError("before callng bestlimit" + timer);
-            var bestLimit =  HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
+            //     Task.Run(() => _hubUserService.ConsumeRefreshInstrumentBestLimit_Orginal(NscCode, nationalCode.Result.nationalID));
+            //}
+            _logger.LogError("before get bestlimit");
+            var bestLimit = await HttpGetRequest<BestLimits>($"rlc/best-limit/{NscCode}");
+            _logger.LogError("after get bestlimit");
             if (bestLimit.bestLimit == null || bestLimit.statusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
-            //_logger.LogError("after callng bestlimit" + timer.ToString());
-            //_logger.LogError("before callng detail" + timer.ToString());
+           
+            _logger.LogError("before get detail");
             var detail = await Details(InstrumentId, NscCode, hubId);
+            _logger.LogError("after get detail");
             if (detail.Model == null || detail.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, detail.StatusCode == 200, detail.Message, detail.StatusCode);
-            //_logger.LogError("after callng detail" + timer.ToString());
+            
 
-            //_logger.LogError("before callng actives" + timer.ToString());
+            _logger.LogError("before get actives");
             var activeOrders = await _externalOrderService.GetAllActives();
+            _logger.LogError("after get actives");
             if (activeOrders.Model.Orders == null || activeOrders.StatusCode != 200)
                 return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(null, bestLimit.statusCode == 200, bestLimit.clientMessage, bestLimit.statusCode);
-           // _logger.LogError("after callng actives" + timer.ToString());
+            _logger.LogError("before proccess bestilimit");
             var result = new BestLimitsView()
             {
                 orderRow1 = new OrderRow()
@@ -236,7 +226,8 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 },
 
             };
-
+            _logger.LogError("after proccess bestilimit");
+            _logger.LogError("before proccess acives");
             foreach (var order in activeOrders.Model.Orders)
             {
 
@@ -257,16 +248,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                     result.orderRow6.HasOrderSell = !result.orderRow6.HasOrderSell ? order.price == result.orderRow6.priceBestSale : true;
                 }
             }
-
+            _logger.LogError("after proccess actives");
+            _logger.LogError("before proccess ");
             var proccessedResult = ProccessVolume(result, detail.Model);
-
+            _logger.LogError("after proccess");
             return new ResultModel<Izi.Online.ViewModels.Instruments.BestLimit.BestLimits>(proccessedResult);
         }
 
         public async Task<ResultModel<InstrumentPriceDetails>> Price(string NscCode)
         {
              Task.Run(() => _hubUserService.PushPrice_Original(NscCode));
-            var result =  HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
+            var result = await HttpGetRequest<InstrumentPrice>($"rlc/price/{NscCode}");
 
 
             return new ResultModel<InstrumentPriceDetails>(result.price, result.statusCode == 200, result.clientMessage, result.statusCode);
@@ -274,22 +266,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         public async Task<ResultModel<Details>> Details(long InstrumentId, string nscCode, string hubId)
         {
-
-            var result =  HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
-            
-            var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
-            _instrumentsRepository.CustomerSelectInstrument(new SelectInstrumentInput()
-            {
-                NscCode = nscCode,
-                Person = new Persons()
-                {
-                    NationalCode = nationalCode.nationalID,
-                    Hubs = new List<string>()
-                   {
-                        hubId
-                   }
-                }
-            });
+            _logger.LogError("before get detailOrder");
+            var result = await HttpGetRequest<InstrumentDetails>($"order/instrument/{InstrumentId}");
+            _logger.LogError("after get detailOrder");
+           // var nationalCode = HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
             return new ResultModel<Details>(result.Instrument, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         }

@@ -1,27 +1,37 @@
-﻿using Amazon.Auth.AccessControlPolicy;
-using Iz.Online.HubConnectionHandler.IServices;
-using Microsoft.AspNetCore.SignalR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Iz.Online.HubConnectionHandler.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Iz.Online.ExternalServices.Rest.IExternalService
 {
     public class MainHub : Hub
     {
         private readonly IHubConnationService _hubConnationService;
-        public MainHub(IHubConnationService userService)
+        private readonly ILogger<MainHub> _logger;
+        public static string NatCode { get; set; }
+        public MainHub(IHubConnationService userService, ILogger<MainHub> logger)
         {
             _hubConnationService = userService;
-        }
-        //[Resource("AddToUserGroup")]
-        public async Task AddToUserGroup(string nationalCode)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments{nationalCode}");
+            _logger = logger;
+            _logger.LogError("CustomersHub init :" + DateTime.Now.ToString());
+
+
         }
 
+        public async Task AddToInstrumentsGroup(int instrumentId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"{instrumentId}/{NatCode}");
+        }
+        public async Task AddToOnlineUserGroup(string nationalCode)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"{nationalCode}");
+        }
         public async Task SendMessage(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
@@ -36,18 +46,18 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public override Task OnConnectedAsync()
         {
-            var a = Context;
-            //await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments{userInfo.nationalCode}");
-           
+
             return base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             //_hubConnationService.DeleteConnectionId(Context.ConnectionId);
-          
+            _logger.LogError("OnDisconnectedAsync :" + DateTime.Now.ToString());
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
         }
     }
 }
+
+

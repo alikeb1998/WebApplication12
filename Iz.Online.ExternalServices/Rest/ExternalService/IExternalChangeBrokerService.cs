@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Iz.Online.OmsModels.InputModels.SuperVisory;
 using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using Izi.Online.ViewModels.ChangeBroker;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.ExternalServices.Rest.ExternalService
@@ -19,6 +20,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         Task<ResultModel<EditReq>> EditRequest(EditModel model);
         Task<ResultModel<DeleteReq>> DeleteRequest(BaseInput model);
         Task<ResultModel<RequestHistories>> RequestHistory(BaseInput model);
+        Task<ResultModel<SuperVisoryReports>> Report(PagingParam<SuperVisoryFilter> model);
 
     }
 }

@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
-using Iz.Online.HubHandler.IServices;
+using Iz.Online.ExternalServices.Rest.IExternalService;
+
 using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
 using Iz.Online.OmsModels.Users.InputModels;

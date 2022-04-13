@@ -2,6 +2,7 @@
 using Iz.Online.OmsModels.InputModels.SuperVisory;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ChangeBroker;
+using Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,7 +68,12 @@ namespace Iz.Online.API.Controllers
             var result = await _changeBrokerService.RequestHistory(model);
             return new Respond<List<RequestsHistory>>().ActionRespond(result);
         }
-
+        [HttpPost("Report")]
+        public async Task<IActionResult> Report([FromBody] PagingParam<SuperVisoryFilter> filter)
+        {
+            var result = await _changeBrokerService.Report(filter);
+            return new Respond<List<SuperVisoryReport>>().ActionRespond(result);
+        }
 
     }
 }

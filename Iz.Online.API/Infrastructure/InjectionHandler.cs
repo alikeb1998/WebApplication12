@@ -8,8 +8,7 @@ using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.ExternalServices.Rest.Infrastructure;
 using Iz.Online.HubConnectionHandler.IServices;
 using Iz.Online.HubConnectionHandler.Services;
-using Iz.Online.HubHandler.IServices;
-using Iz.Online.HubHandler.Services;
+
 using Microsoft.Extensions.Caching.Distributed;
 using ServiceProvider = Iz.Online.ExternalServices.Rest.Infrastructure.ServiceProvider;
 

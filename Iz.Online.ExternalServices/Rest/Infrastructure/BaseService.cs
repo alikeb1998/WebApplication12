@@ -27,7 +27,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 ApiBaseAddress = "http://localhost:5069/";
         }
 
-        public  T HttpGetRequest<T>(string RequestAddress, int port = 1)
+        public  async Task<T> HttpGetRequest<T>(string RequestAddress, int port = 1)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("Authorization", Token);
-                IRestResponse response =  client.Execute(request);
+                IRestResponse response =  await client.ExecuteAsync(request);
 
                 if (string.IsNullOrEmpty(response.Content))
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
@@ -67,7 +67,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public  T HttpPostRequest<T>(string RequestAddress, string SerializedObject)
+        public async Task<T> HttpPostRequest<T>(string RequestAddress, string SerializedObject)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public T HttpPutRequest<T>(string RequestAddress, string SerializedObject,  int port = 1)
+        public async Task<T> HttpPutRequest<T>(string RequestAddress, string SerializedObject,  int port = 1)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
             }
         }
 
-        public T HttpDeleteRequest<T>(string RequestAddress, string SerializedObject, int port = 1)
+        public async Task<T> HttpDeleteRequest<T>(string RequestAddress, string SerializedObject, int port = 1)
         {
             try
             {
