@@ -12,6 +12,7 @@ using NLog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Iz.Online.ExternalServices.Rest.IExternalService;
+using Iz.Online.HubHandler;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");

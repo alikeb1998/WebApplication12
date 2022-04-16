@@ -11,14 +11,14 @@ using Iz.Online.OmsModels.InputModels;
 using Iz.Online.OmsModels.Users.InputModels;
 using Iz.Online.OmsModels.InputModels.Users;
 
-namespace Iz.Online.ExternalServices.Rest.IExternalService
+namespace Iz.Online.HubHandler
 {
     public  interface IHubUserService
     {
     
         Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId, string nationalCode);
         Task PushOrderAdded_Original(string nationalCode);
-        Task PushPrice_Original(string InstrumentId);
+        Task PushPrice_Original(string InstrumentId, string nationlCode);
         Task CreateAllConsumers(string nationalCode);
         Task PushCustomerWallet_Original(string nationalCode);
 

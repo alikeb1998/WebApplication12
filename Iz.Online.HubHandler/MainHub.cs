@@ -4,38 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.HubConnectionHandler.IServices;
+using Iz.Online.Reopsitory.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Iz.Online.ExternalServices.Rest.IExternalService
+namespace Iz.Online.HubHandler
 {
     public class MainHub : Hub
     {
         private readonly IHubConnationService _hubConnationService;
         private readonly ILogger<MainHub> _logger;
         public static string NatCode { get; set; }
-        public MainHub(IHubConnationService userService, ILogger<MainHub> logger)
+        private readonly IInstrumentsRepository _instrumentsRepository;
+
+        public MainHub(IHubConnationService userService, ILogger<MainHub> logger, IInstrumentsRepository instrumentsRepository)
         {
             _hubConnationService = userService;
             _logger = logger;
             _logger.LogError("CustomersHub init :" + DateTime.Now.ToString());
-
+            _instrumentsRepository = instrumentsRepository;
 
         }
 
         public async Task AddToInstrumentsGroup(int instrumentId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"{instrumentId}/{NatCode}");
-        }    
-        public async Task AddToNewOrderGroup(string instrumentId)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"NewOrder{NatCode}");
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"Order/{instrumentId}/{NatCode}");
+            var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{NatCode}/{nsc}");
         }
+        //public async Task AddToNewOrderGroup(int instrumentId)
+        //{
+            
+        //    var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+        //    _logger.LogError("AddToNewOrderGroup" + instrumentId+nsc);
+        //    await Groups.AddToGroupAsync(Context.ConnectionId, $"NewOrder/{NatCode}/{nsc}");
+        //    await Groups.AddToGroupAsync(Context.ConnectionId, $"Order/{NatCode}/{nsc}");
+        //} 
+        //public async Task AddToPricesGroup(int instrumentId)
+        //{
+            
+        //    var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+        //    _logger.LogError("AddToPricesGroup" + instrumentId + nsc);
+        //    await Groups.AddToGroupAsync(Context.ConnectionId, $"price/{NatCode}/{nsc}");
+        //}
         public async Task AddToOnlineUserGroup(string nationalCode)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"{nationalCode}");
+        }
+        public async Task RemoveFromOnlineUserGroup(string nationalCode)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{nationalCode}");
         }
         public async Task SendMessage(string user, string message)
         {
@@ -49,16 +67,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             //await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-             AddToOnlineUserGroup(NatCode);
-            return base.OnConnectedAsync();
+            await AddToOnlineUserGroup(NatCode);
+            await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-           
+
             //_hubConnationService.DeleteConnectionId(Context.ConnectionId);
+            await RemoveFromOnlineUserGroup(NatCode);
             _logger.LogError("OnDisconnectedAsync :" + DateTime.Now.ToString());
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);

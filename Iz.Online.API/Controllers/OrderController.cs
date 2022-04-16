@@ -12,6 +12,7 @@ using Izi.Online.ViewModels.Orders;
 using Izi.Online.ViewModels.Reports;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
+using Iz.Online.HubHandler;
 
 namespace Iz.Online.API.Controllers
 {

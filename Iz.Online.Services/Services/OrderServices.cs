@@ -18,6 +18,8 @@ using CancelOrder = Iz.Online.OmsModels.InputModels.Order.CancelOrder;
 using Report = Izi.Online.ViewModels.Reports;
 using Izi.Online.ViewModels.Reports;
 using System.Linq.Expressions;
+using Iz.Online.ExternalServices.Rest.IExternalService;
+using Iz.Online.HubHandler;
 
 namespace Iz.Online.Services.Services
 {
@@ -28,16 +30,18 @@ namespace Iz.Online.Services.Services
 
 
         private readonly IOrderRepository _orderRepository;
-
+        private IHubUserService _hubUserService;
 
         public IExternalOrderService _externalOrderService { get; }
         public ICacheService _cacheService { get; }
 
-        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, ICacheService cacheService)
+        public OrderServices(IOrderRepository orderRepository, IExternalOrderService externalOrderService, ICacheService cacheService, IHubUserService hubUserService)
         {
             _orderRepository = orderRepository;
             _externalOrderService = externalOrderService;
             _cacheService = cacheService;
+            _hubUserService = hubUserService;
+
         }
 
 
@@ -45,7 +49,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<AddOrderResult>> Add(AddOrderModel addOrderModel)
         {
-            var instrumentData =  _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
+            var instrumentData = _cacheService.InstrumentData((int)addOrderModel.InstrumentId);
 
             //09:00
             var dbEntity = new db.Orders()
@@ -69,7 +73,6 @@ namespace Iz.Online.Services.Services
 
             if (!addOrderResult.IsSuccess)
                 return new ResultModel<AddOrderResult>(null, addOrderResult.StatusCode == 200, addOrderResult.Message, addOrderResult.StatusCode);
-
             dbEntity.OmsResponseDate = DateTime.Now;
             dbEntity.OrderId = addOrderResult.Model.order.id;
             dbEntity.Isr = addOrderResult.Model.order.isr;
@@ -86,7 +89,7 @@ namespace Iz.Online.Services.Services
             dbEntity.OmsQty = result.quantity;
             dbEntity.OmsPrice = result.price;
 
-              _orderRepository.Add(dbEntity);
+            _orderRepository.Add(dbEntity);
 
             return new ResultModel<AddOrderResult>(new AddOrderResult()
             {
@@ -97,9 +100,9 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<ActiveOrder>>> AllActive()
         {
-            var instruments =  _cacheService.InstrumentData();
+            var instruments = _cacheService.InstrumentData();
 
-            var activeOrders = await  _externalOrderService.GetAllActives();
+            var activeOrders = await _externalOrderService.GetAllActives();
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<List<ActiveOrder>>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
@@ -151,7 +154,7 @@ namespace Iz.Online.Services.Services
         public async Task<ResultModel<OrderReport>> AllActivePaged(OrderFilter filter)
         {
             var activeOrders = await _externalOrderService.GetAllActives();
-            
+
             if (activeOrders.StatusCode != 200 || activeOrders.Model.Orders.Count == 0)
                 return new ResultModel<OrderReport>(null, activeOrders.StatusCode == 200, activeOrders.Message, activeOrders.StatusCode);
 
@@ -195,7 +198,7 @@ namespace Iz.Online.Services.Services
             return new ResultModel<OrderReport>(res);
         }
 
-        public async Task< ResultModel<AllOrderReport>> AllSortedOrder(AllOrderCustomFilter filter)
+        public async Task<ResultModel<AllOrderReport>> AllSortedOrder(AllOrderCustomFilter filter)
         {
             if (filter.PageNumber == 0 || filter.PageSize == 0)
             {
@@ -236,7 +239,7 @@ namespace Iz.Online.Services.Services
                     return new ResultModel<AllOrderReport>(a);
 
                 }
-                return new ResultModel<AllOrderReport>(null , 200, "لیست خالی است");
+                return new ResultModel<AllOrderReport>(null, 200, "لیست خالی است");
             }
             return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
         }
@@ -357,9 +360,13 @@ namespace Iz.Online.Services.Services
             list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.CreatedAt) >= 0).ToList();
 
             var instrumentList = new List<AllOrder>();
+            if(filter.InstrumentId.Count == 0)
+            {
+                instrumentList.AddRange(list);
+            }
             foreach (var f in filter.InstrumentId)
             {
-                if (filter.InstrumentId.Count==1 && f == 0)
+                if (filter.InstrumentId.Count == 1 && f == 0 )
                 {
                     instrumentList.AddRange(list);
                 }

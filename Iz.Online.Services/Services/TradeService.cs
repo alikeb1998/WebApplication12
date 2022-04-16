@@ -194,7 +194,10 @@ namespace Iz.Online.Services.Services
             list = list.Where(x => DateTime.Compare(x.TradedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.TradedAt) >= 0).ToList();
 
             var tradeList = new List<Trade>();
-
+            if (filter.InstrumentId.Count==0)
+            {
+                tradeList.AddRange(list);
+            }
             foreach (var f in filter.InstrumentId)
             {
                 if (filter.InstrumentId.Count == 1 && f == 0)

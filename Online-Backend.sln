@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iz.Online.HubHandler", "Iz.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Iz.Online.HubConnectionHandler", "Iz.Online.HubConnectionHandler\Iz.Online.HubConnectionHandler.csproj", "{BF16E63A-DC5C-4DD0-9F61-44E607273579}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashHelper", "CashHelper\CashHelper.csproj", "{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{BF16E63A-DC5C-4DD0-9F61-44E607273579}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF16E63A-DC5C-4DD0-9F61-44E607273579}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF16E63A-DC5C-4DD0-9F61-44E607273579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{788F913D-9599-4087-9B11-604AD8CE4AB4} = {B0C11B86-6BD3-49D7-9145-378E8AE65667}
 		{9E9D4507-9EF1-458E-9C9A-22CE09D53531} = {088B230C-5EE5-4707-8C5A-33720F496228}
 		{BF16E63A-DC5C-4DD0-9F61-44E607273579} = {088B230C-5EE5-4707-8C5A-33720F496228}
+		{B3EC9CBB-6DF1-4BDC-9165-753FC2249F53} = {1AA20BE1-4367-475A-B91A-0212EF85BEC0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {723986F2-AA45-4BCA-8D94-D8EC500B0DEA}

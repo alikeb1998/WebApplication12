@@ -11,6 +11,7 @@ namespace Iz.Online.OmsModels.InputModels.SuperVisory
         public long Id { get; set; }
         public string SessionID { get; set; }
         public long InstrumentId { get; set; }
+        public string InstrumentName { get; set; }
         public string Description { get; set; }
         public bool HasStockSheet { get; set; }
         public string Document { get; set; }

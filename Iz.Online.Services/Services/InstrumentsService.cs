@@ -131,6 +131,7 @@ namespace Iz.Online.Services.Services
 
         public async Task StartConsume()
         {
+            
             await _externalInstrumentsService.StartConsume();
         }
 

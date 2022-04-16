@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 
-namespace Iz.Online.ExternalServices.Rest.IExternalService
+namespace Iz.Online.HubHandler
 {
 
     //topics =>
@@ -33,15 +33,15 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
     //{InstrumentId}-price (details)   \
 
 
-    
+
 
     public class HubUserService : IHubUserService
     {
         private readonly IHubConnationService _hubConnationService;
         private readonly Microsoft.AspNetCore.SignalR.IHubContext<MainHub> _hubContext;
         private readonly ILogger<HubUserService> _logger;
-        
-      
+ 
+
         private readonly ConsumerConfig _consumerConfig;
         private static bool ConsumerIsStar = false;
         public HubUserService(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext, ILogger<HubUserService> logger)
@@ -71,23 +71,23 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             //InstrumentId = "IRO1FOLD0001"; // <= sample فولاد
 
 
-            
+
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
-                 consumer.Subscribe($"{InstrumentId}-bestLimit");
-               
+                consumer.Subscribe($"{InstrumentId}-bestLimit");
+
                 while (true)
                 {
                     //Izi.Online.ViewModels.Instruments.BestLimit.BestLimits
-                    var consumeResult =  consumer.Consume();
+                    var consumeResult = consumer.Consume();
                     var bestLimit = new BestLimitResult();
-                    
+
 
                     bestLimitView result = new bestLimitView();
                     if (consumeResult.Message.Value != null)
                     {
                         bestLimit = JsonConvert.DeserializeObject<BestLimitResult>(consumeResult.Message.Value);
-                       result =new bestLimitView()
+                        result = new bestLimitView()
                         {
                             changeRow1 = bestLimit.changeRow1,
                             changeRow2 = bestLimit.changeRow2,
@@ -150,23 +150,23 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                                 volumeBestSale = bestLimit.orderRow6 == null ? 0 : bestLimit.orderRow6.volumeBestSale
                             },
                         };
-                         result = Izi.Online.ViewModels.Instruments.BestLimit.VolumeProccessor.ProccessVolume(result);
+                        result = Izi.Online.ViewModels.Instruments.BestLimit.VolumeProccessor.ProccessVolume(result);
 
                     }
-                     
+
                     //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                     //if (hubs != null)
                     //{
-                        try
-                        {
-                            //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
-                            await _hubContext.Clients.Group($"instruments{nationalCode}").SendAsync("OnRefreshInstrumentBestLimit", result);
-                        }
-                        catch (Exception ex)
-                        {
+                    try
+                    {
+                        //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
+                        await _hubContext.Clients.Group(nationalCode).SendAsync("OnRefreshInstrumentBestLimit", result);
+                    }
+                    catch (Exception ex)
+                    {
 
-                            throw;
-                        }
+                        throw;
+                    }
                     //}
                 }
                 consumer.Close();
@@ -181,7 +181,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// </summary>
         /// <returns></returns>
 
-        public async Task PushPrice_Original(string InstrumentId)
+        public async Task PushPrice_Original(string InstrumentId, string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -190,7 +190,6 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 {
                     try
                     {
-
                         var consumeResult = consumer.Consume();
                         var model = new Detail();
                         var res = new PushDetail();
@@ -211,9 +210,9 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
                         }
 
-                        var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
-                        if (hubs != null)
-                            await _hubContext.Clients.Clients(hubs).SendCoreAsync($"{InstrumentId}-price", new object[] { res, InstrumentId, " " });
+                        //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
+                        //if (hubs != null)
+                            await _hubContext.Clients.Group(nationalCode).SendCoreAsync($"{InstrumentId}-price", new object[] { res, InstrumentId, " " });
 
                         //var t = consumeResult.Message.Value;
 
@@ -238,7 +237,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         /// topic => OrderTrade
         /// </summary>
 
-        public async Task PushOrderAdded_Original(string nationalId)
+        public async Task PushOrderAdded_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -251,15 +250,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<AddOrder>(consumeResult.Message.Value);
 
-                        var customerData = _hubConnationService.UserHubsList(model1.Customer);
-
-                        if (customerData != null)
-                            if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Group($"NewOrder{nationalId}").SendCoreAsync("OnOrderAdded", new object[] { model1 });
-
-
-                        var t = consumeResult.Message.Value;
-
+                        await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnOrderAdded", new object[] { model1 });
                     }
                     catch (Exception e)
                     {
@@ -294,7 +285,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
                         if (customerData != null)
                             if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Group($"Order/{nationalCode}").SendCoreAsync("OnChangeTrades", new object[] { model1 });
+                                await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnChangeTrades", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
 
@@ -321,39 +312,35 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
 
-                //consumer.Subscribe($"CustomerWallet");
-                //while (true)
-                //{
+                consumer.Subscribe($"CustomerWallet");
+                while (true)
+                {
 
                     try
                     {
 
-                        
-//var consumeResult = consumer.Consume();
-                        //var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
-                        var model1 = new CustomerWallet()
-                        {
-                            BlockedValue = 1234,
-                            BuyingPower = 1234,
-                            Withdrawable = 3434,
-                            LendedCredit = 2341,
-                            NonWithdrawable = 34343,
-                        };
 
-                       // var customerData = _hubConnationService.UserHubsList(model1.Customer);
+                        var consumeResult = consumer.Consume();
+                        var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
+                        //var model1 = new CustomerWallet()
+                        //{
+                        //    BlockedValue = 1234,
+                        //    BuyingPower = 1234,
+                        //    Withdrawable = 3434,
+                        //    LendedCredit = 2341,
+                        //    NonWithdrawable = 34343,
+                        //};
 
-                        //if (customerData != null)
-                        //    if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
+                        await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
 
                         //var t = consumeResult.Message.Value;
-                       
+
                     }
                     catch (Exception e)
                     {
 
                     }
-                //}
+                }
                 consumer.Close();
 
             }
@@ -407,17 +394,18 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
             if (ConsumerIsStar)
                 return;
-
-            Task.Run(() => PushTradeState_Original(nationalCode));
-            Task.Run(() => PushOrderAdded_Original(nationalCode));
-            Task.Run(() => PushCustomerPortfolio_Original(nationalCode));
-            Task.Run(() => PushCustomerWallet_Original(nationalCode));
+            List<Task> tasks = new();
+            tasks.Add(Task.Run(async () => await PushTradeState_Original(nationalCode)));
+            tasks.Add(Task.Run(async () => await PushOrderAdded_Original(nationalCode)));
+            tasks.Add(Task.Run(async () => await PushCustomerPortfolio_Original(nationalCode)));
+            tasks.Add(Task.Run(async () => await PushCustomerWallet_Original(nationalCode)));
+            Task.WhenAll(tasks);
 
 
             ConsumerIsStar = true;
         }
 
-
+    
     }
 
 }
