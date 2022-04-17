@@ -49,6 +49,8 @@ namespace Iz.Online.API.Infrastructure
             services.AddScoped<IExternalChangeBrokerService, ExternalChangeBrokerService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<IChangeBrokerService, ChangeBrokerService>();
+            services.AddScoped<INewsServices, NewsServices>();
+            services.AddScoped<IExternalNewsService, ExternalNewsService>();
             
 
             return services;
