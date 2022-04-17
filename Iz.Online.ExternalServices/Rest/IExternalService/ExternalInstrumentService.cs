@@ -294,10 +294,10 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
         }
 
-        public async Task<ResultModel<CustomerInfo>> GetNationalCode()
+        public  ResultModel<CustomerInfo> GetNationalCode(string token)
         {
 
-            var result = await HttpGetRequest<CustomerInfo>("Customer/GetCustomerInfo");
+            var result =  HttpGetRequestNationalCode<CustomerInfo>("Customer/GetCustomerInfo", token);
             SetNationalCode(result.nationalID);
             return new ResultModel<CustomerInfo>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 

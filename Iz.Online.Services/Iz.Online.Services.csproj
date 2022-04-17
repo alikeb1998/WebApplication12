@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Iz.Online.ExternalServices\Iz.Online.ExternalServices.csproj" />
     <ProjectReference Include="..\Iz.Online.Files\Iz.Online.Files.csproj" />
+    <ProjectReference Include="..\Iz.Online.HubHandler\Iz.Online.HubHandler.csproj" />
     <ProjectReference Include="..\Iz.Online.Reopsitory\Iz.Online.Reopsitory.csproj" />
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>

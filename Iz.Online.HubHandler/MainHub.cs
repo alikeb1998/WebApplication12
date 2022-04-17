@@ -30,7 +30,12 @@ namespace Iz.Online.HubHandler
         public async Task AddToInstrumentsGroup(int instrumentId)
         {
             var nsc = _instrumentsRepository.InstrumentData(instrumentId);
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{NatCode}/{nsc}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{nsc}");
+        }  
+        public async Task RemoveFromInstrumentsGroup(int instrumentId)
+        {
+            var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"instruments/{nsc}");
         }
         //public async Task AddToNewOrderGroup(int instrumentId)
         //{
@@ -49,6 +54,7 @@ namespace Iz.Online.HubHandler
         //}
         public async Task AddToOnlineUserGroup(string nationalCode)
         {
+            
             await Groups.AddToGroupAsync(Context.ConnectionId, $"{nationalCode}");
         }
         public async Task RemoveFromOnlineUserGroup(string nationalCode)

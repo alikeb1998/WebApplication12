@@ -144,7 +144,7 @@ namespace Iz.Online.Services.Services
             _logger.LogError("before get redis");
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
             _logger.LogError("after get redis");
-            var info = await _externalInstrumentsService.GetNationalCode();
+            var info =  _externalInstrumentsService.GetNationalCode(null);
             _externalInstrumentsService.SetNationalCode(info.Model.nationalID);
             return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId, hubId);
         }

@@ -16,7 +16,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         Task<ResultModel<Details>> Details(long InstrumentId, string NscCode, string hubId);
         // InstrumentStates States(Instrument model);
         Task StartConsume();
-        Task<ResultModel<CustomerInfo>> GetNationalCode();
+        ResultModel<CustomerInfo> GetNationalCode(string token);
         void SetNationalCode(string nationalCode);
     }
 }

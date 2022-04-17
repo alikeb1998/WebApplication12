@@ -25,6 +25,7 @@ namespace Iz.Online.API.Controllers
         {
             var result = await _changeBrokerService.AllRequests(model);
             return new Respond<List<Request>>().ActionRespond(result);
+           
         }
         [HttpPost("GetDoc")]
         public async Task<IActionResult> RequestDetails([FromBody] BaseInput model)

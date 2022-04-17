@@ -504,6 +504,7 @@ namespace Iz.Online.Reopsitory.Repository
             var a = (List<string>)result.Select(x => x.Hubs);
             return a;
         }
+
         #endregion
     }
 }

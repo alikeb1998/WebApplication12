@@ -24,8 +24,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             _baseRepository = baseRepository;
             if (provider == ServiceProvider.BackOffice)
-                //ApiBaseAddress = "http://192.168.72.112:8091/";
-                ApiBaseAddress = "http://127.0.0.1:5069/";
+                ApiBaseAddress = "http://192.168.72.112:8091/";
+                //ApiBaseAddress = "http://127.0.0.1:5069/";
         }
 
         public  async Task<T> HttpGetRequest<T>(string RequestAddress, int port = 1)
@@ -189,7 +189,50 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
 
             }
         }
+        public T HttpGetRequestNationalCode<T>(string RequestAddress, string token =null,int port = 1 )
+        {
+            try
+            {
+                var client = new RestClient($"{ApiBaseAddress}{RequestAddress}");
 
+
+                client.Timeout = -1;
+                var request = new RestRequest(Method.GET);
+                
+                
+                if(token != null)
+                    request.AddHeader("Authorization", token);
+                if (token == null)
+                    request.AddHeader("Authorization", Token);
+                IRestResponse response =  client.Execute(request);
+
+                if (string.IsNullOrEmpty(response.Content))
+                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(new OmsResponseBaseModel
+                    {
+                        clientMessage = "خطا در برقراری ارتباط با سرویس",
+                        code = 500,
+                        message = "خطا در برقراری ارتباط با سرویس",
+                        statusCode = 500
+                    }));
+
+                var setting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+
+
+                return JsonConvert.DeserializeObject<T>(response.Content, setting);
+            }
+            catch (Exception e)
+            {
+                _baseRepository.LogException(e);
+                var t = new OmsResponseBaseModel
+                {
+                    clientMessage = "خطا در برقراری ارتباط با سرویس",
+                    code = -1,
+                    message = "خطا در برقراری ارتباط با سرویس",
+                    statusCode = -1
+                };
+                return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(t));
+            }
+        }
 
     }
 

@@ -27,13 +27,15 @@ namespace Iz.Online.Services.Services
         private readonly IHubUserService _hubUserService;
         private readonly ICacheService _cacheService;
         public IExternalUserService _externalUserService { get; }
+        public IExternalInstrumentService  _externalInstrumentsService { get; }
 
 
-        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService, ICacheService cacheService)
+        public UserService(IUserRepository userRepository, IExternalUserService externalUserService, IHubUserService hubUserService, ICacheService cacheService, IExternalInstrumentService externalInstrumentsService)
         {
             _userRepository = userRepository;
             _externalUserService = externalUserService;
             _cacheService = cacheService;
+            _externalInstrumentsService = externalInstrumentsService;
         }
 
         public async Task<ResultModel<List<Asset>>> AllAssets()
@@ -198,7 +200,8 @@ namespace Iz.Online.Services.Services
                     Token = result.Model.Token,
                     Sockettoken = result.Model.SocketToken
                 };
-
+                var natCode = _externalInstrumentsService.GetNationalCode(result.Model.Token);
+                MainHub.NatCode = natCode.Model.nationalID;
                 return new ResultModel<CheckedOtp>(checkOtp);
             }
             return new ResultModel<CheckedOtp>(null, false, result.Message, result.StatusCode);

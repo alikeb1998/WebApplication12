@@ -1,5 +1,6 @@
 ﻿using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
+using Iz.Online.HubHandler;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
@@ -236,6 +237,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<WatchList>>> UserWatchLists(string customerId)
         {
+
             return await _watchListsRepository.GetUserWatchLists(customerId);
         }
     }

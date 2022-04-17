@@ -106,7 +106,7 @@ namespace Iz.Online.Services.Services
                 var a = TradeHistoryFilter(result, filter);
                 if (a != null)
                 {
-                    a.Model = a.Model.OrderBy(x => x.TradedAt).ToList();
+                    a.Model = a.Model.OrderByDescending(x => x.TradedAt).ToList();
                     return new ResultModel<TradeHistoryReport>(a);
 
                 }
@@ -234,7 +234,7 @@ namespace Iz.Online.Services.Services
             //if (!string.IsNullOrEmpty(filter.State))
             //{
             //    switch (filter.State)
-            //    { 
+            //    {
             //        case "لغو شده":
             //            tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
             //            break;

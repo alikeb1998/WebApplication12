@@ -160,7 +160,7 @@ namespace Iz.Online.HubHandler
                     try
                     {
                         //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
-                        await _hubContext.Clients.Group(nationalCode).SendAsync("OnRefreshInstrumentBestLimit", result);
+                        await _hubContext.Clients.Group($"instruments/{InstrumentId}").SendAsync("OnRefreshInstrumentBestLimit", result);
                     }
                     catch (Exception ex)
                     {
@@ -281,11 +281,8 @@ namespace Iz.Online.HubHandler
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<OrderChange>(consumeResult.Message.Value);
 
-                        var customerData = _hubConnationService.UserHubsList(model1.Customer);
 
-                        if (customerData != null)
-                            if (customerData.Hubs.Count > 0)
-                                await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnChangeTrades", new object[] { model1 });
+                                await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
 
@@ -331,7 +328,7 @@ namespace Iz.Online.HubHandler
                         //    NonWithdrawable = 34343,
                         //};
 
-                        await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
+                        await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
 
                         //var t = consumeResult.Message.Value;
 
@@ -359,7 +356,7 @@ namespace Iz.Online.HubHandler
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
 
-                consumer.Subscribe($"CustomerPortfolioL");
+                consumer.Subscribe("CustomerPortfolio");
 
                 while (true)
                 {
@@ -369,10 +366,10 @@ namespace Iz.Online.HubHandler
 
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<Portfolio>(consumeResult.Message.Value);
-                        var hubs = _hubConnationService.UserHubsList(model1.NationalId);
+                        //var hubs = _hubConnationService.UserHubsList(model1.NationalId);
 
-                        if (hubs != null)
-                            await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+                       // if (hubs != null)
+                            await _hubContext.Clients.Group(model1.NationalId).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
                     }

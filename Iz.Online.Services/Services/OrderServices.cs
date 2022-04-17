@@ -235,7 +235,7 @@ namespace Iz.Online.Services.Services
                 var a = AllOrdersFilter(result, filter);
                 if (a != null)
                 {
-                    a.Model = a.Model.OrderBy(x => x.CreatedAt).ToList();
+                    a.Model = a.Model.OrderByDescending(x => x.CreatedAt).ToList();
                     return new ResultModel<AllOrderReport>(a);
 
                 }
