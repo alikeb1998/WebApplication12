@@ -24,8 +24,8 @@ namespace Iz.Online.ExternalServices.Rest.Infrastructure
         {
             _baseRepository = baseRepository;
             if (provider == ServiceProvider.BackOffice)
-                ApiBaseAddress = "http://192.168.72.112:8091/";
-                //ApiBaseAddress = "http://127.0.0.1:5069/";
+                //ApiBaseAddress = "http://192.168.72.112:8091/";
+                ApiBaseAddress = "http://127.0.0.1:5069/";
         }
 
         public  async Task<T> HttpGetRequest<T>(string RequestAddress, int port = 1)

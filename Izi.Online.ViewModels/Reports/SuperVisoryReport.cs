@@ -17,6 +17,8 @@ namespace Izi.Online.ViewModels.Reports
         public long InstrumentId { get; set; }
         public string InstrumentName { get; set; }
         public string Document { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentExtension { get; set; }
         public long RequestId { get; set; }
         public string StatusText { get; set; }
 

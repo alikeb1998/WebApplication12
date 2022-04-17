@@ -124,6 +124,8 @@ namespace Iz.Online.Services.Services
                 InstrumentName = history.InstrumentName,
                 RequestId = history.RequestId,
                 StatusText = history.StatusText,
+                DocumentExtension = history.DocumentExtension,
+                DocumentName = history.DocumentName,
 
             }).ToList();
 
