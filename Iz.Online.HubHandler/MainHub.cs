@@ -30,6 +30,7 @@ namespace Iz.Online.HubHandler
         public async Task AddToInstrumentsGroup(int instrumentId)
         {
             var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+         
             await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{nsc}");
         }  
         public async Task RemoveFromInstrumentsGroup(int instrumentId)

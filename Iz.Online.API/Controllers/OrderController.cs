@@ -41,7 +41,7 @@ namespace Iz.Online.API.Controllers
         #endregion
 
         [HttpGet("OrderState")]
-        public IActionResult OrderStates()
+        public async Task<IActionResult> OrderStates()
         {
             var states = new List<OrderStates>();
             states.Add(new OrderStates { Code = 1, Key = "OrderCancelled", Value = "لغو شده" });
@@ -55,9 +55,9 @@ namespace Iz.Online.API.Controllers
             states.Add(new OrderStates { Code = 9, Key = "OrderInQueuePendingForModify", Value = "در صف در انتظار تایید ویرایش" });
             states.Add(new OrderStates { Code = 10, Key = "OrderPartial", Value = "قسمتی انجام شده" });
             states.Add(new OrderStates { Code = 11, Key = "OrderRejected", Value = "رد شده" });
+            var res = new ResultModel<List<OrderStates>>(states);
 
-
-            return Ok(states);
+            return new Respond<List<OrderStates>>().ActionRespond(res);
         }
 
         // add order

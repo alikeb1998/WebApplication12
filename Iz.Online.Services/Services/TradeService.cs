@@ -67,8 +67,7 @@ namespace Iz.Online.Services.Services
                 State = x.Order.state,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
-                TradedAt = x.TradedAt
-                  ,
+                TradedAt = x.TradedAt,
                 InstrumentId = x.Order.instrument.id,
                 NscCode = x.Order.instrument.code
             }).ToList();
@@ -101,7 +100,7 @@ namespace Iz.Online.Services.Services
                     TradeId = x.Order.id,
                     State = x.Order.state,
                     InstrumentId = x.Order.instrument.id
-                }).ToList();
+                }).OrderByDescending(x=>x.TradedAt).ToList();
 
                 var a = TradeHistoryFilter(result, filter);
                 if (a != null)
@@ -231,21 +230,7 @@ namespace Iz.Online.Services.Services
                 }
             }
 
-            //if (!string.IsNullOrEmpty(filter.State))
-            //{
-            //    switch (filter.State)
-            //    {
-            //        case "لغو شده":
-            //            tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
-            //            break;
-            //        case "معامله شده":
-            //            tradeList = tradeList.Where(x => x.State == "معامله شده").ToList();
-            //            break;
-            //        case "معامله توسط ناظر بازار":
-            //            tradeList = tradeList.Where(x => x.State == "معامله توسط ناظر بازار").ToList();
-            //            break;
-            //    }
-            //}
+ 
             if (filter.State != 0)
             {
                 switch (filter.State)

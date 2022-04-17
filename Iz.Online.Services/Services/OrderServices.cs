@@ -231,7 +231,7 @@ namespace Iz.Online.Services.Services
                     OrderSide = x.orderSide,
                     ValidityInfo = x.ValidityInfo
 
-                }).ToList();
+                }).OrderByDescending(x=>x.CreatedAt).ToList();
                 var a = AllOrdersFilter(result, filter);
                 if (a != null)
                 {
