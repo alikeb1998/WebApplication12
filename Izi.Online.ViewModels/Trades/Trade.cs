@@ -19,5 +19,6 @@ namespace Izi.Online.ViewModels.Trades
         public double Quantity { get; set; }
         public double TradeValue { get; set; }
         public long TradeId { get; set; }
+        public string InternalState { get; set; }
     }
 }

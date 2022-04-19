@@ -69,7 +69,9 @@ namespace Iz.Online.Services.Services
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt,
                 InstrumentId = x.Order.instrument.id,
-                NscCode = x.Order.instrument.code
+                NscCode = x.Order.instrument.code,
+                InternalState = x.InternalState
+                
             }).ToList();
 
             var res = Filter(allTrades, filter);
@@ -99,7 +101,8 @@ namespace Iz.Online.Services.Services
                     TradeValue = x.Order.executedQ * x.Order.price,
                     TradeId = x.Order.id,
                     State = x.Order.state,
-                    InstrumentId = x.Order.instrument.id
+                    InstrumentId = x.Order.instrument.id,
+                    InternalState = x.InternalState
                 }).OrderByDescending(x=>x.TradedAt).ToList();
 
                 var a = TradeHistoryFilter(result, filter);
