@@ -10,7 +10,7 @@ namespace Izi.Online.ViewModels.Reports
     {
         public DateTime CreatedAtFrom { get; set; }
         public DateTime CreatedAtTo { get; set; }
-        public long InstrumentId { get; set; }
+        public List<long> InstrumentId { get; set; }
         public int State { get; set; }
     }
 }

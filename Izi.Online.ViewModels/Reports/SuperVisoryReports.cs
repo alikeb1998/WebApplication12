@@ -1,4 +1,5 @@
 ﻿using Iz.Online.OmsModels.ResponsModels;
+using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Izi.Online.ViewModels.Reports
 {
     public class SuperVisoryReports : BoResponseBaseModel
     {
-        public List<SuperVisoryReport> Data { get; set; }
+        public PagingResponse Data { get; set; }
     }
 }

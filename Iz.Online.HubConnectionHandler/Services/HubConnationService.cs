@@ -31,8 +31,8 @@ namespace Iz.Online.HubConnectionHandler.Services
             return _userRepository.GetUserHubs(userId);
 
         }
-       
 
+       
         public void DeleteConnectionId(string connectionId)
         {
             _userRepository.DeleteConnectionId( connectionId);

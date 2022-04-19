@@ -1,5 +1,6 @@
 ﻿using Iz.Online.API.Infrastructure;
 using Iz.Online.OmsModels.InputModels.SuperVisory;
+using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ChangeBroker;
 using Izi.Online.ViewModels.Reports;
@@ -24,7 +25,7 @@ namespace Iz.Online.API.Controllers
         public async Task<IActionResult> AllRequests([FromBody]GetAllnput model)
         {
             var result = await _changeBrokerService.AllRequests(model);
-            return new Respond<List<Request>>().ActionRespond(result);
+            return new Respond<List<Izi.Online.ViewModels.ChangeBroker.Request>>().ActionRespond(result);
            
         }
         [HttpPost("GetDoc")]
@@ -56,7 +57,7 @@ namespace Iz.Online.API.Controllers
         }
 
         [HttpPost("DeleteRequest")]
-        public async Task<IActionResult> DeleteRequest([FromBody] BaseInput model)
+        public async Task<IActionResult> DeleteRequest([FromBody] EditModel model)
         {
             var result = await _changeBrokerService.DeleteRequest(model);
             return new Respond<bool>().ActionRespond(result);
@@ -73,7 +74,7 @@ namespace Iz.Online.API.Controllers
         public async Task<IActionResult> Report([FromBody] PagingParam<SuperVisoryFilter> filter)
         {
             var result = await _changeBrokerService.Report(filter);
-            return new Respond<List<SuperVisoryReport>>().ActionRespond(result);
+            return new Respond<SuperVisoryPaged>().ActionRespond(result);
         }
 
     }

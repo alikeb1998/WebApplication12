@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Izi.Online.ViewModels.Reports
+namespace Iz.Online.OmsModels.ResponsModels.SuperVisory
 {
     public class SuperVisoryReport
     {

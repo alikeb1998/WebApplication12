@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.OmsModels.InputModels.SuperVisory;
+using Iz.Online.OmsModels.ResponsModels.SuperVisory;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.ChangeBroker;
@@ -23,13 +24,13 @@ namespace Iz.Online.Services.Services
             _cacheService = cacheService;
         }
 
-        public async Task<ResultModel<List<Request>>> AllRequests(GetAllnput model)
+        public async Task<ResultModel<List<Izi.Online.ViewModels.ChangeBroker.Request>>> AllRequests(GetAllnput model)
         {
 
             var requests = await _externalService.AllRequests(model);
             var res = requests.Model.Data
                   .Select(x =>
-                  new Request()
+                  new Izi.Online.ViewModels.ChangeBroker.Request()
                   {
                       CreatedAt = x.CreatedAt,
                       CustomerName = x.CustomerName,
@@ -41,7 +42,7 @@ namespace Iz.Online.Services.Services
                   }).ToList();
 
 
-            return new ResultModel<List<Request>>(res);
+            return new ResultModel<List<Izi.Online.ViewModels.ChangeBroker.Request>>(res);
         }
 
         public async Task<ResultModel<DocDto>> GetDoc(BaseInput model)
@@ -83,7 +84,7 @@ namespace Iz.Online.Services.Services
             return new ResultModel<bool>(res);
         }
 
-        public async Task<ResultModel<bool>> DeleteRequest(BaseInput model)
+        public async Task<ResultModel<bool>> DeleteRequest(EditModel model)
         {
             var req = await _externalService.DeleteRequest(model);
 
@@ -108,30 +109,30 @@ namespace Iz.Online.Services.Services
             return new ResultModel<List<RequestsHistory>>(res);
         }
 
-        public async Task<ResultModel<List<SuperVisoryReport>>> Report(PagingParam<SuperVisoryFilter> filter)
+        public async Task<ResultModel<SuperVisoryPaged>> Report(PagingParam<SuperVisoryFilter> filter)
         {
             var req = await _externalService.Report(filter);
-           var res = req.Model.Data.Select(history => new SuperVisoryReport()
-            {
+           //var res = req.Model.Model.Select(history => new SuperVisoryReport()
+           // {
 
-                ChangeAt = history.ChangeAt,
-                Description = history.Description,
-                Status = history.Status,
-                UserName = history.UserName,
-                CreatedAt = history.CreatedAt,
-                Document = history.Document,
-                InstrumentId = history.InstrumentId,
-                InstrumentName = history.InstrumentName,
-                RequestId = history.RequestId,
-                StatusText = history.StatusText,
-                DocumentExtension = history.DocumentExtension,
-                DocumentName = history.DocumentName,
+           //     ChangeAt = history.ChangeAt,
+           //     Description = history.Description,
+           //     Status = history.Status,
+           //     UserName = history.UserName,
+           //     CreatedAt = history.CreatedAt,
+           //     Document = history.Document,
+           //     InstrumentId = history.InstrumentId,
+           //     InstrumentName = history.InstrumentName,
+           //     RequestId = history.RequestId,
+           //     StatusText = history.StatusText,
+           //     DocumentExtension = history.DocumentExtension,
+           //     DocumentName = history.DocumentName,
 
-            }).ToList();
+           // }).ToList();
 
 
 
-            return new ResultModel<List<SuperVisoryReport>>(res);
+            return req;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<EditReq>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
         }
 
-        public async Task<ResultModel<DeleteReq>> DeleteRequest(BaseInput model)
+        public async Task<ResultModel<DeleteReq>> DeleteRequest(EditModel model)
         {
             var result = await HttpPostRequest<DeleteReq>("api/v1/RQ/Requests/Online/Delete", JsonConvert.SerializeObject(model));
             return new ResultModel<DeleteReq>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
@@ -68,10 +68,35 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
              var result =  await HttpPostRequest <RequestHistories>("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
             return new ResultModel<RequestHistories>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
         }
-        public async Task<ResultModel<SuperVisoryReports>> Report(PagingParam<SuperVisoryFilter> model)
+        public async Task<ResultModel<SuperVisoryPaged>> Report(PagingParam<SuperVisoryFilter> model)
         {
-            var result = await HttpPostRequest<SuperVisoryReports>("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
-            return new ResultModel<SuperVisoryReports>(result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+            var result = await HttpPostRequest<SuperVisoryReports> ("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
+            // return new ResultModel<SuperVisoryPaged> (result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+            var res = result.Data.Items.Select(x=> new SuperVisoryReport(){ 
+                ChangeAt = x.ChangeAt, 
+                CreatedAt = x.CreatedAt, 
+                Description = x.Description,
+                Document =x.Document, 
+                DocumentExtension = x.DocumentExtension,
+                DocumentName = x.DocumentName,
+                InstrumentId = x.InstrumentId,
+                InstrumentName = x.InstrumentName,
+                RequestId = x.RequestId,
+                Status = x.Status, 
+                StatusText = x.StatusText,
+                UserName = x.UserName, 
+            }).ToList();
+            var respnd = new SuperVisoryPaged()
+            {
+                Model = res,
+                OrderType = 0,
+                PageNumber = model.CurrentPage,
+                PageSize = model.PageSize,
+                TotalCount = result.Data.MetaData.TotalCount,
+
+            };
+             return new ResultModel<SuperVisoryPaged> (respnd, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+            
         }
     }
 }

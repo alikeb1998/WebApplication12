@@ -34,6 +34,10 @@ namespace Izi.Online.ViewModels.ShareModels
             Model = model;
             IsSuccess = false;
             StatusCode = statusCode;
+        }    
+        public ResultModel()
+        {
+
         }
         public bool IsSuccess { get; set; }
         public string Message { get; set; }

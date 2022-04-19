@@ -18,9 +18,9 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         Task<ResultModel<GetOneData>> GetOne(BaseInput model);
         Task<ResultModel<AddReq>> AddRequest(OmsModels.InputModels.SuperVisory.NewRequest model);
         Task<ResultModel<EditReq>> EditRequest(EditModel model);
-        Task<ResultModel<DeleteReq>> DeleteRequest(BaseInput model);
+        Task<ResultModel<DeleteReq>> DeleteRequest(EditModel model);
         Task<ResultModel<RequestHistories>> RequestHistory(BaseInput model);
-        Task<ResultModel<SuperVisoryReports>> Report(PagingParam<SuperVisoryFilter> model);
+        Task<ResultModel<SuperVisoryPaged>> Report(PagingParam<SuperVisoryFilter> model);
 
     }
 }

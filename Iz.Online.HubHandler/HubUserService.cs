@@ -280,7 +280,7 @@ namespace Iz.Online.HubHandler
                     {
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<OrderChange>(consumeResult.Message.Value);
-
+                       
 
                                 await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { model1 });
 
@@ -318,17 +318,18 @@ namespace Iz.Online.HubHandler
 
 
                         var consumeResult = consumer.Consume();
+                      
                         var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
-                        //var model1 = new CustomerWallet()
-                        //{
-                        //    BlockedValue = 1234,
-                        //    BuyingPower = 1234,
-                        //    Withdrawable = 3434,
-                        //    LendedCredit = 2341,
-                        //    NonWithdrawable = 34343,
-                        //};
+                        var res =new Wallet()
+                        {
+                            BlockedValue =model1.BlockedValue,
+                            BuyingPower = model1.BuyingPower,
+                            Withdrawable =model1.Withdrawable,
+                            LendedCredit =model1.LendedCredit,
+                            NonWithdrawable = model1.NonWithdrawable,
+                        };
 
-                        await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(model1) });
+                        await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(res) });
 
                         //var t = consumeResult.Message.Value;
 
@@ -366,9 +367,10 @@ namespace Iz.Online.HubHandler
 
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<Portfolio>(consumeResult.Message.Value);
-                        //var hubs = _hubConnationService.UserHubsList(model1.NationalId);
-
-                       // if (hubs != null)
+                        var res = new List<Asset>()
+                        {
+                            
+                        };
                             await _hubContext.Clients.Group(model1.NationalId).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
 
                         var t = consumeResult.Message.Value;
