@@ -76,7 +76,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
                 ChangeAt = x.ChangeAt, 
                 CreatedAt = x.CreatedAt, 
                 Description = x.Description,
-                Document =x.Document, 
+                //Document =x.Document, 
                 DocumentExtension = x.DocumentExtension,
                 DocumentName = x.DocumentName,
                 InstrumentId = x.InstrumentId,

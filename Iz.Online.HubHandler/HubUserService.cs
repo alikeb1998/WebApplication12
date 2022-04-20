@@ -20,6 +20,10 @@ using bestLimitView = Izi.Online.ViewModels.Instruments.BestLimit.BestLimits;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
+using Izi.Online.ViewModels.SignalR;
+using Iz.Online.OmsModels.ResponsModels.Order;
+using Izi.Online.ViewModels.ValidityType;
+using Order = Izi.Online.ViewModels.SignalR.Order;
 
 namespace Iz.Online.HubHandler
 {
@@ -237,7 +241,8 @@ namespace Iz.Online.HubHandler
         /// topic => OrderTrade
         /// </summary>
 
-        public async Task PushOrderAdded_Original(string nationalCode)
+        //public async Task PushOrderAdded_Original(string nationalCode)
+        public async Task PushTradeState_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -249,8 +254,19 @@ namespace Iz.Online.HubHandler
                     {
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<AddOrder>(consumeResult.Message.Value);
-
-                        await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnOrderAdded", new object[] { model1 });
+                        //var res = new Order()
+                        //{
+                            
+                        //    state = model1.TradedState switch { 1=> "لغو شده", 2=> "سفارش به طور کامل اجرا شده است", 3=> "خطای هسته معاملات", 4=> "منقضی شده", 5=> "انجام شده", 6=> "در حال انتظار", 7=> "در صف", 8=> "در صف در انتظار تایید لغو", 9=> "در صف در انتظار تایید ویرایش", 10=> "قسمتی انجام شده", 11=> "رد شده", },
+                        //    instrumentId = 0,
+                        //    createdAt = model1.TradedAt,
+                        //    executedQ = model1.ExecutedQuantity,
+                        //    price = model1.TradedPrice,
+                            
+                        //};
+                        
+                        //await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnOrderAdded", new object[] { res });
+                        await _hubContext.Clients.Group(nationalCode).SendAsync("OnChangeTrades",  model1 );
                     }
                     catch (Exception e)
                     {
@@ -269,7 +285,8 @@ namespace Iz.Online.HubHandler
         /// topic=> OrderChange
         /// </summary>
 
-        public async Task PushTradeState_Original(string nationalCode)
+        // public async Task PushTradeState_Original(string nationalCode)
+        public async Task PushOrderAdded_Original(string nationalCode)
         {
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
@@ -280,9 +297,25 @@ namespace Iz.Online.HubHandler
                     {
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<OrderChange>(consumeResult.Message.Value);
-                       
-
-                                await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { model1 });
+                        var res = new Order()
+                        {
+                            state = model1.State,
+                            orderSide = Convert.ToInt32(model1.OrderSide),
+                            validityType = Convert.ToInt32(model1.ValidityType),
+                            validityInfo = new ValidityInfo() { ValidityDate = model1.ValidityInfo},
+                            remainedQ = (long)Convert.ToDouble(model1.RemainingQuantity),
+                            quantity = (long)Convert.ToDouble(model1.Quantity),
+                            orderId = Convert.ToInt32(model1.OrderId),
+                            instrumentId = 0,
+                            createdAt = Convert.ToDateTime(model1.ChangedAt),
+                            executedQ = Convert.ToInt32(model1.ExecutedQuantity),
+                            price = Convert.ToInt32(model1.Price),
+                           
+                            instrumentName = "test"
+                        };
+                        res.executePercent = res.executedQ / res.quantity * 100;
+                        //await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { res });
+                        await _hubContext.Clients.Group(model1.Customer).SendAsync("OnOrderAdded", res );
 
                         var t = consumeResult.Message.Value;
 
@@ -328,8 +361,8 @@ namespace Iz.Online.HubHandler
                             LendedCredit =model1.LendedCredit,
                             NonWithdrawable = model1.NonWithdrawable,
                         };
-
-                        await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnUpdateCustomerWallet", new object[] { JsonConvert.SerializeObject(res) });
+                        var LastModel = JsonConvert.SerializeObject(res);
+                        await _hubContext.Clients.Group(model1.Customer).SendAsync("OnUpdateCustomerWallet", LastModel  );
 
                         //var t = consumeResult.Message.Value;
 
@@ -371,7 +404,7 @@ namespace Iz.Online.HubHandler
                         {
                             
                         };
-                            await _hubContext.Clients.Group(model1.NationalId).SendCoreAsync("OnUpdateCustomerPortfolio", new object[] { model1 });
+                            await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio",  model1 );
 
                         var t = consumeResult.Message.Value;
                     }
@@ -404,7 +437,23 @@ namespace Iz.Online.HubHandler
             ConsumerIsStar = true;
         }
 
-    
+        public static DateTime GetTime(string dateTime)
+        {
+            if (string.IsNullOrEmpty(dateTime))
+                return DateTime.Now;
+
+            var year = Convert.ToInt32(dateTime.Substring(0, 4));
+            var month = Convert.ToInt32(dateTime.Substring(4, 2));
+            var day = Convert.ToInt32(dateTime.Substring(6, 2));
+            var hour = Convert.ToInt32(dateTime.Substring(8, 2));
+            var minute = Convert.ToInt32(dateTime.Substring(10, 2));
+            var sec = Convert.ToInt32(dateTime.Substring(12, 2));
+
+            DateTime res = new DateTime(year, month, day, hour, minute, sec);
+
+
+            return res;
+        }
     }
 
 }

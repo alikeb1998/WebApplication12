@@ -122,7 +122,7 @@ namespace Iz.Online.Services.Services
                 State = x.state,
                 NscCode = x.instrument.code,
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.instrument.id),
-
+                OrderId = x.id,
                 ValidityInfo = x.validityType != 2 ? null : x.validityInfo,
                 ExecutePercent = x.executedQ / x.quantity * 100
             }).ToList();
@@ -146,7 +146,8 @@ namespace Iz.Online.Services.Services
                              ValidityInfo = trade.ValidityInfo,
                              ExecutePercent = trade.ExecutePercent,
                              InstrumentId = (int)instrument.Id,
-                             StateText = trade.StateText
+                             StateText = trade.StateText,
+                             OrderId = trade.OrderId,
                          };
 
             return new ResultModel<List<ActiveOrder>>(result.ToList());

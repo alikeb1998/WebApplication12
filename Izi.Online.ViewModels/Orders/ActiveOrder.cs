@@ -20,4 +20,5 @@ public class ActiveOrder
      public double ExecutePercent { get; set; }
      public int InstrumentId { get; set; }
      public string NscCode { get; set; }
+    public long OrderId { get; set; }
 }

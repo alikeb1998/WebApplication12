@@ -38,11 +38,12 @@ namespace Iz.Online.Services.Services
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
-                State = x.Order.state,
+                State = x.InternalState,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt,
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Order.instrument.id),
+                StateText = x.InternalState switch { 1 => "لغو شده", 2 => "معامله شده", 3 =>"معمله شده توسط ناظر بازار"}
                 //NscCode = x.Order.instrument.code
             }).ToList();
 
@@ -64,13 +65,14 @@ namespace Iz.Online.Services.Services
             {
                 Name = x.Order.instrument.name,
                 Price = x.Price,
-                State = x.Order.state,
+                State = x.InternalState,
                 OrderSide = x.Order.orderSide,
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt,
                 InstrumentId = x.Order.instrument.id,
                 NscCode = x.Order.instrument.code,
-                InternalState = x.InternalState
+                //StateText = x.InternalState switch { }
+                
                 
             }).ToList();
 
@@ -100,9 +102,10 @@ namespace Iz.Online.Services.Services
                     Quantity = x.Order.quantity,
                     TradeValue = x.Order.executedQ * x.Order.price,
                     TradeId = x.Order.id,
-                    State = x.Order.state,
+                    State = x.InternalState,
                     InstrumentId = x.Order.instrument.id,
-                    InternalState = x.InternalState
+                    StateText = x.InternalState switch { 1 => "لغو شده", 2 => "معامله شده", 3 => "معمله شده توسط ناظر بازار" }
+
                 }).OrderByDescending(x=>x.TradedAt).ToList();
 
                 var a = TradeHistoryFilter(result, filter);
@@ -239,13 +242,13 @@ namespace Iz.Online.Services.Services
                 switch (filter.State)
                 {
                     case 1:
-                        tradeList = tradeList.Where(x => x.State == "لغو شده").ToList();
+                        tradeList = tradeList.Where(x => x.State == 1).ToList();
                         break;
                     case 2:
-                        tradeList = tradeList.Where(x => x.State == "معامله شده").ToList();
+                        tradeList = tradeList.Where(x => x.State == 2).ToList();
                         break;
                     case 3:
-                        tradeList = tradeList.Where(x => x.State == "معامله توسط ناظر بازار").ToList();
+                        tradeList = tradeList.Where(x => x.State == 3).ToList();
                         break;
                 }
             }

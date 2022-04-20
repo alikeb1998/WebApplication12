@@ -16,7 +16,7 @@ namespace Iz.Online.OmsModels.ResponsModels.SuperVisory
         public string Description { get; set; }
         public long InstrumentId { get; set; }
         public string InstrumentName { get; set; }
-        public string Document { get; set; }
+        //public string Document { get; set; }
         public string DocumentName { get; set; }
         public string DocumentExtension { get; set; }
         public long RequestId { get; set; }
