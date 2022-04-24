@@ -70,8 +70,11 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public async Task<ResultModel<SuperVisoryPaged>> Report(PagingParam<SuperVisoryFilter> model)
         {
+           
             var result = await HttpPostRequest<SuperVisoryReports> ("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
-            // return new ResultModel<SuperVisoryPaged> (result, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+            if (result.Data == null || result.HttpStatusCode != 200)
+                return new ResultModel<SuperVisoryPaged>(null, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
+
             var res = result.Data.Items.Select(x=> new SuperVisoryReport(){ 
                 ChangeAt = x.ChangeAt, 
                 CreatedAt = x.CreatedAt, 
@@ -88,7 +91,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             }).ToList();
             var respnd = new SuperVisoryPaged()
             {
-                Model = res,
+                Model = model.Filter.CreatedAtFrom == DateTime.MinValue ? res.Skip(0).Take(5).ToList() : res,
                 OrderType = 0,
                 PageNumber = model.CurrentPage,
                 PageSize = model.PageSize,

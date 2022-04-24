@@ -302,7 +302,7 @@ namespace Iz.Online.HubHandler
                             state = model1.State,
                             orderSide = Convert.ToInt32(model1.OrderSide),
                             validityType = Convert.ToInt32(model1.ValidityType),
-                            validityInfo = new ValidityInfo() { ValidityDate = model1.ValidityInfo},
+                            validityInfo = new ValidityInfo() { ValidityDate = model1.ValidityInfo },
                             remainedQ = (long)Convert.ToDouble(model1.RemainingQuantity),
                             quantity = (long)Convert.ToDouble(model1.Quantity),
                             orderId = Convert.ToInt32(model1.OrderId),
@@ -310,8 +310,9 @@ namespace Iz.Online.HubHandler
                             createdAt = Convert.ToDateTime(model1.ChangedAt),
                             executedQ = Convert.ToInt32(model1.ExecutedQuantity),
                             price = Convert.ToInt32(model1.Price),
-                           
-                            instrumentName = "test"
+                            stateText = model1.State switch { "1" => "لغو شده", "2" => "سفارش به طور کامل اجرا شده است", "3" => "خطای هسته معاملات", "4" => "منقضی شده", "5" => "انجام شده", "6" => "در حال انتظار", "7" => "در صف", "8" => "در صف در انتظار تایید لغو", "9" => "در صف در انتظار تایید ویرایش", "10" => "قسمتی انجام شده", "11" => "رد شده", },
+                            instrumentName = "test",
+                            orderSideText = model1.OrderSide.Equals("1") ? "خرید" : "فروش"
                         };
                         res.executePercent = res.executedQ / res.quantity * 100;
                         //await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { res });
