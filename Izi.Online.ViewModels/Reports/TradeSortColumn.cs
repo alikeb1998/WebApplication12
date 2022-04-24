@@ -4,6 +4,8 @@ namespace Izi.Online.ViewModels.Reports
 {
     public enum TradeSortColumn
     {
+        [Description("تاریخ")]
+        Date,
         [Description("نماد")]
         Symbol,
         [Description("سمت")]
@@ -14,8 +16,7 @@ namespace Izi.Online.ViewModels.Reports
         Price,
         [Description("وضعیت")]
         State,
-        [Description("تاریخ")]
-        Date, 
+
         [Description("ارزش خالص")]
         PureValue,
     }

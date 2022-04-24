@@ -27,7 +27,7 @@ namespace Iz.Online.Services.Services
 
         public async Task<ResultModel<List<Trade>>> Trades()
         {
-            var instruments =  _cacheService.InstrumentData();
+            var instruments = _cacheService.InstrumentData();
 
             var trades = await _externalTradeService.Trades();
 
@@ -43,9 +43,9 @@ namespace Iz.Online.Services.Services
                 ExecutedQ = (long)x.Order.executedQ,
                 TradedAt = x.TradedAt,
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Order.instrument.id),
-                StateText = x.InternalState switch { 1 => "لغو شده", 2 => "معامله شده", 3 =>"معمله شده توسط ناظر بازار"}
+                StateText = x.InternalState switch { 1 => "لغو شده", 2 => "معامله شده", 3 => "معمله شده توسط ناظر بازار" }
                 //NscCode = x.Order.instrument.code
-            }).ToList();
+            }).OrderByDescending(x=>x.TradedAt).ToList();
 
 
             return new ResultModel<List<Trade>>(allTrades);
@@ -72,13 +72,13 @@ namespace Iz.Online.Services.Services
                 InstrumentId = x.Order.instrument.id,
                 NscCode = x.Order.instrument.code,
                 //StateText = x.InternalState switch { }
-                
-                
+
+
             }).ToList();
 
             var res = Filter(allTrades, filter);
 
-            return new ResultModel<List<Trade>>(res);
+            return new ResultModel<List<Trade>>(res.OrderByDescending(x => x.TradedAt).ToList());
         }
 
         public async Task<ResultModel<TradeHistoryReport>> History(TradeHistoryFilter filter)
@@ -106,7 +106,7 @@ namespace Iz.Online.Services.Services
                     InstrumentId = x.Order.instrument.id,
                     StateText = x.InternalState switch { 1 => "لغو شده", 2 => "معامله شده", 3 => "معمله شده توسط ناظر بازار" }
 
-                }).OrderByDescending(x=>x.TradedAt).ToList();
+                }).OrderByDescending(x => x.TradedAt).ToList();
 
                 var a = TradeHistoryFilter(result, filter);
                 if (a != null)
@@ -123,15 +123,15 @@ namespace Iz.Online.Services.Services
         }
         private List<Trade> Filter(List<Trade> list, TradeFilter filter)
         {
-            var report = new TradeReport()
-            {
-                Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
-                TradeSortColumn = filter.TradeSortColumn,
-                PageNumber = filter.PageNumber,
-                PageSize = filter.PageSize,
-                TotalCount = list.Count,
-                OrderType = filter.OrderType,
-            };
+            //var report = new TradeReport()
+            //{
+            //    Model = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+            //    TradeSortColumn = filter.TradeSortColumn,
+            //    PageNumber = filter.PageNumber,
+            //    PageSize = filter.PageSize,
+            //    TotalCount = list.Count,
+            //    OrderType = filter.OrderType,
+            //};
 
             switch (filter.OrderType)
             {
@@ -139,16 +139,16 @@ namespace Iz.Online.Services.Services
                     switch (filter.TradeSortColumn)
                     {
                         case TradeSortColumn.Symbol:
-                            return report.Model.OrderBy(x => x.Name).ToList();
+                            return list = list.OrderBy(x => x.Name).ToList();
 
                         case TradeSortColumn.Side:
-                            return report.Model.OrderBy(x => x.OrderSide).ToList();
+                            return list = list.OrderBy(x => x.OrderSide).ToList();
 
                         case TradeSortColumn.Date:
-                            return report.Model.OrderBy(x => x.TradedAt).ToList();
+                            return list = list.OrderBy(x => x.TradedAt).ToList();
 
                         case TradeSortColumn.Price:
-                            return report.Model.OrderBy(x => x.Price).ToList();
+                            return list = list.OrderBy(x => x.Price).ToList();
 
                     }
                     break;
@@ -156,25 +156,25 @@ namespace Iz.Online.Services.Services
                 case OrderType.DESC:
                     switch (filter.TradeSortColumn)
                     {
-                        case TradeSortColumn.Symbol:
-                            return report.Model.OrderByDescending(x => x.Name).ToList();
-
-                        case TradeSortColumn.Side:
-                            return report.Model.OrderByDescending(x => x.OrderSide).ToList();
 
                         case TradeSortColumn.Date:
-                            return report.Model.OrderByDescending(x => x.TradedAt).ToList();
+                            return list = list.OrderByDescending(x => x.TradedAt).ToList();
+                        case TradeSortColumn.Side:
+                            return list = list.OrderByDescending(x => x.OrderSide).ToList();
 
+                        case TradeSortColumn.Symbol:
+                            return list = list.OrderByDescending(x => x.Name).ToList();
                         case TradeSortColumn.Price:
-                            return report.Model.OrderByDescending(x => x.Price).ToList();
+                            return list = list.OrderByDescending(x => x.Price).ToList();
 
                     }
                     break;
 
                 default:
-                    return report.Model.OrderByDescending(x => x.TradedAt).ToList();
+                    return list = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).OrderByDescending(x => x.TradedAt).ToList();
             }
-            return report.Model.OrderByDescending(x => x.TradedAt).ToList();
+
+            return list = list.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).OrderByDescending(x => x.TradedAt).ToList();
         }
         private TradeHistoryReport TradeHistoryFilter(List<Trade> list, TradeHistoryFilter filter)
         {
@@ -199,7 +199,7 @@ namespace Iz.Online.Services.Services
             list = list.Where(x => DateTime.Compare(x.TradedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.TradedAt) >= 0).ToList();
 
             var tradeList = new List<Trade>();
-            if (filter.InstrumentId.Count==0)
+            if (filter.InstrumentId.Count == 0)
             {
                 tradeList.AddRange(list);
             }
@@ -236,7 +236,7 @@ namespace Iz.Online.Services.Services
                 }
             }
 
- 
+
             if (filter.State != 0)
             {
                 switch (filter.State)
