@@ -8,10 +8,10 @@ namespace Izi.Online.ViewModels.Users
 {
     public class Wallet
     {
-        public long Withdrawable { get; set; }
-        public long NonWithdrawable { get; set; }
-        public long LendedCredit { get; set; }
-        public long BlockedValue { get; set; }
-        public long BuyingPower { get; set; }
+        public long withdrawable { get; set; }
+        public long nonWithdrawable { get; set; }
+        public long lendedCredit { get; set; }
+        public long blockedValue { get; set; }
+        public long buyingPower { get; set; }
     }
 }

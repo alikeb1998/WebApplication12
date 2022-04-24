@@ -356,11 +356,11 @@ namespace Iz.Online.HubHandler
                         var model1 = JsonConvert.DeserializeObject<CustomerWallet>(consumeResult.Message.Value);
                         var res =new Wallet()
                         {
-                            BlockedValue =model1.BlockedValue,
-                            BuyingPower = model1.BuyingPower,
-                            Withdrawable =model1.Withdrawable,
-                            LendedCredit =model1.LendedCredit,
-                            NonWithdrawable = model1.NonWithdrawable,
+                            blockedValue =model1.BlockedValue,
+                            buyingPower = model1.BuyingPower,
+                            withdrawable =model1.Withdrawable,
+                            lendedCredit =model1.LendedCredit,
+                            nonWithdrawable = model1.NonWithdrawable,
                         };
                         var LastModel = JsonConvert.SerializeObject(res);
                         await _hubContext.Clients.Group(model1.Customer).SendAsync("OnUpdateCustomerWallet", LastModel  );

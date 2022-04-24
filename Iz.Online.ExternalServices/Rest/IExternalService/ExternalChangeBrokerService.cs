@@ -72,7 +72,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         {
            
             var result = await HttpPostRequest<SuperVisoryReports> ("api/v1/RQ/Requests/Online/History", JsonConvert.SerializeObject(model));
-            if (result.Data == null || result.HttpStatusCode != 200)
+            if (result.Data.Items == null || result.HttpStatusCode != 200)
                 return new ResultModel<SuperVisoryPaged>(null, result.HttpStatusCode == 200, result.Message, result.HttpStatusCode);
 
             var res = result.Data.Items.Select(x=> new SuperVisoryReport(){ 

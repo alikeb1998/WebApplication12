@@ -101,11 +101,11 @@ namespace Iz.Online.Services.Services
 
             var result = new Wallet()
             {
-                Withdrawable = respond.Model.wallet.withdrawable,
-                BlockedValue = respond.Model.wallet.blockedValue,
-                BuyingPower = respond.Model.wallet.buyingPower,
-                LendedCredit = respond.Model.wallet.lendedCredit,
-                NonWithdrawable = respond.Model.wallet.nonWithdrawable,
+                withdrawable = respond.Model.wallet.withdrawable,
+                blockedValue = respond.Model.wallet.blockedValue,
+                buyingPower = respond.Model.wallet.buyingPower,
+                lendedCredit = respond.Model.wallet.lendedCredit,
+                nonWithdrawable = respond.Model.wallet.nonWithdrawable,
             };
 
             return new ResultModel<Wallet>(result);
