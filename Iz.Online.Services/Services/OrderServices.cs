@@ -150,7 +150,7 @@ namespace Iz.Online.Services.Services
                              OrderId = trade.OrderId,
                          };
 
-            return new ResultModel<List<ActiveOrder>>(result.ToList());
+            return new ResultModel<List<ActiveOrder>>(result.OrderByDescending(x=>x.CreatedAt).ToList());
         }
         public async Task<ResultModel<OrderReport>> AllActivePaged(OrderFilter filter)
         {

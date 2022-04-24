@@ -312,7 +312,7 @@ namespace Iz.Online.HubHandler
                             price = Convert.ToInt32(model1.Price),
                             stateText = model1.State switch { "1" => "لغو شده", "2" => "سفارش به طور کامل اجرا شده است", "3" => "خطای هسته معاملات", "4" => "منقضی شده", "5" => "انجام شده", "6" => "در حال انتظار", "7" => "در صف", "8" => "در صف در انتظار تایید لغو", "9" => "در صف در انتظار تایید ویرایش", "10" => "قسمتی انجام شده", "11" => "رد شده", },
                             instrumentName = "test",
-                            orderSideText = model1.OrderSide.Equals("1") ? "خرید" : "فروش"
+                            orderSideText = model1.OrderSide.Equals("1") ? "فروش" : "خرید"
                         };
                         res.executePercent = res.executedQ / res.quantity * 100;
                         //await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { res });
@@ -401,8 +401,10 @@ namespace Iz.Online.HubHandler
 
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<Portfolio>(consumeResult.Message.Value);
-                        var res = new List<Asset>()
+                        var res = new Asset()
                         {
+                            TradeableQuantity = model1.Quantity,
+                            AvgPrice = model1.AveragePrice,
                             
                         };
                             await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio",  model1 );
