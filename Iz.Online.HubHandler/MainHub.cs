@@ -31,16 +31,27 @@ namespace Iz.Online.HubHandler
         {
             var nsc = _instrumentsRepository.InstrumentData(instrumentId);
          
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{nsc}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"instruments/{nsc.NscCode}");
         }  
         public async Task RemoveFromInstrumentsGroup(int instrumentId)
         {
             var nsc = _instrumentsRepository.InstrumentData(instrumentId);
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"instruments/{nsc}");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"instruments/{nsc.NscCode}");
+        }
+        public async Task AddToPricesGroup(int instrumentId)
+        {
+            var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"{nsc.NscCode}-price");
+        }
+        public async Task RemoveFromPricesGroup(int instrumentId)
+        {
+            var nsc = _instrumentsRepository.InstrumentData(instrumentId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{nsc.NscCode}-price");
         }
         //public async Task AddToNewOrderGroup(int instrumentId)
         //{
-            
+
         //    var nsc = _instrumentsRepository.InstrumentData(instrumentId);
         //    _logger.LogError("AddToNewOrderGroup" + instrumentId+nsc);
         //    await Groups.AddToGroupAsync(Context.ConnectionId, $"NewOrder/{NatCode}/{nsc}");
@@ -48,7 +59,7 @@ namespace Iz.Online.HubHandler
         //} 
         //public async Task AddToPricesGroup(int instrumentId)
         //{
-            
+
         //    var nsc = _instrumentsRepository.InstrumentData(instrumentId);
         //    _logger.LogError("AddToPricesGroup" + instrumentId + nsc);
         //    await Groups.AddToGroupAsync(Context.ConnectionId, $"price/{NatCode}/{nsc}");

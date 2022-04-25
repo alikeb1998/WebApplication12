@@ -18,7 +18,7 @@ namespace Izi.Online.ViewModels.Orders
         public long ProfitAmount { get; set; }
         public long ProfitPercent { get; set; }
         public long SellProfit { get; set; }
-        public int InstrumentId { get; set; }
+        public long InstrumentId { get; set; }
         public string NscCode { get; set; }
     }
 }

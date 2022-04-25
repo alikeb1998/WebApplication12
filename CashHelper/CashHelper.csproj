@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Iz.Online.Services\Iz.Online.Services.csproj" />
+    <ProjectReference Include="..\Iz.Online.Reopsitory\Iz.Online.Reopsitory.csproj" />
     <ProjectReference Include="..\Izi.Online.ViewModels\Izi.Online.ViewModels.csproj" />
   </ItemGroup>
 

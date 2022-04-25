@@ -150,7 +150,7 @@ namespace Iz.Online.Services.Services
                              OrderId = trade.OrderId,
                          };
 
-            return new ResultModel<List<ActiveOrder>>(result.OrderByDescending(x=>x.CreatedAt).ToList());
+            return new ResultModel<List<ActiveOrder>>(result.OrderByDescending(x => x.CreatedAt).ToList());
         }
         public async Task<ResultModel<OrderReport>> AllActivePaged(OrderFilter filter)
         {
@@ -232,7 +232,7 @@ namespace Iz.Online.Services.Services
                     OrderSide = x.orderSide,
                     ValidityInfo = x.ValidityInfo
 
-                }).OrderByDescending(x=>x.CreatedAt).ToList();
+                }).OrderByDescending(x => x.CreatedAt).ToList();
                 var a = AllOrdersFilter(result, filter);
                 if (a != null)
                 {
@@ -240,9 +240,9 @@ namespace Iz.Online.Services.Services
                     return new ResultModel<AllOrderReport>(a);
 
                 }
-                return new ResultModel<AllOrderReport>(null, 200, "لیست خالی است");
+                return new ResultModel<AllOrderReport>(new AllOrderReport() { Model=new(), TotalCount=0,PageNumber=0,PageSize=0}, 200, "لیست خالی است");
             }
-            return new ResultModel<AllOrderReport>(null, allOrders.IsSuccess = allOrders.StatusCode == 200, allOrders.Message, allOrders.StatusCode);
+            return new ResultModel<AllOrderReport>(new AllOrderReport() { Model = new(), TotalCount = 0, PageNumber = 0, PageSize = 0 }, 200, "لیست خالی است");
         }
 
         public async Task<ResultModel<UpdatedOrder>> Update(UpdateOrder model)
@@ -361,13 +361,13 @@ namespace Iz.Online.Services.Services
             list = list.Where(x => DateTime.Compare(x.CreatedAt, filter.From) >= 0 && DateTime.Compare(filter.To, x.CreatedAt) >= 0).ToList();
 
             var instrumentList = new List<AllOrder>();
-            if(filter.InstrumentId.Count == 0)
+            if (filter.InstrumentId.Count == 0)
             {
                 instrumentList.AddRange(list);
             }
             foreach (var f in filter.InstrumentId)
             {
-                if (filter.InstrumentId.Count == 1 && f == 0 )
+                if (filter.InstrumentId.Count == 1 && f == 0)
                 {
                     instrumentList.AddRange(list);
                 }
@@ -439,7 +439,7 @@ namespace Iz.Online.Services.Services
             }
             var report = new AllOrderReport()
             {
-                Model = instrumentList.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
+                Model = instrumentList.Count == 0 ? new List<AllOrder>() : instrumentList.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize).ToList(),
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalCount = instrumentList.Count,

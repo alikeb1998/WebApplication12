@@ -21,6 +21,7 @@ namespace Iz.Online.Reopsitory.IRepository
 
         Task<ResultModel<string>> GetInstrumentComment(GetInstrumentComment model);
         InstrumentList InstrumentData(int instrumentId);
+        InstrumentList InstrumentData(string nsc);
         List<InstrumentList> InstrumentData();
         int GetLocalInstrumentIdFromOmsId(int omsId);
         void CustomerSelectInstrument(SelectInstrumentInput model);

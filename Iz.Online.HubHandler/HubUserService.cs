@@ -24,6 +24,7 @@ using Izi.Online.ViewModels.SignalR;
 using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.ValidityType;
 using Order = Izi.Online.ViewModels.SignalR.Order;
+using Iz.Online.Services.IServices;
 
 namespace Iz.Online.HubHandler
 {
@@ -44,11 +45,12 @@ namespace Iz.Online.HubHandler
         private readonly IHubConnationService _hubConnationService;
         private readonly Microsoft.AspNetCore.SignalR.IHubContext<MainHub> _hubContext;
         private readonly ILogger<HubUserService> _logger;
- 
+        private readonly ICacheService _cacheService;
+
 
         private readonly ConsumerConfig _consumerConfig;
         private static bool ConsumerIsStar = false;
-        public HubUserService(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext, ILogger<HubUserService> logger)
+        public HubUserService(IHubConnationService hubConnationService, Microsoft.AspNetCore.SignalR.IHubContext<MainHub> hubContext, ILogger<HubUserService> logger, ICacheService cacheService)
         {
 
             _hubConnationService = hubConnationService;
@@ -61,7 +63,7 @@ namespace Iz.Online.HubHandler
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
             _logger = logger;
-
+            _cacheService = cacheService;
         }
 
         #region BESTLIMIT
@@ -158,12 +160,9 @@ namespace Iz.Online.HubHandler
 
                     }
 
-                    //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
-                    //if (hubs != null)
-                    //{
                     try
                     {
-                        //await _hubContext.Clients.Client("Rig8v1ZCVK9M2VFF6aNn3A").SendCoreAsync("OnRefreshInstrumentBestLimit", new object[] { result, InstrumentId, " " });
+                      
                         await _hubContext.Clients.Group($"instruments/{InstrumentId}").SendAsync("OnRefreshInstrumentBestLimit", result);
                     }
                     catch (Exception ex)
@@ -216,7 +215,7 @@ namespace Iz.Online.HubHandler
 
                         //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                         //if (hubs != null)
-                            await _hubContext.Clients.Group(nationalCode).SendCoreAsync($"{InstrumentId}-price", new object[] { res, InstrumentId, " " });
+                            await _hubContext.Clients.Group($"{InstrumentId}-price").SendAsync($"{InstrumentId}-price", res);
 
                         //var t = consumeResult.Message.Value;
 
@@ -403,11 +402,19 @@ namespace Iz.Online.HubHandler
                         var model1 = JsonConvert.DeserializeObject<Portfolio>(consumeResult.Message.Value);
                         var res = new Asset()
                         {
+                            Name = "test",
+                            LastPrice = model1.LastPrice,
                             TradeableQuantity = model1.Quantity,
+                            Gav = 0,
                             AvgPrice = model1.AveragePrice,
-                            
+                            FianlAmount = model1.HeadToHeadPoint,
+                            ProfitAmount = model1.ProfitLoss,
+                            ProfitPercent = model1.ProfitLossPercent,
+                            SellProfit = 0,
+                            InstrumentId = _cacheService.InstrumentData(model1.InstrumentCode).Id,
+
                         };
-                            await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio",  model1 );
+                            await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio", JsonConvert.SerializeObject(res));
 
                         var t = consumeResult.Message.Value;
                     }

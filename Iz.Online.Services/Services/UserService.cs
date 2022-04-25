@@ -62,6 +62,36 @@ namespace Iz.Online.Services.Services
 
             return new ResultModel<List<Asset>>(allAssets);
 
+        }     
+        public async Task<ResultModel<List<Asset>>> Portfolio()
+        {
+            var assets = await _externalUserService.Portfolio();
+            var instruments =  _cacheService.InstrumentData();
+
+            if (!assets.IsSuccess || assets.Model == null)
+                return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
+
+            var allAssets = assets.Model.Select(x => new Asset()
+            {
+                Name = x.InstrumentName,
+                LastPrice = x.LastPrice,
+               // TradeableQuantity = x.TradeableQuantity,
+                TradeableQuantity = 0,
+                Gav = x.Gav,
+                //AvgPrice = x.AvgPrice,
+                AvgPrice =0 ,
+                FianlAmount = x.HeadToHeadPoint,
+                //FianlAmount = 0,
+                ProfitAmount = x.profitLossValue,
+                //ProfitAmount = 0,
+                ProfitPercent = x.ProfitLossPercent,
+                //SellProfit = x.SellProfit,
+                SellProfit = 0,
+                InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId),
+            }).ToList();
+
+            return new ResultModel<List<Asset>>(allAssets);
+
         }
 
         public async Task<ResultModel<List<Asset>>> AllAssetsPaged(PortfoFilter filter)

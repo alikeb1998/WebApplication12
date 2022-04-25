@@ -8,9 +8,10 @@ using Izi.Online.ViewModels.ShareModels;
 
 namespace Iz.Online.Services.IServices
 {
-   public interface ICacheServicee
+    public interface ICacheService
     {
         InstrumentList InstrumentData(int instrumentId);
+        InstrumentList InstrumentData(string nsc);
         Izi.Online.ViewModels.AppConfigs ConfigData(string key);
         List<InstrumentList> InstrumentData();
         List<Izi.Online.ViewModels.AppConfigs> ConfigData();

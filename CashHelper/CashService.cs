@@ -13,31 +13,31 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Iz.Online.Services.Services
+namespace CashHelper
 {
-    public class CacheServicee : ICacheServicee
+    public class CacheService : ICacheService
     {
         private readonly IUserRepository _userRepository;
         private readonly IInstrumentsRepository _instrumentsRepository;
-        public CacheServicee(IUserRepository userRepository, IInstrumentsRepository instrumentsRepository)
+        public CacheService(IUserRepository userRepository, IInstrumentsRepository instrumentsRepository)
         {
             _userRepository = userRepository;
             _instrumentsRepository = instrumentsRepository;
         }
 
 
-       public void CleareCache()
+        public void CleareCache()
         {
             _instrumentsRepository.CleareCache();
         }
         public InstrumentList InstrumentData(int instrumentId)
         {
-            return  _instrumentsRepository.InstrumentData(instrumentId);
+            return _instrumentsRepository.InstrumentData(instrumentId);
         }
-        
-        public  List<InstrumentList> InstrumentData()
+
+        public List<InstrumentList> InstrumentData()
         {
-            return  _instrumentsRepository.InstrumentData();
+            return _instrumentsRepository.InstrumentData();
         }
 
         public List<Izi.Online.ViewModels.AppConfigs> ConfigData()
@@ -57,6 +57,9 @@ namespace Iz.Online.Services.Services
 
         }
 
-       
+        public InstrumentList InstrumentData(string nsc)
+        {
+            return _instrumentsRepository.InstrumentData(nsc);
+        }
     }
 }

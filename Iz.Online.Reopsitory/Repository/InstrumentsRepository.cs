@@ -316,6 +316,31 @@ namespace Iz.Online.Reopsitory.Repository
                 return result;
             }
         }
+        public InstrumentList InstrumentData(string nsc)
+        {
+            try
+            {
+                var dataBytes = _cache.Get("Instrument" + nsc);
+                if (dataBytes == null)
+                    CacheInstrumentsData();
+
+                dataBytes = _cache.Get("Instrument" + nsc);
+                var result = JsonConvert.DeserializeObject<InstrumentList>(Encoding.Default.GetString(dataBytes));
+                if (result != null)
+                    return result;
+
+                result = SqlInstrumentList().FirstOrDefault(x => x.NscCode == nsc);
+                CacheInstrumentsData();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                var result = SqlInstrumentList().FirstOrDefault(x => x.NscCode == nsc);
+                CacheInstrumentsData();
+                return result;
+            }
+        }
         public int GetLocalInstrumentIdFromOmsId(int omsId)
         {
             try

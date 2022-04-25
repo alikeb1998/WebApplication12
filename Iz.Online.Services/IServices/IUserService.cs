@@ -20,6 +20,7 @@ namespace Iz.Online.Services.IServices
         IExternalUserService _externalUserService { get; }
         Task<ResultModel<bool>> SetUserHub(string token, string hubId);
         Task<ResultModel<List<Asset>>> AllAssets();
+        Task<ResultModel<List<Asset>>> Portfolio();
         Task<ResultModel<List<Asset>>> AllAssetsPaged(PortfoFilter filter);
         Task<ResultModel<Wallet>> Wallet();
         List<Izi.Online.ViewModels.AppConfigs> AppConfigs();

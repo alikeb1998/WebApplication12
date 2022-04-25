@@ -35,6 +35,17 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
 
             return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 
+        } 
+        public async Task<ResultModel<List<Portfo>>> Portfolio()
+        {
+            var result = await HttpGetRequest<List<Portfo>>("order/portfolio/assets");
+            if (result == null)
+            {
+                return new ResultModel<List<Portfo>>(null, 400);
+            }
+
+            return new ResultModel<List<Portfo>>(result);
+
         }
         public async Task<ResultModel<Login>> Captcha()
         {

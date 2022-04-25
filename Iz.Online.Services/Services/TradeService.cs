@@ -117,9 +117,9 @@ namespace Iz.Online.Services.Services
                 }
 
 
-                return new ResultModel<TradeHistoryReport>(null, 200, "لیست خالی است.");
+                return new ResultModel<TradeHistoryReport>(new TradeHistoryReport() { Model=new(),PageNumber = 0, PageSize = 0,TotalCount = 0}, 200, "لیست خالی است.");
             }
-            return new ResultModel<TradeHistoryReport>(null, false, list.Message, list.StatusCode);
+            return new ResultModel<TradeHistoryReport>(new TradeHistoryReport() { Model = new(), PageNumber = 0, PageSize = 0, TotalCount = 0 }, 200, "لیست خالی است.");
         }
         private List<Trade> Filter(List<Trade> list, TradeFilter filter)
         {

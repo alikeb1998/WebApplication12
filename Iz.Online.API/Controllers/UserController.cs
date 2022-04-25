@@ -148,11 +148,18 @@ namespace Iz.Online.API.Controllers
 
         }
 
+        ////get customer portfolio
+        //[HttpGet("portfolio")]
+        //public async Task<IActionResult> AllAssets()
+        //{
+        //    var result = await _userService.AllAssets();
+        //    return new Respond<List<Asset>>().ActionRespond(result);
+        //} 
         //get customer portfolio
         [HttpGet("portfolio")]
-        public async Task<IActionResult> AllAssets()
+        public async Task<IActionResult> Portfolio()
         {
-            var result = await _userService.AllAssets();
+            var result = await _userService.Portfolio();
             return new Respond<List<Asset>>().ActionRespond(result);
         }
 
