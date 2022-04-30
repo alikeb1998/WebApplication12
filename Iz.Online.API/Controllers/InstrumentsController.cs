@@ -34,12 +34,12 @@ namespace Iz.Online.API.Controllers
         #endregion
 
 
-        [HttpGet("UpdateInstrumentsDb")]
-        public async Task<ResultModel<bool>> UpdateInstrumentsDb()
-        {
-            var result = await _instrumentsService.UpdateInstrumentsDb();
-            return new ResultModel<bool>(result, result);
-        }
+            [HttpGet("UpdateInstrumentsDb")]
+            public async Task<ResultModel<bool>> UpdateInstrumentsDb()
+            {
+                var result = await _instrumentsService.UpdateInstrumentsDb();
+                return new ResultModel<bool>(result, result);
+            }
 
         //get instruments list.
         [HttpGet("List")]

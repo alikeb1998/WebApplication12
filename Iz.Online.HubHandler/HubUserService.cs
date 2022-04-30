@@ -24,7 +24,7 @@ using Izi.Online.ViewModels.SignalR;
 using Iz.Online.OmsModels.ResponsModels.Order;
 using Izi.Online.ViewModels.ValidityType;
 using Order = Izi.Online.ViewModels.SignalR.Order;
-using Iz.Online.Services.IServices;
+using CashHelper;
 
 namespace Iz.Online.HubHandler
 {
@@ -46,7 +46,7 @@ namespace Iz.Online.HubHandler
         private readonly Microsoft.AspNetCore.SignalR.IHubContext<MainHub> _hubContext;
         private readonly ILogger<HubUserService> _logger;
         private readonly ICacheService _cacheService;
-
+        private string nationalCode;
 
         private readonly ConsumerConfig _consumerConfig;
         private static bool ConsumerIsStar = false;
@@ -67,7 +67,7 @@ namespace Iz.Online.HubHandler
         }
 
         #region BESTLIMIT
-
+        
 
         /// <summary>
         /// {InstrumentId}-bestLimit
@@ -75,7 +75,10 @@ namespace Iz.Online.HubHandler
         public async Task ConsumeRefreshInstrumentBestLimit_Orginal(string InstrumentId, string nationalCode)
         {
             //InstrumentId = "IRO1FOLD0001"; // <= sample فولاد
-
+            if (nationalCode != null)
+            {
+                this.nationalCode = nationalCode;
+            }
 
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
@@ -186,6 +189,10 @@ namespace Iz.Online.HubHandler
 
         public async Task PushPrice_Original(string InstrumentId, string nationalCode)
         {
+            if (nationalCode != null)
+            {
+                this.nationalCode = nationalCode;
+            }
             using (var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build())
             {
                 consumer.Subscribe($"{InstrumentId}-price");
@@ -215,7 +222,8 @@ namespace Iz.Online.HubHandler
 
                         //var hubs = await _hubConnationService.GetInstrumentHubs(InstrumentId);
                         //if (hubs != null)
-                            await _hubContext.Clients.Group($"{InstrumentId}-price").SendAsync($"{InstrumentId}-price", res);
+                        var lastModel = JsonConvert.SerializeObject(res);
+                        await _hubContext.Clients.Group($"{InstrumentId}-price").SendAsync($"{InstrumentId}-price", lastModel);
 
                         //var t = consumeResult.Message.Value;
 
@@ -253,19 +261,22 @@ namespace Iz.Online.HubHandler
                     {
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<AddOrder>(consumeResult.Message.Value);
-                        //var res = new Order()
-                        //{
-                            
-                        //    state = model1.TradedState switch { 1=> "لغو شده", 2=> "سفارش به طور کامل اجرا شده است", 3=> "خطای هسته معاملات", 4=> "منقضی شده", 5=> "انجام شده", 6=> "در حال انتظار", 7=> "در صف", 8=> "در صف در انتظار تایید لغو", 9=> "در صف در انتظار تایید ویرایش", 10=> "قسمتی انجام شده", 11=> "رد شده", },
-                        //    instrumentId = 0,
-                        //    createdAt = model1.TradedAt,
-                        //    executedQ = model1.ExecutedQuantity,
-                        //    price = model1.TradedPrice,
-                            
-                        //};
-                        
+                        var res = new Order()
+                        {
+
+                            state = model1.TradedState switch { 1 => "لغو شده", 2 => "سفارش به طور کامل اجرا شده است", 3 => "خطای هسته معاملات", 4 => "منقضی شده", 5 => "انجام شده", 6 => "در حال انتظار", 7 => "در صف", 8 => "در صف در انتظار تایید لغو", 9 => "در صف در انتظار تایید ویرایش", 10 => "قسمتی انجام شده", 11 => "رد شده", },
+                            instrumentId = _cacheService.InstrumentData(model1.Instrument).Id,
+                            createdAt = model1.TradedAt,
+                            executedQ = model1.ExecutedQuantity,
+                            price = model1.TradedPrice,
+                            orderSide =model1.OrderSide,
+                            orderSideText = model1.OrderSide == 2 ? "خرید" : "فروش",
+                            orderId = model1.OrderId,
+
+                        };
+
                         //await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnOrderAdded", new object[] { res });
-                        await _hubContext.Clients.Group(nationalCode).SendAsync("OnChangeTrades",  model1 );
+                        await _hubContext.Clients.Group(nationalCode).SendAsync("OnChangeTrades", JsonConvert.SerializeObject(res));
                     }
                     catch (Exception e)
                     {
@@ -396,8 +407,6 @@ namespace Iz.Online.HubHandler
                 {
                     try
                     {
-
-
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<Portfolio>(consumeResult.Message.Value);
                         var res = new Asset()
@@ -408,13 +417,14 @@ namespace Iz.Online.HubHandler
                             Gav = 0,
                             AvgPrice = model1.AveragePrice,
                             FianlAmount = model1.HeadToHeadPoint,
-                            ProfitAmount = model1.ProfitLoss,
+                            ProfitAmount = model1.profitLoss,
                             ProfitPercent = model1.ProfitLossPercent,
                             SellProfit = 0,
                             InstrumentId = _cacheService.InstrumentData(model1.InstrumentCode).Id,
 
                         };
-                            await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio", JsonConvert.SerializeObject(res));
+                        var lastModel = JsonConvert.SerializeObject(res).ToLower();
+                            await _hubContext.Clients.Group(model1.NationalId).SendAsync("OnUpdateCustomerPortfolio", lastModel);
 
                         var t = consumeResult.Message.Value;
                     }
@@ -434,17 +444,17 @@ namespace Iz.Online.HubHandler
 
         public async Task CreateAllConsumers(string nationalCode)
         {
-            if (ConsumerIsStar)
-                return;
+            //if (ConsumerIsStar)
+            //    return;
             List<Task> tasks = new();
             tasks.Add(Task.Run(async () => await PushTradeState_Original(nationalCode)));
             tasks.Add(Task.Run(async () => await PushOrderAdded_Original(nationalCode)));
-            tasks.Add(Task.Run(async () => await PushCustomerPortfolio_Original(nationalCode)));
+            tasks.Add(Task.Run(async () => await PushCustomerPortfolio_Original(this.nationalCode)));
             tasks.Add(Task.Run(async () => await PushCustomerWallet_Original(nationalCode)));
             Task.WhenAll(tasks);
 
 
-            ConsumerIsStar = true;
+            //ConsumerIsStar = true;
         }
 
         public static DateTime GetTime(string dateTime)

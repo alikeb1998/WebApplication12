@@ -138,6 +138,7 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
         }
         public async Task StartConsume()
         {
+             GetNationalCode(Token);
             await _hubUserService.CreateAllConsumers(NationalCode);
         }
 

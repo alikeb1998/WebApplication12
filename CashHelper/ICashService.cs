@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 
-namespace Iz.Online.Services.IServices
+//namespace Iz.Online.Services.IServices
+namespace CashHelper
 {
     public interface ICacheService
     {

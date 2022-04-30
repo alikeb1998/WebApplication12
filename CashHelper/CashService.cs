@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Iz.Online.DataAccess;
 using Iz.Online.Reopsitory.IRepository;
 using Iz.Online.Reopsitory.Repository;
-using Iz.Online.Services.IServices;
 using Izi.Online.ViewModels.Instruments;
 using Izi.Online.ViewModels.ShareModels;
 using Microsoft.Extensions.Caching.Distributed;

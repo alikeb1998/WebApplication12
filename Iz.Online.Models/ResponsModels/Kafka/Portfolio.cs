@@ -8,16 +8,15 @@ namespace Iz.Online.OmsModels.ResponsModels.Kafka
 {
     public class Portfolio
     {
-        public DateTime DateOfEvent { get; set; }
-        public string InstrumentCode { get; set; }
         public string NationalId { get; set; }
-        public int Quantity { get; set; }
-        public int LastPrice { get; set; }
-        public int AveragePrice { get; set; }
-        public int PriceOver { get; set; }
-        public int AssetValue { get; set; }
-        public int ProfitLoss { get; set; }
-        public int ProfitLossPercent { get; set; }
-        public int HeadToHeadPoint { get; set; }
+        public string InstrumentCode { get; set; }
+        public long Quantity { get; set; }
+        public long LastPrice { get; set; }
+        public long AveragePrice { get; set; }
+        public long PriceOver { get; set; }
+        public long AssetValue { get; set; }
+        public long profitLoss { get; set; }
+        public long ProfitLossPercent { get; set; }
+        public long HeadToHeadPoint { get; set; }
     }
 }

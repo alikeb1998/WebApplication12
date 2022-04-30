@@ -23,7 +23,7 @@ namespace Izi.Online.ViewModels.SignalR
         public string state { get; set; }
         public string stateText { get; set; }
         public double executePercent { get; set; }
-        public int instrumentId { get; set; }
+        public long instrumentId { get; set; }
         public string nscCode { get; set; }
         public long orderId { get; set; }
 

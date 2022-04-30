@@ -9,21 +9,19 @@ namespace Iz.Online.OmsModels.ResponsModels.User
     public class Portfo
     {
        
-        public int InstrumentId { get; set; }
-        public string InstrumentISIN { get; set; }
-        public string InstrumentName { get; set; }
-      //  public long Quantity { get; set; }
-        public long Gav { get; set; }
+    
+        public string InstrumentCode{ get; set; }
+        public long Quantity { get; set; }
+        //public long Gav { get; set; }
 
         public long LastPrice { get; set; }
-      
-        //public long AveragePrice { get; set; }
+      public long AveragePrice { get; set; }
 
         public long PriceOver { get; set; }
 
         public long AssetValue { get; set; }
 
-        public long profitLossValue { get; set; }
+        public long profitLoss{ get; set; }
 
         public long ProfitLossPercent { get; set; }
        

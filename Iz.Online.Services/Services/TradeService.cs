@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using System.Net;
+using CashHelper;
 
 namespace Iz.Online.Services.Services
 {
@@ -243,7 +244,7 @@ namespace Iz.Online.Services.Services
                 {
                     case 1:
                         tradeList = tradeList.Where(x => x.State == 1).ToList();
-                        break;
+                        break;  
                     case 2:
                         tradeList = tradeList.Where(x => x.State == 2).ToList();
                         break;

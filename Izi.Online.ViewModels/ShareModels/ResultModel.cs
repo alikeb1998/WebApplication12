@@ -8,12 +8,12 @@ namespace Izi.Online.ViewModels.ShareModels
 {
     public class ResultModel<T>
     {
-        public ResultModel(T model , bool isSuccess = true, string message = "", int statusCode = 1)
+        public ResultModel(T model , bool isSuccess = true, string message = "", int statusCode = 200)
         {
             if (isSuccess)
             {
                 Message = "با موفقیت انجام شد";
-                StatusCode = 200;
+                StatusCode = statusCode;
 
             }
             else

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CashHelper;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.OmsModels.InputModels.SuperVisory;
 using Iz.Online.OmsModels.ResponsModels.SuperVisory;

@@ -14,8 +14,15 @@ namespace Iz.Online.OmsModels.ResponsModels.Order
         public long AvgPrice { get; set; }
         public long FinalAmount { get; set; }
         public long Gav { get; set; }
-        public long ProfitAmount { get; set; }
-        public long ProfitPercent { get; set; }
+        public long AssetValue { get; set; }
+        public long HeadToHeadPoint { get; set; }
+        public long PriceOver { get; set; }
+       // public long ProfitAmount { get; set; }
+        public long ProfitLossValue { get; set; }
+
+        //public long ProfitPercent { get; set; }
+        public long ProfitLossPercent { get; set; }
+
         public long SellProfit { get; set; }
     }
 }

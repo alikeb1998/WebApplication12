@@ -18,6 +18,7 @@ namespace Izi.Online.ViewModels.ShareModels
                 200 => Ok(Model),
                 401 => Unauthorized(Model),
                 404 => NotFound(Model),
+                204 => NoContent(),
                 _ => BadRequest(Model),
             };
         }

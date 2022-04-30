@@ -21,6 +21,7 @@ using StackExchange.Redis;
 using Iz.Online.API.Controllers;
  
 using Izi.Online.ViewModels.Reports;
+using CashHelper;
 
 namespace Iz.Online.API.Controllers
 {

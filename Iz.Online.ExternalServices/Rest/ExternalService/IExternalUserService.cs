@@ -15,7 +15,7 @@ namespace Iz.Online.ExternalServices.Rest.ExternalService
         string Token { get; set; }
         Task<ResultModel<Wallet>> Wallet();
         Task<ResultModel<AssetsList>> GetAllAssets();
-        Task<ResultModel<List<Portfo>>> Portfolio();
+        Task<ResultModel<PortfoList>> Portfolio();
         Task<ResultModel<Login>> Captcha();
         Task<ResultModel<OtpResult>> SendOtp(Credentials credentials);
         Task<ResultModel<CheckOtp>> CheckOtp(Otp otp);

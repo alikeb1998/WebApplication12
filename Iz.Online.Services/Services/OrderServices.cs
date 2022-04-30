@@ -20,6 +20,7 @@ using Izi.Online.ViewModels.Reports;
 using System.Linq.Expressions;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.HubHandler;
+using CashHelper;
 
 namespace Iz.Online.Services.Services
 {

@@ -8,6 +8,6 @@ namespace Iz.Online.OmsModels.ResponsModels.User
 {
     public class PortfoList:OmsResponseBaseModel
     {
-        public List<Portfo> Portfolio { get; set; }    
+        public List<Portfo> assets { get; set; }    
     }
 }

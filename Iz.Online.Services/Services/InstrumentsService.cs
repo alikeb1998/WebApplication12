@@ -12,6 +12,7 @@ using Izi.Online.ViewModels.Instruments.BestLimit;
 using Izi.Online.ViewModels.SignalR;
 using Microsoft.Extensions.Logging;
 using Iz.Online.OmsModels.ResponsModels.User;
+using CashHelper;
 
 namespace Iz.Online.Services.Services
 {
@@ -141,11 +142,11 @@ namespace Iz.Online.Services.Services
             {
                 return new ResultModel<BestLimits>(null, 400, "خطا در پارامتر های ورودی");
             }
-            _logger.LogError("before get redis");
+            
             var instrumentDetails = _cacheService.InstrumentData(InstrumentId);
-            _logger.LogError("after get redis");
-            var info =  _externalInstrumentsService.GetNationalCode(null);
-            _externalInstrumentsService.SetNationalCode(info.Model.nationalID);
+           
+           // var info =  _externalInstrumentsService.GetNationalCode(null);
+            //_externalInstrumentsService.SetNationalCode(info.Model.nationalID);
             return await _externalInstrumentsService.BestLimits(instrumentDetails.NscCode, instrumentDetails.InstrumentId, hubId);
         }
 

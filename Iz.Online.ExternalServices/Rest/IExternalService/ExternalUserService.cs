@@ -36,15 +36,15 @@ namespace Iz.Online.ExternalServices.Rest.IExternalService
             return new ResultModel<AssetsList>(result, result.statusCode == 200, result.clientMessage, result.statusCode);
 
         } 
-        public async Task<ResultModel<List<Portfo>>> Portfolio()
+        public async Task<ResultModel<PortfoList>> Portfolio()
         {
-            var result = await HttpGetRequest<List<Portfo>>("order/portfolio/assets");
+            var result = await HttpGetRequest<PortfoList>("order/portfolio/assets");
             if (result == null)
             {
-                return new ResultModel<List<Portfo>>(null, 400);
+                return new ResultModel<PortfoList>(null, 400);
             }
 
-            return new ResultModel<List<Portfo>>(result);
+            return new ResultModel<PortfoList>(result);
 
         }
         public async Task<ResultModel<Login>> Captcha()

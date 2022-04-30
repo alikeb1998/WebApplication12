@@ -436,7 +436,7 @@ namespace Iz.Online.Reopsitory.Repository
                     var omsId = JsonConvert.SerializeObject(instrument.Id);
                     var omsIdContent = Encoding.UTF8.GetBytes(omsId);
                     var content = Encoding.UTF8.GetBytes(serializedData);
-                    _cache.Set("Instrument" + instrument.Id, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
+                    _cache.Set("Instrument" + instrument.Code, content, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });
 
                     content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Id = instrument.Id }));
                     _cache.Set("omsId" + instrument.InstrumentId, omsIdContent, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(1) });

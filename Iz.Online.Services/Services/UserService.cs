@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CashHelper;
 using Iz.Online.ExternalServices.Rest.ExternalService;
 using Iz.Online.ExternalServices.Rest.IExternalService;
 using Iz.Online.HubHandler;
@@ -54,8 +55,8 @@ namespace Iz.Online.Services.Services
                 Gav = x.Gav,
                 AvgPrice = x.AvgPrice,
                 FianlAmount = x.FinalAmount,
-                ProfitAmount = x.ProfitAmount,
-                ProfitPercent = x.ProfitPercent,
+                ProfitAmount = x.ProfitLossValue,
+                ProfitPercent = x.ProfitLossPercent,
                 SellProfit = x.SellProfit,
                 InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.Instrument.id),
             }).ToList();
@@ -68,26 +69,22 @@ namespace Iz.Online.Services.Services
             var assets = await _externalUserService.Portfolio();
             var instruments =  _cacheService.InstrumentData();
 
-            if (!assets.IsSuccess || assets.Model == null)
+            if (!assets.IsSuccess || assets.Model.assets == null)
                 return new ResultModel<List<Asset>>(null, assets.StatusCode == 200, assets.Message, assets.StatusCode);
 
-            var allAssets = assets.Model.Select(x => new Asset()
+            var allAssets = assets.Model.assets.Select(x => new Asset()
             {
-                Name = x.InstrumentName,
+                Name = _cacheService.InstrumentData(x.InstrumentCode).Name,
                 LastPrice = x.LastPrice,
-               // TradeableQuantity = x.TradeableQuantity,
-                TradeableQuantity = 0,
-                Gav = x.Gav,
-                //AvgPrice = x.AvgPrice,
-                AvgPrice =0 ,
+                TradeableQuantity = x.Quantity,
+                //Gav = x.Gav,
+                AvgPrice = x.AveragePrice,
                 FianlAmount = x.HeadToHeadPoint,
-                //FianlAmount = 0,
-                ProfitAmount = x.profitLossValue,
-                //ProfitAmount = 0,
+                ProfitAmount = x.profitLoss,
                 ProfitPercent = x.ProfitLossPercent,
                 //SellProfit = x.SellProfit,
                 SellProfit = 0,
-                InstrumentId = _cacheService.GetLocalInstrumentIdFromOmsId(x.InstrumentId),
+                InstrumentId = _cacheService.InstrumentData(x.InstrumentCode).Id,
             }).ToList();
 
             return new ResultModel<List<Asset>>(allAssets);
@@ -109,8 +106,8 @@ namespace Iz.Online.Services.Services
                 Gav = x.Gav,
                 AvgPrice = x.AvgPrice,
                 FianlAmount = x.FinalAmount,
-                ProfitAmount = x.ProfitAmount,
-                ProfitPercent = x.ProfitPercent,
+                ProfitAmount = x.ProfitLossValue,
+                ProfitPercent = x.ProfitLossPercent,
                 SellProfit = x.SellProfit,
                 InstrumentId = x.Instrument.id,
                 NscCode = x.Instrument.code

@@ -48,12 +48,14 @@ namespace Iz.Online.API.Infrastructure
    
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IExternalChangeBrokerService, ExternalChangeBrokerService>();
-            services.AddScoped<ICacheServicee, CacheServicee>();
+            //services.AddScoped<ICacheServicee, CacheServicee>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<IChangeBrokerService, ChangeBrokerService>();
             services.AddScoped<INewsServices, NewsServices>();
             services.AddScoped<IExternalNewsService, ExternalNewsService>();
-            
+            services.AddScoped<IExternalInitialReleaseService, ExternalInitialService>();
+            services.AddScoped<IInitialReleaseService, InitialReleaseService>();
+
 
             return services;
 
