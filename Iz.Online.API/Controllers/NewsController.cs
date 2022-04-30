@@ -21,12 +21,25 @@ namespace Iz.Online.API.Controllers
         }
         #endregion
 
-        [HttpGet]
+        [HttpGet("Messages")]
         public async Task<IActionResult> Messages()
         {
             var result = await _newsServices.Messages();
             return new Respond<List<Message>>().ActionRespond(result);
         }
 
+        [HttpGet("Read")]
+        public async Task<IActionResult> Read(string id)
+        {
+            var result = await _newsServices.Read(id);
+            return new Respond<bool>().ActionRespond(result);
+        }
+
+        [HttpGet("UnreadMessages")]
+        public async Task<IActionResult> UnreadMessages()
+        {
+            var result = await _newsServices.UnreadMessages();
+            return new Respond<MessageIds>().ActionRespond(result);
+        }
     }
 }

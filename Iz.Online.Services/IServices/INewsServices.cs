@@ -14,5 +14,7 @@ namespace Iz.Online.Services.IServices
         string Token { get; set; }
         IExternalNewsService _externalNewsService { get; }
         Task<ResultModel<List<Message>>> Messages();
+        Task<ResultModel<bool>> Read(string id);
+        Task<ResultModel<MessageIds>> UnreadMessages();
     }
 }

@@ -21,7 +21,7 @@ namespace Iz.Online.Services.Services
             var res = await _externalNewsService.Messages();
 
             if (!res.IsSuccess || res.Model.message == null)
-                return new ResultModel<List<Message>>(null, res.StatusCode == res.StatusCode, res.Message, res.StatusCode);
+                return new ResultModel<List<Message>>(null, res.StatusCode == 200, res.Message, res.StatusCode);
             var result = res.Model.Messages.Select(m => new Message()
             {
                 Id = m.Id,
@@ -30,6 +30,31 @@ namespace Iz.Online.Services.Services
                 Title = m.Title
             }).ToList();
             return new ResultModel<List<Message>>(result);
+
+        }
+
+        public async Task<ResultModel<bool>> Read(string id)
+        {
+            var res = await _externalNewsService.Read(id);
+
+            if (!res.IsSuccess || res.Model.message == null)
+                return new ResultModel<bool>(false, res.StatusCode == 200, res.Message, res.StatusCode);
+          
+            return new ResultModel<bool>(res.StatusCode==200);
+          
+        }
+
+        public async Task<ResultModel<MessageIds>> UnreadMessages()
+        {
+            var res = await _externalNewsService.UnreadMessages();
+
+            if (!res.IsSuccess || res.Model.message == null)
+                return new ResultModel<MessageIds>(null, res.StatusCode == 200, res.Message, res.StatusCode);
+            var result = new MessageIds()
+            {
+                Messages = res.Model.Ids
+            };
+            return new ResultModel<MessageIds>(result);
 
         }
     }
