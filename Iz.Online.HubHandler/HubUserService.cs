@@ -261,18 +261,32 @@ namespace Iz.Online.HubHandler
                     {
                         var consumeResult = consumer.Consume();
                         var model1 = JsonConvert.DeserializeObject<AddOrder>(consumeResult.Message.Value);
-                        var res = new Order()
-                        {
+                        //var res = new Order()
+                        //{
 
-                            state = model1.TradedState switch { 1 => "لغو شده", 2 => "سفارش به طور کامل اجرا شده است", 3 => "خطای هسته معاملات", 4 => "منقضی شده", 5 => "انجام شده", 6 => "در حال انتظار", 7 => "در صف", 8 => "در صف در انتظار تایید لغو", 9 => "در صف در انتظار تایید ویرایش", 10 => "قسمتی انجام شده", 11 => "رد شده", },
+                        //    state = model1.TradedState switch { 1 => "لغو شده", 2 => "سفارش به طور کامل اجرا شده است", 3 => "خطای هسته معاملات", 4 => "منقضی شده", 5 => "انجام شده", 6 => "در حال انتظار", 7 => "در صف", 8 => "در صف در انتظار تایید لغو", 9 => "در صف در انتظار تایید ویرایش", 10 => "قسمتی انجام شده", 11 => "رد شده", },
+                        //    instrumentId = _cacheService.InstrumentData(model1.Instrument).Id,
+                        //    createdAt = model1.TradedAt,
+                        //    executedQ = model1.ExecutedQuantity,
+                        //    price = model1.TradedPrice,
+                        //    orderSide =model1.OrderSide,
+                        //    orderSideText = model1.OrderSide == 2 ? "خرید" : "فروش",
+                        //    orderId = model1.OrderId,
+
+                        //};
+                        var res = new Izi.Online.ViewModels.SignalR.Trade()
+                        {
+                            stateText = model1.TradedState switch { 1 => "لغو شده", 2 => "سفارش به طور کامل اجرا شده است", 3 => "خطای هسته معاملات", 4 => "منقضی شده", 5 => "انجام شده", 6 => "در حال انتظار", 7 => "در صف", 8 => "در صف در انتظار تایید لغو", 9 => "در صف در انتظار تایید ویرایش", 10 => "قسمتی انجام شده", 11 => "رد شده", },
+                            state = model1.TradedState,
                             instrumentId = _cacheService.InstrumentData(model1.Instrument).Id,
-                            createdAt = model1.TradedAt,
+                            tradedAt = model1.TradedAt,
                             executedQ = model1.ExecutedQuantity,
                             price = model1.TradedPrice,
-                            orderSide =model1.OrderSide,
+                            orderSide = model1.OrderSide,
                             orderSideText = model1.OrderSide == 2 ? "خرید" : "فروش",
-                            orderId = model1.OrderId,
-
+                            tradeId = model1.OrderId,
+                            name="tst",
+                            
                         };
 
                         //await _hubContext.Clients.Group(nationalCode).SendCoreAsync("OnOrderAdded", new object[] { res });
@@ -309,24 +323,25 @@ namespace Iz.Online.HubHandler
                         var model1 = JsonConvert.DeserializeObject<OrderChange>(consumeResult.Message.Value);
                         var res = new Order()
                         {
-                            state = model1.State,
+                            state = model1.State switch { "1" => "لغو شده", "2" => "سفارش به طور کامل اجرا شده است", "3" => "خطای هسته معاملات", "4" => "منقضی شده", "5" => "انجام شده", "6" => "در حال انتظار", "7" => "در صف", "8" => "در صف در انتظار تایید لغو", "9" => "در صف در انتظار تایید ویرایش", "10" => "قسمتی انجام شده", "11" => "رد شده", },
                             orderSide = Convert.ToInt32(model1.OrderSide),
                             validityType = Convert.ToInt32(model1.ValidityType),
                             validityInfo = new ValidityInfo() { ValidityDate = model1.ValidityInfo },
                             remainedQ = (long)Convert.ToDouble(model1.RemainingQuantity),
                             quantity = (long)Convert.ToDouble(model1.Quantity),
                             orderId = Convert.ToInt32(model1.OrderId),
-                            instrumentId = 0,
+                            instrumentId = _cacheService.InstrumentData(model1.Instrument).Id,
                             createdAt = Convert.ToDateTime(model1.ChangedAt),
                             executedQ = Convert.ToInt32(model1.ExecutedQuantity),
                             price = Convert.ToInt32(model1.Price),
-                            stateText = model1.State switch { "1" => "لغو شده", "2" => "سفارش به طور کامل اجرا شده است", "3" => "خطای هسته معاملات", "4" => "منقضی شده", "5" => "انجام شده", "6" => "در حال انتظار", "7" => "در صف", "8" => "در صف در انتظار تایید لغو", "9" => "در صف در انتظار تایید ویرایش", "10" => "قسمتی انجام شده", "11" => "رد شده", },
+                           // stateText = model1.State switch { "1" => "لغو شده", "2" => "سفارش به طور کامل اجرا شده است", "3" => "خطای هسته معاملات", "4" => "منقضی شده", "5" => "انجام شده", "6" => "در حال انتظار", "7" => "در صف", "8" => "در صف در انتظار تایید لغو", "9" => "در صف در انتظار تایید ویرایش", "10" => "قسمتی انجام شده", "11" => "رد شده", },
                             instrumentName = "test",
-                            orderSideText = model1.OrderSide.Equals("1") ? "فروش" : "خرید"
+                            orderSideText = model1.OrderSide.Equals("1") ? "فروش" : "خرید",
+                            
                         };
                         res.executePercent = res.executedQ / res.quantity * 100;
                         //await _hubContext.Clients.Group(model1.Customer).SendCoreAsync("OnChangeTrades", new object[] { res });
-                        await _hubContext.Clients.Group(model1.Customer).SendAsync("OnOrderAdded", res );
+                        await _hubContext.Clients.Group(model1.Customer).SendAsync("OnOrderAdded", JsonConvert.SerializeObject(res));
 
                         var t = consumeResult.Message.Value;
 

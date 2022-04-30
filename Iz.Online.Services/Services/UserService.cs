@@ -85,6 +85,7 @@ namespace Iz.Online.Services.Services
                 //SellProfit = x.SellProfit,
                 SellProfit = 0,
                 InstrumentId = _cacheService.InstrumentData(x.InstrumentCode).Id,
+                Gav = x.LastPrice*x.Quantity,
             }).ToList();
 
             return new ResultModel<List<Asset>>(allAssets);
